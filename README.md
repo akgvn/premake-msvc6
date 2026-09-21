@@ -1,0 +1,1 @@
+This will be a premake5 action to generate MSVC6 `.dsp`/`.dsw` files. Licensed under GPLv2 since the code is based on premake3 code.
