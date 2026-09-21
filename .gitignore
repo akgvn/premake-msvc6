@@ -1,0 +1,3 @@
+# Regenerated E2E output (committed baselines live in tests/golden/)
+samples/*.dsp
+samples/*.dsw

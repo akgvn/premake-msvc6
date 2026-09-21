@@ -1,0 +1,4 @@
+# VC6 project files are golden fixtures: preserve bytes exactly, never
+# let git normalize line endings on checkout/commit.
+*.dsp -text
+*.dsw -text
