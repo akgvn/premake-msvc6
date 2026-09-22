@@ -1,3 +1,21 @@
 # Regenerated E2E output (committed baselines live in tests/golden/)
 samples/*.dsp
 samples/*.dsw
+
+# Local VC6 validation artifacts (PLAN.md 1b): stub sources, build
+# outputs and IDE state stay on disk for reuse but are never committed.
+samples/app/
+samples/core/
+samples/engine/
+samples/tool/
+samples/obj/
+samples/*.exe
+samples/*.dll
+samples/*.lib
+samples/*.exp
+samples/*.ilk
+samples/*.pdb
+samples/*.plg
+samples/*.ncb
+samples/*.opt
+samples/build-*.log
