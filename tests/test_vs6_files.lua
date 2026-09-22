@@ -1,0 +1,123 @@
+--
+-- test_vs6_files.lua
+-- Port of premake 3.x Tests/Vs6/Cpp/Test_Files.cs
+--
+-- Note: the module emits Windows path separators (OQ-7), so SOURCE= lines
+-- use backslashes where the 3.x parser saw forward slashes.
+--
+
+	local p = premake
+	local suite = test.declare("vs6_files")
+	local vs6 = p.modules.vs6
+	local dsp = vs6.dsp
+
+
+--
+-- Setup: mirrors Script.MakeBasic("exe", "c++") from the 3.x framework.
+--
+
+	local wks, prj
+
+	function suite.setup()
+		p.action.set("vs6")
+		wks = workspace("MyProject")
+		configurations { "Debug", "Release" }
+		prj = project("MyPackage")
+		language "C++"
+		kind "ConsoleApp"
+		files { "somefile.txt" }
+	end
+
+	local function prepare()
+		dsp.sourceTree(test.getproject(wks, 1))
+	end
+
+
+--
+-- Files in the root directory are listed without a group.
+--
+
+	function suite.filesInRoot()
+		files { "file1.cpp", "file2.cpp" }
+		prepare()
+		test.capture [[
+# Begin Source File
+
+SOURCE=somefile.txt
+# End Source File
+# Begin Source File
+
+SOURCE=file1.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=file2.cpp
+# End Source File
+		]]
+	end
+
+
+--
+-- Nested directories become nested groups; groups precede the files of
+-- their parent directory.
+--
+
+	function suite.filesInSubDirs()
+		files { "Src/file1.cpp", "Src/Base/file2.cpp" }
+		prepare()
+		test.capture [[
+# Begin Group "Src"
+
+# PROP Default_Filter ""
+# Begin Group "Base"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=Src\Base\file2.cpp
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=Src\file1.cpp
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=somefile.txt
+# End Source File
+		]]
+	end
+
+
+--
+-- Files above the project directory: the ".." group root is skipped (3.x
+-- behavior), but the "Help" group inside it is kept.
+--
+
+	function suite.filesAboveDir()
+		files { "Src/file1.cpp", "../Help/file2.cpp" }
+		prepare()
+		test.capture [[
+# Begin Group "Src"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=Src\file1.cpp
+# End Source File
+# End Group
+# Begin Group "Help"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\Help\file2.cpp
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=somefile.txt
+# End Source File
+		]]
+	end

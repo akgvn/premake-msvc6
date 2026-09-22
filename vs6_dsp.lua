@@ -171,7 +171,7 @@
 			p.outln('# ADD MTL /nologo /D "' .. sym .. '" /mktyplib203 /win32')
 		end
 
-		local rsc = dsp.rscFlags(cfg, sym)
+		local rsc = dsp.rscFlags(cfg)
 		p.outln('# ADD BASE RSC' .. rsc)
 		p.outln('# ADD RSC' .. rsc)
 
@@ -283,8 +283,8 @@
 -- defines/includepaths with the resource-specific ones.
 ---
 
-	function dsp.rscFlags(cfg, sym)
-		local r = { '/l 0x409 /d "' .. sym .. '"' }
+	function dsp.rscFlags(cfg)
+		local r = { '/l 0x409 /d "' .. (vs6.symbols(cfg) and "_DEBUG" or "NDEBUG") .. '"' }
 
 		for _, def in ipairs(cfg.defines) do
 			table.insert(r, '/d "' .. def .. '"')
@@ -379,8 +379,14 @@
 ---
 
 	function dsp.sourceTree(prj)
+		-- prj._.files is sorted alphabetically by virtual path; fcfg.order
+		-- holds the script declaration index (3.x order)
 		local files = {}
-		for _, fcfg in ipairs(prj._.files) do
+		local ordered = table.shallowcopy(prj._.files)
+		table.sort(ordered, function(a, b)
+			return (a.order or math.huge) < (b.order or math.huge)
+		end)
+		for _, fcfg in ipairs(ordered) do
 			table.insert(files, fcfg.relpath)
 		end
 		dsp._sourceTree(files, "")

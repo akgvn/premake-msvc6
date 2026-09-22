@@ -39,6 +39,21 @@
 
 
 ---
+-- As rawvalue(), for path-kind fields: values fetched through the context
+-- come back absolute; re-relativize against the project location so the
+-- output contains relative paths like 3.x.
+---
+
+	function vs6.rawpath(cfg, name)
+		local value = vs6.rawvalue(cfg, name)
+		if value then
+			value = p.project.getrelative(cfg.project, value)
+		end
+		return value
+	end
+
+
+---
 -- Path output helper: VC6 files use backslash separators.
 ---
 
@@ -176,7 +191,7 @@
 
 	-- 3.x prj_get_outdir_for(): the output directory for the final target
 	function vs6.outdir(cfg)
-		local dir = vs6.rawvalue(cfg, "targetdir") or "."
+		local dir = vs6.rawpath(cfg, "targetdir") or "."
 		local sub = path.getdirectory(vs6.targetname(cfg))
 		if sub and sub ~= "" and sub ~= "." then
 			dir = dir .. "/" .. sub
@@ -186,14 +201,14 @@
 
 	-- 3.x prj_get_objdir(): always <objdir>/<config>
 	function vs6.objdir(cfg)
-		local dir = vs6.rawvalue(cfg, "objdir") or "obj"
+		local dir = vs6.rawpath(cfg, "objdir") or "obj"
 		return dir .. "/" .. cfg.buildcfg
 	end
 
 	-- 3.x prj_get_libdir(): where sibling library outputs land; drives the
 	-- trailing /libpath: and the DLL import library location
 	function vs6.libdir(cfg)
-		return vs6.rawvalue(cfg, "targetdir") or "."
+		return vs6.rawpath(cfg, "targetdir") or "."
 	end
 
 	-- 3.x prj_get_target_for(), Windows naming (VS6 is Win32-only)
@@ -228,7 +243,7 @@
 		if vs6.noImportLib(cfg) then
 			return vs6.objdir(cfg) .. "/" .. name .. ".lib"
 		end
-		local dir = vs6.rawvalue(cfg, "implibdir") or vs6.libdir(cfg)
+		local dir = vs6.rawpath(cfg, "implibdir") or vs6.libdir(cfg)
 		local sub = path.getdirectory(vs6.targetname(cfg))
 		if sub and sub ~= "" and sub ~= "." then
 			dir = dir .. "/" .. sub
