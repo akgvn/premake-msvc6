@@ -2,6 +2,8 @@
 -- Mirror of premake.lua (premake 3.x syntax) in this directory; the two must
 -- describe the same workspace. See PLAN.md Step 5.
 
+require "vs6"
+
 workspace "Sample"
 	configurations { "Debug", "Release" }
 
