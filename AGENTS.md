@@ -30,12 +30,19 @@ real-world-test-cases/  310 .dsw/.dsp from public projects + SOURCE.md provenanc
 
 - A premake-core checkout with a built binary is expected at
   `../premake-sources/premake-core` (`bin/release/premake5`), with this
-  repo symlinked at `../premake-sources/premake-core/modules/vs6`
-  (required for test discovery — `--scripts` alone does NOT work).
+  repo linked at `premake-core/modules/vs6` (required for test
+  discovery — `--scripts` alone does NOT work): `ln -s <repo> modules/vs6`
+  on Linux, `mklink /J modules\vs6 <repo>` on Windows (plain mklink /J,
+  no admin needed). On Windows the binary is `bin\release\premake5.exe`
+  (`Bootstrap.bat vs18` to build with VS2026 Community).
 - A premake 3.7 checkout may exist at `../premake-sources/premake-3.x`
   (oracle; `bin/premake` is a Linux build, `bin/premake.exe` the Windows
   one). `../premake-sources/` is slated for deletion — don't rely on it
   in committed files.
+- A loose VC6 tree exists on the Windows machine at
+  `C:\MSVC6`
+  (`Common\MSDev98\Bin\MSDEV.EXE` + `VC98\Bin\VCVARS32.BAT`; environment
+  must come from VCVARS32) — used for the IDE/acceptance runs.
 
 ## Common commands
 

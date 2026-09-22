@@ -28,7 +28,7 @@ VC-authored files agree on it. No test changes needed for these:
   `/WX` for `fatalwarnings { "All" }`, `/W4` for `warnings "Extra"`.
 - `/subsystem:windows|console`, `/dll`, `LINK32=link.exe -lib` + LIB32
   for StaticLib, MTL block for WindowedApp/SharedLib.
-- RSC `/l 0x409` (until the Priority 4 locale option), resdefines/
+- RSC `/l 0x409` (until the later locale option — PLAN.md Step 2), resdefines/
   resincludedirs/resoptions merging with defines/includedirs.
 - `.dsw` skeleton; sibling `links` → dependency blocks (extended by D7
   below); `prj.filename` for the .dsp path.
