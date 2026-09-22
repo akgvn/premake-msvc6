@@ -4,10 +4,11 @@ A standalone [Premake5](https://premake.github.io) module adding a `vs6`
 action that generates Visual C++ 6.0 workspace (`.dsw`) and project (`.dsp`)
 files for C/C++ projects (Win32 only).
 
-It is a faithful port of the premake 3.7 `vs6` exporter: the generated
-files match premake 3.x output byte-for-byte (modulo path separators and
-line endings, see below), including its default directory semantics and
-quirks — *not* premake5-native conventions.
+The module follows premake5-native conventions: baked build/link targets,
+premake5 defaults, and the msc toolset's flag mappings. (It began as a
+byte-exact port of premake 3.7's vs6 exporter — that state is preserved
+at tag `v1.0-3x-parity`; see `docs/3x-to-native.md` for the migration
+spec.) Validated to open and build correctly in a real Visual C++ 6.0 IDE.
 
 Licensed under GPLv2, since the code is based on premake 3.x
 (`Src/vs6.c`, `Src/vs6_cpp.c`).
@@ -50,39 +51,38 @@ ln -s /path/to/premake5-vs6 modules/vs6
 bin/release/premake5 test --test-only=vs6*
 ```
 
-End-to-end validation regenerates `samples/` and diffs against the
-committed premake 3.7 oracle fixtures in `tests/golden/` (normalizing
-path separators and line endings):
+End-to-end regression check: regenerates `samples/` output and diffs
+against the committed baseline in `tests/golden/` (the module's own
+output, regenerated deliberately — the old premake 3.7 oracle fixtures
+live at tag `v1.0-3x-parity`):
 
 ```sh
 tests/e2e.sh [path-to-premake5]
 ```
 
-## Deliberate 3.x-parity behaviors
+## Behavior notes
 
-These diverge from premake5-native defaults on purpose, to stay
-byte-compatible with the premake 3.7 oracle (see PLAN.md):
-
-- **Directories**: unset `targetdir` means `.` (not `bin/<cfg>`); the
-  configuration name is always appended to `objdir` (default `obj`, so
-  `obj/Debug`). The 3.x `libdir` maps to `targetdir` for
-  executables/static libraries and to `implibdir` for DLL import
-  libraries.
-- **Symbols**: debug symbols are *on* unless `symbols "Off"` (3.x
-  default), emitting `/ZI`, `/incremental:yes /debug` and `/pdbtype:sept`.
-- **Entry point**: executables get `/entry:"mainCRTStartup"` unless
-  `entrypoint` is set (`entrypoint ""` suppresses it).
-- **Sibling links**: `links` naming a sibling project become `.dsw`
-  project dependencies only (VC6 links them implicitly); other links are
-  emitted as `name.lib`.
-- **Configurations** are stored in reverse order in the `.dsp`, and the
-  `Use_Debug_Libraries` state of each block is taken from the *next*
-  configuration — an off-by-one quirk of premake 3.7, reproduced for
-  oracle parity.
-- **Ignored with a warning**: `prebuildcommands` (VC6 has no pre-build
-  step), `dependson`, and premake5-only `optimize`/`warnings` values
-  (fall back to the 3.x defaults).
+- **Targets and directories** are premake5's: `bin/<cfg>` default target
+  dir, baked `objdir` (buildcfg appended on collision, `!`-prefix opts
+  out), `implibdir`/`implibname` honored via `cfg.linktarget`.
+- **Symbols** follow premake5: off by default; `symbols "On"` emits
+  `/Zi` (or `/ZI` when edit-and-continue is legal, `/Z7` for
+  `debugformat "c7"`), `/debug` and `/pdbtype:sept` on the linker.
+- **Runtime library** follows `runtime`/`staticruntime` and premake5's
+  debug-build rule (`/MDd`+`Use_Debug_Libraries 1`+`/GZ` for debug
+  builds, `/MT(d)` for `staticruntime "On"`).
+- **Entry point**: `/entry:` only when `entrypoint` is explicitly set.
+- **Sibling links** become `.dsw` project dependencies (unioned across
+  all configurations, plus `dependson`); other links are emitted as
+  `name.lib`.
+- **prebuildcommands** are folded into `PreLink_Cmds` ahead of
+  `prelinkcommands` (VC6 has no pre-build step).
+- **optimize/warnings** use the msc toolset's mappings (`On`→`/Ot`,
+  `Speed`→`/O2`, `Size`→`/O1`, `Off`/`Debug`→`/Od`, `Full`→`/Ox`;
+  `Off`→`/W0`, `Extra`/`High`/`Everything`→`/W4`).
 - **Platforms**: anything other than Win32/x86 is rejected outright.
+- Configurations are stored in reverse order in the `.dsp`, matching
+  VC6's own layout.
 
 ## Layout
 
@@ -92,8 +92,10 @@ _manifest.lua   file manifest
 vs6.lua         module entry: p.modules.vs6, shared helpers
 vs6_dsw.lua     workspace (.dsw) writer
 vs6_dsp.lua     project (.dsp) writer
-samples/        E2E sample (premake 3.x + premake5 syntax)
-tests/          test suites (_tests.lua), e2e.sh, golden/ fixtures
+samples/        E2E sample (premake5 syntax)
+tests/          test suites (_tests.lua), e2e.sh, golden/ baseline
+docs/           design and migration notes
+real-world-test-cases/  .dsw/.dsp files from public projects + provenance
 ```
 
 ## Notes

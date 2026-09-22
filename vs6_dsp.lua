@@ -1,7 +1,6 @@
 --
 -- vs6_dsp.lua
 -- Visual C++ 6.0 project (.dsp) file writer.
--- Port of premake 3.7 Src/vs6_cpp.c.
 --
 -- Copyright (c) 2026 the premake5-vs6 project contributors
 -- Based on premake 3.x (vs6_cpp.c) by Jason Perkins
@@ -29,7 +28,7 @@
 		local configs = vs6.configs(prj)
 
 		-- VS6 is Win32-only; a bad platform would silently produce garbage
-		-- configuration names, so fail fast instead (OQ-5)
+		-- configuration names, so fail fast instead
 		for _, cfg in ipairs(configs) do
 			local platform = cfg.platform
 			if platform and platform ~= "x86" and platform ~= "Win32" then
@@ -37,23 +36,9 @@
 			end
 		end
 
-		-- features with no VC6 equivalent are ignored with a warning (OQ-13, OQ-16)
-		for _, cfg in ipairs(configs) do
-			if #cfg.prebuildcommands > 0 then
-				p.warnOnce("vs6.prebuildcommands:" .. prj.name,
-					"vs6: prebuildcommands are not supported by Visual C++ 6.0 and will be ignored (project '%s')",
-					prj.name)
-			end
-			if cfg.dependson and #cfg.dependson > 0 then
-				p.warnOnce("vs6.dependson:" .. prj.name,
-					"vs6: dependson is not supported by Visual C++ 6.0 and will be ignored (project '%s')",
-					prj.name)
-			end
-		end
-
 		dsp.header(prj, configs)
 
-		-- 3.x stores configurations in reverse order
+		-- configurations are stored in reverse order
 		for i = #configs, 1, -1 do
 			dsp.configBlock(prj, configs, i)
 		end
@@ -80,7 +65,7 @@
 ---
 -- File header: identification, TARGTYPE, CFG=, the !MESSAGE block, and the
 -- fixed project properties. The first configuration decides the TARGTYPE
--- and the CFG= default, like 3.x.
+-- and the CFG= default.
 ---
 
 	function dsp.header(prj, configs)
@@ -133,16 +118,11 @@
 ---
 -- One per-configuration !IF/!ELSEIF block. Configs are emitted in reverse
 -- order; the first emitted block (the last configuration) gets !IF.
---
--- 3.7 quirk: the Use_Debug_Libraries state of a block is computed from the
--- configuration selected *before* the block's own, i.e. rotated by one
--- (vs6_cpp.c reads the optimize flags before prj_select_config()). The
--- released 3.7 binary exhibits this in its output, so it is reproduced here.
 ---
 
 	function dsp.configBlock(prj, configs, i)
 		local cfg = configs[i]
-		local dbglibs = vs6.useDebugLibs(vs6.rotatedConfig(configs, i)) and "1" or "0"
+		local dbglibs = vs6.debugRuntime(cfg) and "1" or "0"
 
 		p.outln((i == #configs and '!IF' or '!ELSEIF') .. '  "$(CFG)" == "' .. prj.name .. ' - Win32 ' .. cfg.buildcfg .. '"')
 		p.outln('')
@@ -189,10 +169,11 @@
 			p.outln('# ADD LINK32' .. dsp.linkFlags(cfg))
 		end
 
-		if #cfg.prelinkcommands > 0 or #cfg.postbuildcommands > 0 then
+		local prelink = table.join(table.shallowcopy(cfg.prebuildcommands), cfg.prelinkcommands)
+		if #prelink > 0 or #cfg.postbuildcommands > 0 then
 			p.outln('# Begin Special Build Tool')
-			if #cfg.prelinkcommands > 0 then
-				p.outln('PreLink_Cmds=' .. table.concat(cfg.prelinkcommands, "\t"))
+			if #prelink > 0 then
+				p.outln('PreLink_Cmds=' .. table.concat(prelink, "\t"))
 			end
 			if #cfg.postbuildcommands > 0 then
 				p.outln('PostBuild_Cmds=' .. table.concat(cfg.postbuildcommands, "\t"))
@@ -205,19 +186,16 @@
 
 
 ---
--- Compiler flags for one configuration; port of 3.x writeCppFlags().
--- Returns the flag text following "/nologo" (leading space included).
+-- Compiler flags for one configuration, following premake5's msc toolset
+-- mappings. Returns the flag text following "/nologo" (leading space
+-- included).
 ---
 
 	function dsp.cppFlags(cfg)
 		local r = {}
-		local debugLibs = vs6.useDebugLibs(cfg)
+		local debugRuntime = vs6.debugRuntime(cfg)
 
-		if debugLibs then
-			table.insert(r, vs6.staticRuntime(cfg) and "/MTd" or "/MDd")
-		else
-			table.insert(r, vs6.staticRuntime(cfg) and "/MT" or "/MD")
-		end
+		table.insert(r, (vs6.staticRuntime(cfg) and "/MT" or "/MD") .. (debugRuntime and "d" or ""))
 
 		table.insert(r, "/W" .. vs6.warnLevel(cfg))
 
@@ -225,8 +203,8 @@
 			table.insert(r, "/WX")
 		end
 
-		if debugLibs then
-			table.insert(r, "/Gm")  -- minimal rebuild
+		if cfg.minimalrebuild == p.ON then
+			table.insert(r, "/Gm")
 		end
 
 		if vs6.rtti(cfg) then
@@ -237,16 +215,14 @@
 			table.insert(r, "/GX")
 		end
 
-		if vs6.symbols(cfg) then
-			table.insert(r, "/ZI")  -- debug symbols for edit-and-continue
+		local z = vs6.debugFlag(cfg)
+		if z then
+			table.insert(r, z)
 		end
 
-		if vs6.optimizeSize(cfg) then
-			table.insert(r, "/O1")
-		elseif vs6.optimizeSpeed(cfg) then
-			table.insert(r, "/O2")
-		else
-			table.insert(r, "/Od")
+		local o = vs6.optimizeFlag(cfg)
+		if o then
+			table.insert(r, o)
 		end
 
 		if vs6.omitFramePointer(cfg) then
@@ -264,7 +240,7 @@
 		table.insert(r, "/YX")
 		table.insert(r, "/FD")
 
-		if debugLibs then
+		if debugRuntime then
 			table.insert(r, "/GZ")
 		end
 
@@ -279,8 +255,8 @@
 
 
 ---
--- Resource compiler flags for one configuration. 3.x merges the regular
--- defines/includepaths with the resource-specific ones.
+-- Resource compiler flags for one configuration. premake5 merges the
+-- regular defines/includedirs with the resource-specific ones.
 ---
 
 	function dsp.rscFlags(cfg)
@@ -307,9 +283,9 @@
 
 
 ---
--- Linker flags for one configuration; port of 3.x writeLinkFlags().
--- Returns the flag text following "# ADD BASE LINK32" (leading space
--- included). Only used for non-static-library kinds.
+-- Linker flags for one configuration. Returns the flag text following
+-- "# ADD BASE LINK32" (leading space included). Only used for
+-- non-static-library kinds.
 ---
 
 	function dsp.linkFlags(cfg)
@@ -341,14 +317,22 @@
 		end
 
 		if vs6.symbols(cfg) then
-			table.insert(r, "/incremental:yes")
 			table.insert(r, "/debug")
+		end
+
+		if cfg.incrementallink == p.ON then
+			table.insert(r, "/incremental:yes")
+		elseif cfg.incrementallink == p.OFF then
+			table.insert(r, "/incremental:no")
 		end
 
 		table.insert(r, "/machine:I386")
 
 		if vs6.isdll(cfg) then
-			table.insert(r, '/implib:"' .. vs6.path(vs6.implib(cfg)) .. '"')
+			local implib = vs6.implib(cfg)
+			if implib then
+				table.insert(r, '/implib:"' .. vs6.path(implib) .. '"')
+			end
 		end
 
 		table.insert(r, '/out:"' .. vs6.path(vs6.target(cfg)) .. '"')
@@ -372,15 +356,14 @@
 
 
 ---
--- The source file tree; port of 3.x print_source_tree() + the vs6_cpp.c
--- listFiles() callback. Groups are emitted in order of first appearance,
+-- The source file tree. Groups are emitted in order of first appearance,
 -- before the files of their parent directory; group roots named ".." are
 -- skipped.
 ---
 
 	function dsp.sourceTree(prj)
 		-- prj._.files is sorted alphabetically by virtual path; fcfg.order
-		-- holds the script declaration index (3.x order)
+		-- holds the script declaration index
 		local files = {}
 		local ordered = table.shallowcopy(prj._.files)
 		table.sort(ordered, function(a, b)
@@ -427,8 +410,8 @@
 	end
 
 	function dsp._treeNode(name, stage)
-		-- 3.x uses the last path component as the group name, and skips
-		-- groups named ".." (and the anonymous root)
+		-- the last path component is the group name; groups named ".." (and
+		-- the anonymous root) are skipped
 		local leaf = name:match("[^/]*$")
 		if stage == "open" then
 			if #name > 0 and leaf ~= ".." then

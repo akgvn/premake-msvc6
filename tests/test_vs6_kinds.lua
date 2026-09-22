@@ -1,6 +1,7 @@
 --
 -- test_vs6_kinds.lua
--- Port of premake 3.x Tests/Vs6/Cpp/Test_Kinds.cs
+-- Port of premake 3.x Tests/Vs6/Cpp/Test_Kinds.cs; expectations follow
+-- premake5-native semantics (docs/3x-to-native.md).
 --
 
 	local p = premake
@@ -10,7 +11,7 @@
 
 
 --
--- Setup: mirrors Script.MakeBasic("exe", "c++") from the 3.x framework.
+-- Setup: one console application with Debug/Release configurations.
 --
 
 	local wks, prj
@@ -36,7 +37,7 @@
 
 
 --
--- Console application (exe)
+-- Console application
 --
 
 	function suite.kindIsExe()
@@ -76,32 +77,32 @@ RSC=rc.exe
 !IF  "$(CFG)" == "MyPackage - Win32 Release"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "."
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "bin\Release"
 # PROP BASE Intermediate_Dir "obj\Release"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "."
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "bin\Release"
 # PROP Intermediate_Dir "obj\Release"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /entry:"mainCRTStartup" /subsystem:console /incremental:yes /debug /machine:I386 /out:"MyPackage.exe" /pdbtype:sept /libpath:"."
-# ADD LINK32 /nologo /entry:"mainCRTStartup" /subsystem:console /incremental:yes /debug /machine:I386 /out:"MyPackage.exe" /pdbtype:sept /libpath:"."
+# ADD BASE LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Release\MyPackage.exe" /libpath:"bin\Release"
+# ADD LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Release\MyPackage.exe" /libpath:"bin\Release"
 
 ]]
 	end
 
 
 --
--- Windows application (winexe)
+-- Windows application
 --
 
 	function suite.kindIsWinExe()
@@ -142,34 +143,34 @@ RSC=rc.exe
 !IF  "$(CFG)" == "MyPackage - Win32 Release"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "."
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "bin\Release"
 # PROP BASE Intermediate_Dir "obj\Release"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "."
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "bin\Release"
 # PROP Intermediate_Dir "obj\Release"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
-# ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /entry:"mainCRTStartup" /subsystem:windows /incremental:yes /debug /machine:I386 /out:"MyPackage.exe" /pdbtype:sept /libpath:"."
-# ADD LINK32 /nologo /entry:"mainCRTStartup" /subsystem:windows /incremental:yes /debug /machine:I386 /out:"MyPackage.exe" /pdbtype:sept /libpath:"."
+# ADD BASE LINK32 /nologo /subsystem:windows /machine:I386 /out:"bin\Release\MyPackage.exe" /libpath:"bin\Release"
+# ADD LINK32 /nologo /subsystem:windows /machine:I386 /out:"bin\Release\MyPackage.exe" /libpath:"bin\Release"
 
 ]]
 	end
 
 
 --
--- Dynamic-link library (dll)
+-- Dynamic-link library
 --
 
 	function suite.kindIsDll()
@@ -210,34 +211,34 @@ RSC=rc.exe
 !IF  "$(CFG)" == "MyPackage - Win32 Release"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "."
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "bin\Release"
 # PROP BASE Intermediate_Dir "obj\Release"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "."
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "bin\Release"
 # PROP Intermediate_Dir "obj\Release"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
-# ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /dll /incremental:yes /debug /machine:I386 /implib:".\MyPackage.lib" /out:"MyPackage.dll" /pdbtype:sept /libpath:"."
-# ADD LINK32 /nologo /dll /incremental:yes /debug /machine:I386 /implib:".\MyPackage.lib" /out:"MyPackage.dll" /pdbtype:sept /libpath:"."
+# ADD BASE LINK32 /nologo /dll /machine:I386 /implib:"bin\Release\MyPackage.lib" /out:"bin\Release\MyPackage.dll" /libpath:"bin\Release"
+# ADD LINK32 /nologo /dll /machine:I386 /implib:"bin\Release\MyPackage.lib" /out:"bin\Release\MyPackage.dll" /libpath:"bin\Release"
 
 ]]
 	end
 
 
 --
--- Static library (lib): no MTL=midl.exe line, LIB32 instead of LINK32.
+-- Static library: no MTL=midl.exe line, LIB32 instead of LINK32.
 --
 
 	function suite.kindIsLib()
@@ -277,25 +278,25 @@ RSC=rc.exe
 !IF  "$(CFG)" == "MyPackage - Win32 Release"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "."
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "bin\Release"
 # PROP BASE Intermediate_Dir "obj\Release"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "."
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "bin\Release"
 # PROP Intermediate_Dir "obj\Release"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"MyPackage.lib"
+# ADD LIB32 /nologo /out:"bin\Release\MyPackage.lib"
 
 ]]
 	end
@@ -303,8 +304,8 @@ LINK32=link.exe -lib
 
 --
 -- Kinds may differ per configuration; the TARGTYPE and the presence of
--- MTL=midl.exe follow the first configuration (3.x behavior), while each
--- configuration block follows its own kind.
+-- MTL=midl.exe follow the first configuration, while each configuration
+-- block follows its own kind.
 --
 
 	function suite.mixedKinds()
@@ -352,50 +353,50 @@ RSC=rc.exe
 !IF  "$(CFG)" == "MyPackage - Win32 Release"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "."
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "bin\Release"
 # PROP BASE Intermediate_Dir "obj\Release"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "."
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "bin\Release"
 # PROP Intermediate_Dir "obj\Release"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
-# ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /dll /incremental:yes /debug /machine:I386 /implib:".\MyPackage.lib" /out:"MyPackage.dll" /pdbtype:sept /libpath:"."
-# ADD LINK32 /nologo /dll /incremental:yes /debug /machine:I386 /implib:".\MyPackage.lib" /out:"MyPackage.dll" /pdbtype:sept /libpath:"."
+# ADD BASE LINK32 /nologo /dll /machine:I386 /implib:"bin\Release\MyPackage.lib" /out:"bin\Release\MyPackage.dll" /libpath:"bin\Release"
+# ADD LINK32 /nologo /dll /machine:I386 /implib:"bin\Release\MyPackage.lib" /out:"bin\Release\MyPackage.dll" /libpath:"bin\Release"
 
 !ELSEIF  "$(CFG)" == "MyPackage - Win32 Debug"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "."
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "bin\Debug"
 # PROP BASE Intermediate_Dir "obj\Debug"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "."
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "bin\Debug"
 # PROP Intermediate_Dir "obj\Debug"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"MyPackage.lib"
+# ADD LIB32 /nologo /out:"bin\Debug\MyPackage.lib"
 
 ]]
 	end

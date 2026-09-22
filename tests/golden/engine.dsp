@@ -32,29 +32,29 @@ RSC=rc.exe
 !IF  "$(CFG)" == "engine - Win32 Release"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "."
-# PROP BASE Intermediate_Dir "obj/Release"
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "bin\Release"
+# PROP BASE Intermediate_Dir "obj\Release\engine"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "."
-# PROP Intermediate_Dir "obj/Release"
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "bin\Release"
+# PROP Intermediate_Dir "obj\Release\engine"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W3 /GR /GX /ZI /O2 /I "engine/include" /D "ENGINE_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /ZI /O2 /I "engine/include" /D "ENGINE_EXPORTS" /YX /FD /c
-# ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
-# ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "_DEBUG" /d "ENGINE_EXPORTS" /d "ENGINE_RES" /i "engine/include" /i "engine/res" /x
-# ADD RSC /l 0x409 /d "_DEBUG" /d "ENGINE_EXPORTS" /d "ENGINE_RES" /i "engine/include" /i "engine/res" /x
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /O2 /I "engine\include" /D "ENGINE_EXPORTS" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /O2 /I "engine\include" /D "ENGINE_EXPORTS" /YX /FD /c
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "NDEBUG" /d "ENGINE_EXPORTS" /d "ENGINE_RES" /i "engine\include" /i "engine\res" /x
+# ADD RSC /l 0x409 /d "NDEBUG" /d "ENGINE_EXPORTS" /d "ENGINE_RES" /i "engine\include" /i "engine\res" /x
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /dll /incremental:yes /debug /machine:I386 /implib:"./engine.lib" /out:"engine.dll" /pdbtype:sept /libpath:"."
-# ADD LINK32 /nologo /dll /incremental:yes /debug /machine:I386 /implib:"./engine.lib" /out:"engine.dll" /pdbtype:sept /libpath:"."
+# ADD BASE LINK32 /nologo /dll /machine:I386 /implib:"bin\Release\engine.lib" /out:"bin\Release\engine.dll" /libpath:"bin\Release"
+# ADD LINK32 /nologo /dll /machine:I386 /implib:"bin\Release\engine.lib" /out:"bin\Release\engine.dll" /libpath:"bin\Release"
 # Begin Special Build Tool
-PreLink_Cmds=echo prelink
+PreLink_Cmds=echo prebuild	echo prelink
 PostBuild_Cmds=echo postbuild
 # End Special Build Tool
 
@@ -62,28 +62,28 @@ PostBuild_Cmds=echo postbuild
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "."
-# PROP BASE Intermediate_Dir "obj/Debug"
+# PROP BASE Output_Dir "bin\Debug"
+# PROP BASE Intermediate_Dir "obj\Debug\engine"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "."
-# PROP Intermediate_Dir "obj/Debug"
+# PROP Output_Dir "bin\Debug"
+# PROP Intermediate_Dir "obj\Debug\engine"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /I "engine/include" /D "ENGINE_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /I "engine/include" /D "ENGINE_EXPORTS" /YX /FD /GZ /c
-# ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
-# ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "_DEBUG" /d "ENGINE_EXPORTS" /d "ENGINE_RES" /i "engine/include" /i "engine/res" /x
-# ADD RSC /l 0x409 /d "_DEBUG" /d "ENGINE_EXPORTS" /d "ENGINE_RES" /i "engine/include" /i "engine/res" /x
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /I "engine\include" /D "ENGINE_EXPORTS" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /I "engine\include" /D "ENGINE_EXPORTS" /YX /FD /c
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "NDEBUG" /d "ENGINE_EXPORTS" /d "ENGINE_RES" /i "engine\include" /i "engine\res" /x
+# ADD RSC /l 0x409 /d "NDEBUG" /d "ENGINE_EXPORTS" /d "ENGINE_RES" /i "engine\include" /i "engine\res" /x
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /dll /incremental:yes /debug /machine:I386 /implib:"./engine.lib" /out:"engine.dll" /pdbtype:sept /libpath:"."
-# ADD LINK32 /nologo /dll /incremental:yes /debug /machine:I386 /implib:"./engine.lib" /out:"engine.dll" /pdbtype:sept /libpath:"."
+# ADD BASE LINK32 /nologo /dll /machine:I386 /implib:"bin\Debug\engine.lib" /out:"bin\Debug\engine.dll" /libpath:"bin\Debug"
+# ADD LINK32 /nologo /dll /machine:I386 /implib:"bin\Debug\engine.lib" /out:"bin\Debug\engine.dll" /libpath:"bin\Debug"
 # Begin Special Build Tool
-PreLink_Cmds=echo prelink
+PreLink_Cmds=echo prebuild	echo prelink
 PostBuild_Cmds=echo postbuild
 # End Special Build Tool
 
@@ -98,11 +98,11 @@ PostBuild_Cmds=echo postbuild
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=engine/engine.cpp
+SOURCE=engine\engine.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=engine/engine.rc
+SOURCE=engine\engine.rc
 # End Source File
 # End Group
 # End Target

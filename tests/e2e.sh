@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
-# tests/e2e.sh - End-to-end validation of the vs6 module against the
-# golden premake 3.7 oracle fixtures (PLAN.md Step 5).
+# tests/e2e.sh - End-to-end regression check of the vs6 module against
+# the committed baseline fixtures in tests/golden/ (the module's own
+# output for samples/premake5.lua, regenerated deliberately; the old
+# premake 3.7 oracle fixtures live at tag v1.0-3x-parity).
 #
 # Runs the module on samples/premake5.lua and diffs the generated files
 # against tests/golden with a normalized diff: path separators (module
-# emits backslashes per OQ-7, the oracle emits forward slashes) and line
-# endings (goldens are CRLF) are canonicalized; everything else must
-# match byte-for-byte.
+# emits backslashes) and line endings (goldens are CRLF) are
+# canonicalized; everything else must match byte-for-byte.
 #
 # Usage: tests/e2e.sh [path-to-premake5]
 # The premake5 binary defaults to the sibling premake-core checkout.
@@ -42,7 +43,7 @@ for f in $FILES; do
 done
 
 if [ "$status" -eq 0 ]; then
-	echo "E2E: all files match the premake 3.7 oracle (normalized)"
+	echo "E2E: all files match the golden baseline (normalized)"
 else
 	echo "E2E: FAILED"
 fi

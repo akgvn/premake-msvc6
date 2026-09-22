@@ -3,9 +3,10 @@
 -- Module entry point for the "vs6" action: generates Visual C++ 6.0
 -- workspace (.dsw) and project (.dsp) files for C/C++ projects.
 --
--- The module is a faithful port of the premake 3.7 vs6 exporter, so the
--- generated files match the premake 3.x output (including its quirks and
--- default directory semantics), not premake5-native conventions.
+-- The module follows premake5-native conventions: baked build/link
+-- targets, premake5 defaults, and the msc toolset's flag mappings.
+-- (It began as a byte-exact port of premake 3.7's vs6 exporter; that
+-- state is preserved at tag v1.0-3x-parity. See docs/3x-to-native.md.)
 --
 -- Copyright (c) 2026 the premake5-vs6 project contributors
 -- Based on premake 3.x (vs6.c, vs6_cpp.c) by Jason Perkins
@@ -23,37 +24,6 @@
 
 
 ---
--- Fetch a configuration value as written in the project script, bypassing
--- any post-processing the oven applied to the baked configuration (e.g.
--- cfg.objdir is rewritten to an absolute, buildcfg-suffixed path by
--- oven.bakeObjDirs, which is useless for 3.x-compatible output).
----
-
-	function vs6.rawvalue(cfg, name)
-		local field = p.field.get(name)
-		if field then
-			return p.configset.fetch(cfg._cfgset, field, cfg.terms, cfg)
-		end
-		return nil
-	end
-
-
----
--- As rawvalue(), for path-kind fields: values fetched through the context
--- come back absolute; re-relativize against the project location so the
--- output contains relative paths like 3.x.
----
-
-	function vs6.rawpath(cfg, name)
-		local value = vs6.rawvalue(cfg, name)
-		if value then
-			value = p.project.getrelative(cfg.project, value)
-		end
-		return value
-	end
-
-
----
 -- Path output helper: VC6 files use backslash separators.
 ---
 
@@ -63,9 +33,9 @@
 
 
 ---
--- Kind helpers. premake5 kinds per configuration map to the 3.x kinds:
--- ConsoleApp = "exe", WindowedApp = "winexe", SharedLib = "dll",
--- StaticLib = "lib".
+-- Kind helpers. premake5 kinds per configuration map to the VC6 kinds:
+-- ConsoleApp = console exe, WindowedApp = windows exe, SharedLib = dll,
+-- StaticLib = static lib.
 ---
 
 	function vs6.isexe(cfg)
@@ -86,47 +56,101 @@
 
 
 ---
--- Flag accessors, mapping premake5 APIs to the equivalent 3.x build flags.
+-- Output locations, straight from the oven-baked targets (premake5
+-- semantics: bin/<cfg> defaults, explicit objdir as-is, uniqueness
+-- rules, "!" prefix). Returned pre-translation (forward slashes).
 ---
 
-	function vs6.optimizeSize(cfg)
-		return cfg.optimize == "Size"
+	-- Output_Dir: directory of the final target
+	function vs6.outdir(cfg)
+		return p.project.getrelative(cfg.project, cfg.buildtarget.directory)
 	end
 
-	function vs6.optimizeSpeed(cfg)
-		return cfg.optimize == "On" or cfg.optimize == "Speed"
+	-- Intermediate_Dir: baked objects directory
+	function vs6.objdir(cfg)
+		return p.project.getrelative(cfg.project, cfg.objdir)
 	end
 
-	-- premake5-only optimize values have no 3.x equivalent: warn + default (OQ-15)
-	local function checkOptimize(cfg)
-		local opt = cfg.optimize
-		if opt and not vs6.optimizeSize(cfg) and not vs6.optimizeSpeed(cfg) then
-			p.warnOnce("vs6.optimize." .. opt,
-				"vs6: optimize '%s' has no VC6 equivalent; using no optimization", opt)
+	-- the final target path (/out:), relative to the project
+	function vs6.target(cfg)
+		return cfg.buildtarget.relpath
+	end
+
+	-- the import library path (/implib:), or nil when useimportlib is Off
+	function vs6.implib(cfg)
+		if vs6.noImportLib(cfg) then
+			return nil
 		end
+		return cfg.linktarget.relpath
 	end
 
-	function vs6.useDebugLibs(cfg)
-		checkOptimize(cfg)
-		return not vs6.optimizeSize(cfg) and not vs6.optimizeSpeed(cfg)
+	-- the trailing /libpath: — the target's own directory, so sibling
+	-- project outputs are found
+	function vs6.libdir(cfg)
+		return p.project.getrelative(cfg.project, cfg.buildtarget.directory)
+	end
+
+
+---
+-- Flag accessors, following premake5's msc toolset mappings
+-- (src/tools/msc.lua) and vstudio precedents.
+---
+
+	-- premake5 default is no symbols
+	function vs6.symbols(cfg)
+		return cfg.symbols == p.ON
+	end
+
+	-- /Z7 / /Zi / /ZI per vstudio's vs200x_vcproj.symbols(): edit-and-
+	-- continue (/ZI) is illegal with optimization and disabled when
+	-- editandcontinue is Off; /Z7 for debugformat "c7"
+	function vs6.debugFlag(cfg)
+		if not vs6.symbols(cfg) then
+			return nil
+		end
+		if cfg.debugformat == "c7" then
+			return "/Z7"
+		end
+		if cfg.editandcontinue == p.OFF or p.config.isOptimizedBuild(cfg) then
+			return "/Zi"
+		end
+		return "/ZI"
+	end
+
+	-- debug runtime selection, mirroring msc.lua's getRuntimeFlag():
+	-- runtime "Debug", or runtime unset for a debug build (symbols
+	-- explicitly on, not optimized)
+	function vs6.debugRuntime(cfg)
+		return cfg.runtime == "Debug"
+			or (cfg.runtime == nil and p.config.isDebugBuild(cfg))
 	end
 
 	function vs6.staticRuntime(cfg)
 		return cfg.staticruntime == p.ON
 	end
 
+	-- msc.lua's optimize table; nil means "no flag"
+	function vs6.optimizeFlag(cfg)
+		local flags = {
+			Off   = "/Od",
+			Debug = "/Od",
+			On    = "/Ot",
+			Speed = "/O2",
+			Size  = "/O1",
+			Full  = "/Ox",
+		}
+		return flags[cfg.optimize]
+	end
+
+	-- msc.lua's warnings table (Everything has no /Wall on VC6 — /W4 is
+	-- the highest available)
 	function vs6.warnLevel(cfg)
 		local w = cfg.warnings
-		if w == "Extra" then
-			return 4
+		if w == "Off" then
+			return 0
 		end
-		if w and w ~= "Default" and w ~= "Off" then
-			-- "High"/"Everything" have no 3.x equivalent (OQ-15)
-			p.warnOnce("vs6.warnings." .. w,
-				"vs6: warnings '%s' has no VC6 equivalent; using /W3", w)
-		elseif w == "Off" then
-			p.warnOnce("vs6.warnings.Off",
-				"vs6: warnings 'Off' has no VC6 equivalent; using /W3")
+		if w == "Extra" or w == "High" or w == "Everything" then
+			return 4
 		end
 		return 3
 	end
@@ -143,12 +167,6 @@
 		return cfg.exceptionhandling ~= p.OFF
 	end
 
-	-- 3.x emits debug symbols unless told otherwise; keep that default (the
-	-- premake5-native default of "no symbols" would diverge from the oracle)
-	function vs6.symbols(cfg)
-		return cfg.symbols ~= p.OFF
-	end
-
 	function vs6.omitFramePointer(cfg)
 		return cfg.omitframepointer == p.ON
 	end
@@ -161,102 +179,18 @@
 		return cfg.flags ~= nil and table.contains(cfg.flags, "NoImportLib")
 	end
 
-	-- 3.x parity (OQ-3): executables get /entry:"mainCRTStartup" unless an
-	-- entrypoint is explicitly set; entrypoint "" suppresses it
+	-- premake5 semantics: /entry: only when entrypoint is explicitly set
 	function vs6.entrypoint(cfg)
 		local e = cfg.entrypoint
-		if e == nil then
-			return "mainCRTStartup"
-		elseif e == "" then
-			return nil
+		if e and e ~= "" then
+			return e
 		end
-		return e
+		return nil
 	end
 
 
 ---
--- Directory and target name computations, following 3.x semantics (OQ-14):
---
--- - targetdir/objdir are read raw (nil means "not set"); the premake5 baked
---   defaults (bin/<cfg>, absolute objdirs) are NOT 3.x compatible.
--- - objdir always gets the configuration name appended.
--- - the 3.x "libdir" (library output dir) maps to the target's own
---   directory for executables/static libraries, and to implibdir for DLL
---   import libraries.
----
-
-	function vs6.targetname(cfg)
-		return vs6.rawvalue(cfg, "targetname") or cfg.project.name
-	end
-
-	-- 3.x prj_get_outdir_for(): the output directory for the final target
-	function vs6.outdir(cfg)
-		local dir = vs6.rawpath(cfg, "targetdir") or "."
-		local sub = path.getdirectory(vs6.targetname(cfg))
-		if sub and sub ~= "" and sub ~= "." then
-			dir = dir .. "/" .. sub
-		end
-		return dir
-	end
-
-	-- 3.x prj_get_objdir(): always <objdir>/<config>
-	function vs6.objdir(cfg)
-		local dir = vs6.rawpath(cfg, "objdir") or "obj"
-		return dir .. "/" .. cfg.buildcfg
-	end
-
-	-- 3.x prj_get_libdir(): where sibling library outputs land; drives the
-	-- trailing /libpath: and the DLL import library location
-	function vs6.libdir(cfg)
-		return vs6.rawpath(cfg, "targetdir") or "."
-	end
-
-	-- 3.x prj_get_target_for(), Windows naming (VS6 is Win32-only)
-	function vs6.target(cfg)
-		local targetname = vs6.targetname(cfg)
-		local basename = path.getbasename(targetname)
-		local prefix = cfg.targetprefix or ""
-
-		local ext = cfg.targetextension
-		if ext then
-			-- premake5 spells it with a leading dot, 3.x without
-			ext = ext:gsub("^%.", "")
-		elseif vs6.islib(cfg) then
-			ext = "lib"
-		elseif vs6.isdll(cfg) then
-			ext = "dll"
-		else
-			ext = "exe"
-		end
-
-		local outdir = vs6.outdir(cfg)
-		local result = ""
-		if outdir ~= "." then
-			result = outdir .. "/"
-		end
-		return result .. prefix .. basename .. "." .. ext
-	end
-
-	-- 3.x import library path algorithm (vs6_cpp.c writeLinkFlags)
-	function vs6.implib(cfg)
-		local name = cfg.implibname or path.getbasename(vs6.targetname(cfg))
-		if vs6.noImportLib(cfg) then
-			return vs6.objdir(cfg) .. "/" .. name .. ".lib"
-		end
-		local dir = vs6.rawpath(cfg, "implibdir") or vs6.libdir(cfg)
-		local sub = path.getdirectory(vs6.targetname(cfg))
-		if sub and sub ~= "" and sub ~= "." then
-			dir = dir .. "/" .. sub
-		end
-		return dir .. "/" .. name .. ".lib"
-	end
-
-
----
--- Configuration enumeration helpers. 3.x stores configurations in reverse
--- order in the .dsp file and computes a couple of values from the "next"
--- configuration (an off-by-one quirk in 3.7 that is part of its observable
--- output and therefore reproduced here).
+-- Configuration enumeration helper.
 ---
 
 	function vs6.configs(prj)
@@ -265,11 +199,6 @@
 			table.insert(configs, cfg)
 		end
 		return configs
-	end
-
-	-- the configuration whose flag state is shown by config at index i
-	function vs6.rotatedConfig(configs, i)
-		return configs[(i % #configs) + 1]
 	end
 
 

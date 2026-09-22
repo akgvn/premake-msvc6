@@ -1,9 +1,8 @@
 --
 -- test_vs6_limits.lua
--- Tests for module behaviors that have no 3.x test counterpart; these pin
--- decisions from PLAN.md: OQ-3 (entrypoint), OQ-5 (fail fast on non-Win32
--- platforms), OQ-13/OQ-16 (prebuildcommands/dependson ignored + warned),
--- OQ-15 (premake5-only values warn + fall back to the 3.x default).
+-- Module behaviors without 3.x-test counterparts: entrypoint, platform
+-- validation, prebuildcommands folding, dependson blocks, and the
+-- premake5-native optimize/warnings value mappings (docs/3x-to-native.md).
 --
 
 	local p = premake
@@ -34,17 +33,17 @@
 
 
 --
--- OQ-3: entrypoint "X" replaces the default /entry:"mainCRTStartup".
+-- entrypoint "X" emits /entry:"X" (the only case that emits /entry:).
 --
 
 	function suite.customEntrypoint()
 		entrypoint "myMain"
-		test.isequal(" /nologo /entry:\"myMain\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\"", linkflags("Debug"))
+		test.isequal(" /nologo /entry:\"myMain\" /subsystem:console /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /libpath:\"bin\\Debug\"", linkflags("Debug"))
 	end
 
 
 --
--- OQ-5: platforms other than Win32/x86 are rejected; x86 is accepted.
+-- Platforms other than Win32/x86 are rejected; x86 is accepted.
 --
 
 	function suite.unsupportedPlatformErrors()
@@ -64,42 +63,128 @@
 
 
 --
--- OQ-13: prebuildcommands are ignored with a warning.
+-- prebuildcommands are folded into PreLink_Cmds ahead of
+-- prelinkcommands (VC6 has no pre-build step).
 --
 
-	function suite.prebuildcommandsIgnored()
+	function suite.prebuildcommandsFolded()
 		prebuildcommands { "echo pre" }
+		prelinkcommands { "echo link" }
 		local bprj = test.getproject(wks, 1)
-		vs6.generateProject(bprj)
-		test.stderr("prebuildcommands")
+		local configs = vs6.configs(bprj)
+		dsp.configBlock(bprj, configs, 2)
+		test.capture [[
+!IF  "$(CFG)" == "MyPackage - Win32 Release"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "bin\Release"
+# PROP BASE Intermediate_Dir "obj\Release"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "bin\Release"
+# PROP Intermediate_Dir "obj\Release"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Release\MyPackage.exe" /libpath:"bin\Release"
+# ADD LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Release\MyPackage.exe" /libpath:"bin\Release"
+# Begin Special Build Tool
+PreLink_Cmds=echo pre	echo link
+# End Special Build Tool
+
+		]]
 	end
 
 
 --
--- OQ-16: dependson is ignored with a warning.
+-- dependson emits a .dsw dependency block.
 --
 
-	function suite.dependsonIgnored()
-		dependson { "someproject" }
-		local bprj = test.getproject(wks, 1)
-		vs6.generateProject(bprj)
-		test.stderr("dependson")
+	function suite.dependsonBlock()
+		dependson { "PackageB" }
+		local prj2 = project("PackageB")
+		language "C++"
+		kind "StaticLib"
+		files { "somefile.cpp" }
+		vs6.generateWorkspace(test.getWorkspace(wks))
+		test.capture [[
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "MyPackage"=.\MyPackage.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name PackageB
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "PackageB"=.\PackageB.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+
+]]
 	end
 
 
 --
--- OQ-15: premake5-only optimize/warnings values warn and fall back to
--- the 3.x default behavior.
+-- premake5-native value mappings (msc.lua): optimize Off/Debug -> /Od,
+-- Full -> /Ox; warnings Off -> /W0, High/Everything -> /W4.
 --
 
-	function suite.unmappedOptimizeWarns()
+	function suite.optimizeOffMapped()
 		optimize "Off"
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c", dsp.cppFlags(getcfg("Debug")))
-		test.stderr("optimize 'Off'")
+		test.isequal(" /MD /W3 /GR /GX /Od /YX /FD /c", dsp.cppFlags(getcfg("Debug")))
 	end
 
-	function suite.unmappedWarningsWarns()
+	function suite.optimizeFullMapped()
+		optimize "Full"
+		test.isequal(" /MD /W3 /GR /GX /Ox /YX /FD /c", dsp.cppFlags(getcfg("Debug")))
+	end
+
+	function suite.warningsOffMapped()
 		warnings "Off"
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c", dsp.cppFlags(getcfg("Debug")))
-		test.stderr("warnings 'Off'")
+		test.isequal(" /MD /W0 /GR /GX /YX /FD /c", dsp.cppFlags(getcfg("Debug")))
+	end
+
+	function suite.warningsHighMapped()
+		warnings "High"
+		test.isequal(" /MD /W4 /GR /GX /YX /FD /c", dsp.cppFlags(getcfg("Debug")))
 	end

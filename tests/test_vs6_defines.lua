@@ -1,6 +1,7 @@
 --
 -- test_vs6_defines.lua
--- Port of premake 3.x Tests/Vs6/Cpp/Test_Defines.cs
+-- Port of premake 3.x Tests/Vs6/Cpp/Test_Defines.cs; expectations follow
+-- premake5-native semantics (docs/3x-to-native.md).
 --
 
 	local p = premake
@@ -10,7 +11,7 @@
 
 
 --
--- Setup: mirrors Script.MakeBasic("exe", "c++") from the 3.x framework.
+-- Setup: one console application with Debug/Release configurations.
 --
 
 	local wks, prj
@@ -31,15 +32,15 @@
 
 
 	function suite.noDefines()
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c", cppflags("Debug"))
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /YX /FD /c", cppflags("Release"))
 	end
 
 
 	function suite.definesOnPackage()
 		defines { "TRACE", "EXPORT=__declspec(dllexport)" }
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /D \"TRACE\" /D \"EXPORT=__declspec(dllexport)\" /YX /FD /GZ /c", cppflags("Debug"))
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /D \"TRACE\" /D \"EXPORT=__declspec(dllexport)\" /YX /FD /GZ /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /D \"TRACE\" /D \"EXPORT=__declspec(dllexport)\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /D \"TRACE\" /D \"EXPORT=__declspec(dllexport)\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -48,8 +49,8 @@
 		defines { "DEBUG" }
 		filter "configurations:Release"
 		defines { "NDEBUG" }
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /D \"DEBUG\" /YX /FD /GZ /c", cppflags("Debug"))
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /D \"NDEBUG\" /YX /FD /GZ /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /D \"DEBUG\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /D \"NDEBUG\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -59,6 +60,6 @@
 		defines { "DEBUG" }
 		filter "configurations:Release"
 		defines { "NDEBUG" }
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /D \"TRACE\" /D \"DEBUG\" /YX /FD /GZ /c", cppflags("Debug"))
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /D \"TRACE\" /D \"NDEBUG\" /YX /FD /GZ /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /D \"TRACE\" /D \"DEBUG\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /D \"TRACE\" /D \"NDEBUG\" /YX /FD /c", cppflags("Release"))
 	end

@@ -31,48 +31,48 @@ RSC=rc.exe
 !IF  "$(CFG)" == "core - Win32 Release"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "."
-# PROP BASE Intermediate_Dir "obj/Release"
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "bin\Release"
+# PROP BASE Intermediate_Dir "obj\Release\core"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "."
-# PROP Intermediate_Dir "obj/Release"
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "bin\Release"
+# PROP Intermediate_Dir "obj\Release\core"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W3 /GR /GX /ZI /O2 /D "CORE_LIB" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /ZI /O2 /D "CORE_LIB" /YX /FD /c
-# ADD BASE RSC /l 0x409 /d "_DEBUG" /d "CORE_LIB"
-# ADD RSC /l 0x409 /d "_DEBUG" /d "CORE_LIB"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /O2 /D "CORE_LIB" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /O2 /D "CORE_LIB" /YX /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG" /d "CORE_LIB"
+# ADD RSC /l 0x409 /d "NDEBUG" /d "CORE_LIB"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"core.lib"
+# ADD LIB32 /nologo /out:"bin\Release\core.lib"
 
 !ELSEIF  "$(CFG)" == "core - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "."
-# PROP BASE Intermediate_Dir "obj/Debug"
+# PROP BASE Output_Dir "bin\Debug"
+# PROP BASE Intermediate_Dir "obj\Debug\core"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "."
-# PROP Intermediate_Dir "obj/Debug"
+# PROP Output_Dir "bin\Debug"
+# PROP Intermediate_Dir "obj\Debug\core"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /D "CORE_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /D "CORE_LIB" /YX /FD /GZ /c
-# ADD BASE RSC /l 0x409 /d "_DEBUG" /d "CORE_LIB"
-# ADD RSC /l 0x409 /d "_DEBUG" /d "CORE_LIB"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /D "CORE_LIB" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /D "CORE_LIB" /YX /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG" /d "CORE_LIB"
+# ADD RSC /l 0x409 /d "NDEBUG" /d "CORE_LIB"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"core.lib"
+# ADD LIB32 /nologo /out:"bin\Debug\core.lib"
 
 !ENDIF
 
@@ -85,11 +85,11 @@ LINK32=link.exe -lib
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=core/core.cpp
+SOURCE=core\core.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=core/core.h
+SOURCE=core\core.h
 # End Source File
 # End Group
 # End Target

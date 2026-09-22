@@ -1,9 +1,8 @@
 --
 -- test_vs6_libpaths.lua
--- Port of premake 3.x Tests/Vs6/Cpp/Test_LibPaths.cs
---
--- Note: the module emits Windows path separators (OQ-7), so the 3.x
--- "../src" expectations appear here as "..\src".
+-- Port of premake 3.x Tests/Vs6/Cpp/Test_LibPaths.cs; expectations
+-- follow premake5-native semantics (docs/3x-to-native.md). The module
+-- emits Windows path separators.
 --
 
 	local p = premake
@@ -13,7 +12,7 @@
 
 
 --
--- Setup: mirrors Script.MakeBasic("exe", "c++") from the 3.x framework.
+-- Setup: one console application with Debug/Release configurations.
 --
 
 	local wks, prj
@@ -34,15 +33,15 @@
 
 
 	function suite.noLibPaths()
-		test.isequal(" /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\"", linkflags("Debug"))
-		test.isequal(" /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\"", linkflags("Release"))
+		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /libpath:\"bin\\Debug\"", linkflags("Debug"))
+		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Release\\MyPackage.exe\" /libpath:\"bin\\Release\"", linkflags("Release"))
 	end
 
 
 	function suite.pathsOnPackage()
 		libdirs { "../src", "../include" }
-		test.isequal(" /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\" /libpath:\"..\\src\" /libpath:\"..\\include\"", linkflags("Debug"))
-		test.isequal(" /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\" /libpath:\"..\\src\" /libpath:\"..\\include\"", linkflags("Release"))
+		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /libpath:\"bin\\Debug\" /libpath:\"..\\src\" /libpath:\"..\\include\"", linkflags("Debug"))
+		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Release\\MyPackage.exe\" /libpath:\"bin\\Release\" /libpath:\"..\\src\" /libpath:\"..\\include\"", linkflags("Release"))
 	end
 
 
@@ -51,8 +50,8 @@
 		libdirs { "../debug" }
 		filter "configurations:Release"
 		libdirs { "../release" }
-		test.isequal(" /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\" /libpath:\"..\\debug\"", linkflags("Debug"))
-		test.isequal(" /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\" /libpath:\"..\\release\"", linkflags("Release"))
+		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /libpath:\"bin\\Debug\" /libpath:\"..\\debug\"", linkflags("Debug"))
+		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Release\\MyPackage.exe\" /libpath:\"bin\\Release\" /libpath:\"..\\release\"", linkflags("Release"))
 	end
 
 
@@ -62,6 +61,6 @@
 		libdirs { "../debug" }
 		filter "configurations:Release"
 		libdirs { "../release" }
-		test.isequal(" /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\" /libpath:\"..\\package\" /libpath:\"..\\debug\"", linkflags("Debug"))
-		test.isequal(" /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\" /libpath:\"..\\package\" /libpath:\"..\\release\"", linkflags("Release"))
+		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /libpath:\"bin\\Debug\" /libpath:\"..\\package\" /libpath:\"..\\debug\"", linkflags("Debug"))
+		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Release\\MyPackage.exe\" /libpath:\"bin\\Release\" /libpath:\"..\\package\" /libpath:\"..\\release\"", linkflags("Release"))
 	end

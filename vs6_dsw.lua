@@ -1,7 +1,6 @@
 --
 -- vs6_dsw.lua
 -- Visual C++ 6.0 workspace (.dsw) file writer.
--- Port of premake 3.7 Src/vs6.c.
 --
 -- Copyright (c) 2026 the premake5-vs6 project contributors
 -- Based on premake 3.x (vs6.c) by Jason Perkins
@@ -25,7 +24,7 @@
 		p.outln('###############################################################################')
 		p.outln('')
 
-		-- 3.x lists the projects in script order (not sorted)
+		-- projects are listed in script order (not sorted)
 		for _, prj in ipairs(wks.projects) do
 			dsw.projectEntry(wks, prj)
 		end
@@ -51,9 +50,9 @@
 
 ---
 -- One project entry: the Project: line and its Package blocks, including
--- dependencies on sibling projects. Like 3.x, only the first
--- configuration's links are considered (OQ-6), and links naming another
--- project of the workspace become VC6 project dependencies.
+-- dependencies on sibling projects. Linked siblings (from any
+-- configuration) and `dependson` targets both become VC6 project
+-- dependencies.
 ---
 
 	function dsw.projectEntry(wks, prj)
@@ -69,13 +68,12 @@
 		p.outln('Package=<4>')
 		p.outln('{{{')
 
-		local configs = vs6.configs(prj)
-		local cfg0 = configs[1]
-		if cfg0 then
-			for _, link in ipairs(cfg0.links) do
-				local name = link:gsub(":static$", ""):gsub(":shared$", "")
-				local dep = p.workspace.findproject(wks, name)
-				if dep then
+		local seen = {}
+		for _, mode in ipairs({ "linkOnly", "dependOnly" }) do
+			for _, dep in ipairs(p.project.getdependencies(prj, mode)) do
+				local key = dep.name:lower()
+				if not seen[key] then
+					seen[key] = true
 					p.outln('    Begin Project Dependency')
 					p.outln('    Project_Dep_Name ' .. dep.name)
 					p.outln('    End Project Dependency')

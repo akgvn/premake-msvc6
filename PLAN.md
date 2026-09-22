@@ -1,41 +1,44 @@
 # PLAN: Visual C++ 6.0 (vs6) exporter for Premake5
 
-## Status: v1 complete (premake 3.x parity)
+## Status: premake5-native (conversion complete)
 
-The module is implemented and verified on Linux:
+Decision (2026-09-22): **no 3.x mode, no parity switch** — the module is
+premake5-native outright. The 3.x-parity v1 is preserved at tag
+`v1.0-3x-parity`; the migration spec is `docs/3x-to-native.md`.
 
 - `premake5 vs6` generates `.dsw`/`.dsp` for C/C++ projects, Win32 only.
   Layout: `_preload.lua` (action), `vs6.lua` (entry + shared helpers),
   `vs6_dsw.lua`, `vs6_dsp.lua`.
-- Output is byte-identical to the premake 3.7 oracle on
-  `samples/premake5.lua` after normalizing path separators (module always
-  emits `\`) and line endings (module always emits CRLF). Reproduce with
-  `tests/e2e.sh`.
-- 83 tests green (75 ported 3.x NUnit tests + 8 module-specific) via
-  `bin/release/premake5 test --test-only=vs6*` from a premake-core
-  checkout with this repo linked into `premake-core/modules/vs6`. The full
-  premake-core suite passes with the module linked in.
+- 86 tests green via `bin/release/premake5 test --test-only=vs6*` from a
+  premake-core checkout with this repo linked into
+  `premake-core/modules/vs6`; full premake-core suite passes.
+- `tests/golden/` is the module's own output for
+  `samples/premake5.lua` (regenerated deliberately); `tests/e2e.sh`
+  diffs against it with separator/EOL normalization.
+- Windows validation (2026-09-22): 83/83 then-current tests and full
+  suite green; Sample.dsw opens clean in a real VC6 IDE and builds
+  (Debug end-to-end, deps + build events working); beta7 output
+  byte-identical. The Release `/ZI /O2` illegality found there was a
+  premake 3.7 oracle bug and is moot in native mode (`/Zi` is emitted
+  with optimization; the 3.x line survives only in the tagged history).
 - `real-world-test-cases/` holds 310 .dsw/.dsp files from 13 public
   projects (provenance in each SOURCE.md) for later experiments.
 
-Current behavior contract (deliberate 3.x-parity divergences from
-premake5-native conventions — details in README.md): raw
-`targetdir`/`objdir` semantics with buildcfg always appended to objdir;
-3.x `libdir` mapped to `targetdir` (exe/StaticLib) and `implibdir` (DLL
-implibs); symbols on by default; `/entry:"mainCRTStartup"` unless
-`entrypoint` is set; sibling `links` become .dsw dependencies only;
-configs stored in reverse order with the rotated `Use_Debug_Libraries`
-quirk; `prebuildcommands`/`dependson`/premake5-only `optimize`/`warnings`
-values ignored with warnings; non-Win32 platforms rejected.
+Current behavior (premake5-native — details in README.md): baked
+build/link targets (`bin/<cfg>` default, `implibdir` honored); symbols
+off by default with the `/Zi`-vs-`/ZI` legality rule; runtime library
+per `runtime`/`staticruntime` + premake5's debug-build rule;
+`/entry:` only when set; sibling `links` + `dependson` unioned into
+.dsw dependency blocks; `prebuildcommands` folded into `PreLink_Cmds`;
+msc toolset's optimize/warnings mappings; non-Win32 platforms rejected;
+configs stored in reverse order per VC6's layout.
 
 ## Priority 1 — Windows validation (agent brief)
 
-Status: **complete except the /ZI+/O2 Release question** (see findings).
-1a/1c done 2026-09-22; 1b done 2026-09-22 against the VC6 tree at
-`C:\MSVC6`. Remaining open item: decide
-whether 3.x-mode keeps bug-parity (`/ZI /O2` in Release, rejected by
-real VC6) or emits `/Zi` when optimization is on — likely belongs on
-the Priority 2 switch.
+Status: **complete** (2026-09-22). The `/ZI+/O2` Release question is
+resolved by the native-mode decision (native mode emits `/Zi` with
+optimization; the 3.x bug-parity line survives only at tag
+`v1.0-3x-parity`). 1a/1b/1c all done; findings below.
 
 ### Windows validation findings (2026-09-22 run)
 
@@ -163,62 +166,40 @@ the Priority 2 switch.
   Content diffs vs the freshly built binary are acceptable; just report
   them.
 
-### 1d. Golden regeneration (only if ever needed)
+### 1d. Golden regeneration
 
-The 3.7 oracle is Windows-only: `$P3/bin/premake.exe --file premake.lua --target vs6`
-in `samples/`; move outputs to `tests/golden/`. Do not regenerate as
-part of validation — goldens are the frozen 3.x baseline.
+`tests/golden/` is the module's own output for `samples/premake5.lua`;
+regenerate it deliberately from module output when behavior changes
+intentionally (and review the diff as part of the change). The premake
+3.7 oracle fixtures that used to live there are at tag `v1.0-3x-parity`
+(the 3.7 oracle itself is Windows-only: `$P3/bin/premake.exe --file
+premake.lua --target vs6`).
 
 ## Priority 2 — premake5-native defaults parity
 
-v1 deliberately reproduces premake 3.x semantics wherever they diverge
-from premake5-native conventions. This item makes the module able to
-follow premake5-native defaults instead, gated on a switch so 3.x parity
-remains available.
+Status: **the known divergences are all landed** (no switch — native is
+the only mode; migration spec `docs/3x-to-native.md`):
 
-**First, decide the switch mechanism**: module option
-(e.g. `vs6 { mode = "3x" | "native" }`), a separate action trigger, or a
-command-line `newoption`. Recommendation: a module-level setting read at
-generate time, defaulting to 3.x for now. Tests: existing suites pin 3.x
-behavior; add native-mode expectations alongside (re-baseline
-`vs6_outputdirs`, `vs6_target`, `vs6_importlib` for native mode; E2E
-goldens stay 3.x-only, native mode gets its own sample baseline).
+- Output directories: baked `cfg.buildtarget` trusted.
+- libdir / import libraries: baked `cfg.linktarget` trusted;
+  `useimportlib "Off"` → `Ignore_Export_Lib 1` + no `/implib:`.
+- Symbols: premake5 default (off); `symbols "On"` → `/Zi` or `/ZI` per
+  the vstudio legality rule, `/Z7` for `debugformat "c7"`.
+- Entry point: `/entry:` only when set (see Priority 3).
+- `Use_Debug_Libraries` rotation: dropped; each block computes from its
+  own config via the runtime rule (`runtime "Debug"` or premake5's
+  `isDebugBuild`).
+- File lists: union across configs (was already native).
 
-**Known divergences to cover** (each gets native-mode behavior + tests):
-
-- **Output directories**: 3.x `targetdir` unset → `.`; premake5 →
-  `bin/<buildcfg>`. 3.x always appends the buildcfg to `objdir`
-  (`obj/Debug`, and `temp/Debug` for explicit `objdir "temp"`);
-  premake5 uses explicit objdirs as-is and has its own uniqueness
-  rules. Native mode: trust baked `cfg.buildtarget`.
-- **libdir / import libraries**: 3.x `libdir` (drives the trailing
-  `/libpath:`, StaticLib `Output_Dir`, DLL implib dir) has no premake5
-  equivalent; v1 maps it to `targetdir`/`implibdir`. Native mode: trust
-  baked `cfg.linktarget` for implibs.
-- **Symbols**: 3.x emits debug symbols unless told otherwise (`/ZI`,
-  `/incremental:yes /debug`, `/pdbtype:sept`, `_DEBUG`); premake5
-  defaults to no symbols. Native mode: premake5 default.
-- **Entry point**: 3.x emits `/entry:"mainCRTStartup"` for executables
-  unless suppressed; premake5 only when `entrypoint` is set. The
-  behavior change lands with Priority 3 but its default belongs to this
-  divergence list.
-- **`Use_Debug_Libraries` rotation**: v1 reproduces the 3.7 off-by-one
-  (each block shows the *next* config's flag state) because the oracle
-  does. Native mode should compute it from the block's own config —
-  decide and document.
-- **File lists**: 3.x used config 0's file list; v1 already follows
-  premake5 (union across configs). Already native — just confirm and
-  document.
-
-**Then investigate for more.** Don't stop at the list — the agent
-should hunt for additional divergences and fix any it finds (behind the
-switch, with tests). Suggested procedure:
+**Remaining: investigate for more.** Don't stop at the list — the agent
+should hunt for additional divergences and fix any it finds (with
+tests). Suggested procedure:
 
 - For a battery of small scripts (each kind, with/without each common
   setting), generate with vs6 and with a premake5-native generator
   (vstudio vcxproj and/or gmake) and diff the *semantics*: output
-  locations, defaults, naming. Every place the module's 3.x behavior
-  differs from premake5's own conventions is a candidate for the list.
+  locations, defaults, naming. Every place the module's behavior
+  differs from premake5's own conventions is a candidate fix.
 - Read the defaults in premake-core's `src/_premake_init.lua` (system
   filters, `symbols "Default"`, `rtti "Default"`,
   `exceptionhandling "Default"`, `characterset "Default"`, …) and check
@@ -226,33 +207,22 @@ switch, with tests). Suggested procedure:
 - Check premake5 APIs the module maps loosely or ignores: `runtime`
   (Debug/Release) vs `staticruntime`, `characterset`, `cdialect`/
   `cppdialect`, `toolset` variations, per-config `kind` interactions
-  with the baked `cfg.buildtarget`.
+  with the baked `cfg.buildtarget`, `incrementallink`,
+  `editandcontinue`, `debugformat`, `minimalrebuild`.
 
-## Priority 3 — other post-v1 behavior changes (test impact)
+## Priority 3 — other post-v1 behavior changes
 
-Each item changes observable output; test suites must be re-baselined or
-extended per item. Land them one at a time, tests updated in the same
-commit. Where an item diverges from the oracle, gate it on the
-Priority 2 switch.
+Status: **all landed** (2026-09-22), tests updated in the same commits:
 
-- **`entrypoint` premake5 semantics**: emit `/entry:` only when
-  `entrypoint` is explicitly set. Impact: `vs6_buildflags.noMain` and
-  `vs6_limits.customEntrypoint` re-baseline (default becomes "no
-  /entry"); document on the switch.
-- **`prebuildcommands` → `PreLink_Cmds`** ahead of `prelinkcommands`.
-  Impact: diverges from the oracle, so gate on the switch; native-mode
-  sample shows `PreLink_Cmds=echo prebuild\techo prelink`; the
-  `vs6_limits.prebuildcommandsIgnored` test becomes a folding test in
-  native mode.
-- **Dependencies: union across configs** in the .dsw writer (dedup,
-  preserve first-seen order) instead of first-config-only; new test with
-  per-config links.
-- **`dependson` blocks** via `project.getdependencies(prj, "dependOnly")`;
-  new test; remove the OQ-16 warning in native mode.
-- **optimize/warnings value mapping**: `optimize Off/Debug` → `/Od`,
-  `Full` → `/Ox`; `warnings Off` → `/W0`, `High`/`Everything` → `/W4`.
-  Impact: `vs6_limits.unmapped*` tests become mapped-value tests;
-  warnings stop.
+- `entrypoint` premake5 semantics (emit only when set).
+- `prebuildcommands` folded into `PreLink_Cmds` ahead of
+  `prelinkcommands`.
+- Dependencies: sibling links unioned across all configs (dedup,
+  first-seen order).
+- `dependson` emits .dsw dependency blocks via
+  `project.getdependencies(prj, "dependOnly")`.
+- optimize/warnings value mapping per msc.lua (`On`→`/Ot`, `Full`→`/Ox`,
+  `Off`→`/W0`, `High`/`Everything`→`/W4`).
 
 ## Priority 4 — gap-driven module features (from real-world analysis)
 
@@ -288,8 +258,9 @@ From the real-world-test-cases survey (details in each SOURCE.md):
 
 ## Reference material
 
-- `tests/golden/` — premake 3.7 Windows-oracle output for the sample
-  (CRLF, `-text` in .gitattributes). Regenerate only per 1d.
+- `tests/golden/` — the module's own output for the sample (CRLF,
+  `-text` in .gitattributes); regenerate deliberately from module
+  output. The premake 3.7 oracle fixtures live at tag `v1.0-3x-parity`.
 - `real-world-test-cases/` — 310 files from 13 projects (see its
   README.md); not byte-parity targets.
 - `../premake-sources/` can be deleted; a premake-core checkout is still
@@ -301,23 +272,18 @@ From the real-world-test-cases survey (details in each SOURCE.md):
   after `prepareAction`, so `_preload.lua` re-runs `p.action.set("vs6")`
   at load to apply `targetos`/`toolset` before baking (otherwise POSIX
   target naming leaks in: `libengine.so`).
-- `oven.bakeObjDirs` rewrites `cfg.objdir` to an absolute baked path;
-  `vs6.rawvalue`/`vs6.rawpath` re-fetch raw script values via
-  `configset.fetch(cfg._cfgset, ...)` and re-relativize to the project
-  location. Same for path lists (`includedirs`/`libdirs`/
-  `resincludedirs` come back absolute from the oven).
+- Output locations come from the oven: `cfg.buildtarget`/
+  `cfg.linktarget` (absolute — re-relativize with
+  `p.project.getrelative`) and baked `cfg.objdir`. Path lists
+  (`includedirs`/`libdirs`/`resincludedirs`) also come back absolute.
 - `p.generate` captures via `buffered.tostring()`, which trims one
   trailing EOL; both writers emit one extra blank line to compensate.
 - `prj._.files` is alpha-sorted by vpath; the source tree restores
-  script declaration order via `fcfg.order`. It is also the union across
-  configs (3.x used config 0's list only) — per-config `removefiles`
-  divergence is accepted for v1.
-- The `Use_Debug_Libraries` rotation is a genuine 3.7 off-by-one (flags
-  read before `prj_select_config`), confirmed present in both the git
-  checkout and the released binary; it is required for oracle parity.
+  script declaration order via `fcfg.order`, and is the union across
+  configs (premake5-native).
 - Line endings are `p.eol("\r\n")` + `p.indent("")` set in
   onWorkspace/onProject; all output goes through `p.out`/`p.outln` with
   literal leading whitespace.
 - `p.generate` writes to `prj.filename` (not `prj.name`); the .dsw
-  writer must reference `prj.filename` (fixed post-v1 — Peter's
-  Loader/Loader0 both produce Peter.dsp in different directories).
+  writer references `prj.filename` (Peter's Loader/Loader0 both produce
+  Peter.dsp in different directories).

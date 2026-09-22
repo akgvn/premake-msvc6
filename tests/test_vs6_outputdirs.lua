@@ -1,12 +1,8 @@
 --
 -- test_vs6_outputdirs.lua
--- Port of premake 3.x Tests/Vs6/Cpp/Test_OutputDirs.cs
---
--- 3.x has separate bindir/libdir project settings; premake5 has only
--- targetdir. Per OQ-14 the 3.x libdir maps to the target's own directory,
--- so the LibDir tests are ported using StaticLib projects (whose 3.x
--- Output_Dir comes from libdir) with targetdir in place of libdir.
---
+-- Output/intermediate directory behavior; expectations follow
+-- premake5-native semantics (docs/3x-to-native.md): baked buildtarget
+-- directories (bin/<cfg> default), baked objdir (explicit value as-is).
 -- vs6.outdir()/vs6.objdir() return pre-translation paths (forward slashes).
 --
 
@@ -17,7 +13,7 @@
 
 
 --
--- Setup: mirrors Script.MakeBasic("exe", "c++") from the 3.x framework.
+-- Setup: one console application with Debug/Release configurations.
 --
 
 	local wks, prj
@@ -42,12 +38,12 @@
 
 
 --
--- BinDir tests (3.x bindir -> premake5 targetdir)
+-- BinDir tests (targetdir)
 --
 
 	function suite.binDirDefault()
-		test.isequal(".", vs6.outdir(getcfg("Debug")))
-		test.isequal(".", vs6.outdir(getcfg("Release")))
+		test.isequal("bin/Debug", vs6.outdir(getcfg("Debug")))
+		test.isequal("bin/Release", vs6.outdir(getcfg("Release")))
 	end
 
 
@@ -69,13 +65,13 @@
 
 
 --
--- LibDir tests (see header note for the 3.x -> premake5 mapping)
+-- LibDir tests (the trailing /libpath: follows the target's directory;
+-- a StaticLib's Output_Dir likewise)
 --
 
 	function suite.libDirDefault()
-		-- the trailing /libpath: of the linker line is the 3.x libdir
-		test.isequal(" /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\"", linkflags("Debug"))
-		test.isequal(" /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\"", linkflags("Release"))
+		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /libpath:\"bin\\Debug\"", linkflags("Debug"))
+		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Release\\MyPackage.exe\" /libpath:\"bin\\Release\"", linkflags("Release"))
 	end
 
 
@@ -99,7 +95,8 @@
 
 
 --
--- ObjDir tests
+-- ObjDir tests (baked objdir; premake5 appends the configuration name
+-- when configs would collide, and honors the "!" prefix to opt out)
 --
 
 	function suite.objDirDefault()

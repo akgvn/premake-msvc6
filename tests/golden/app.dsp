@@ -32,25 +32,25 @@ RSC=rc.exe
 !IF  "$(CFG)" == "app - Win32 Release"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "."
-# PROP BASE Intermediate_Dir "obj/Release"
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "bin\Release"
+# PROP BASE Intermediate_Dir "obj\Release\app"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "."
-# PROP Intermediate_Dir "obj/Release"
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "bin\Release"
+# PROP Intermediate_Dir "obj\Release\app"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W3 /GR /GX /ZI /O2 /I "engine/include" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /ZI /O2 /I "engine/include" /YX /FD /c
-# ADD BASE RSC /l 0x409 /d "_DEBUG" /i "engine/include"
-# ADD RSC /l 0x409 /d "_DEBUG" /i "engine/include"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /O2 /I "engine\include" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /O2 /I "engine\include" /YX /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG" /i "engine\include"
+# ADD RSC /l 0x409 /d "NDEBUG" /i "engine\include"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /entry:"mainCRTStartup" /subsystem:console /incremental:yes /debug /machine:I386 /out:"app.exe" /pdbtype:sept /libpath:"." /libpath:"libs"
-# ADD LINK32 /nologo /entry:"mainCRTStartup" /subsystem:console /incremental:yes /debug /machine:I386 /out:"app.exe" /pdbtype:sept /libpath:"." /libpath:"libs"
+# ADD BASE LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Release\app.exe" /libpath:"bin\Release" /libpath:"libs"
+# ADD LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Release\app.exe" /libpath:"bin\Release" /libpath:"libs"
 # Begin Special Build Tool
 PostBuild_Cmds=echo done
 # End Special Build Tool
@@ -59,24 +59,24 @@ PostBuild_Cmds=echo done
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "."
-# PROP BASE Intermediate_Dir "obj/Debug"
+# PROP BASE Output_Dir "bin\Debug"
+# PROP BASE Intermediate_Dir "obj\Debug\app"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "."
-# PROP Intermediate_Dir "obj/Debug"
+# PROP Output_Dir "bin\Debug"
+# PROP Intermediate_Dir "obj\Debug\app"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /I "engine/include" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /I "engine/include" /YX /FD /GZ /c
-# ADD BASE RSC /l 0x409 /d "_DEBUG" /i "engine/include"
-# ADD RSC /l 0x409 /d "_DEBUG" /i "engine/include"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /I "engine\include" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /I "engine\include" /YX /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG" /i "engine\include"
+# ADD RSC /l 0x409 /d "NDEBUG" /i "engine\include"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /entry:"mainCRTStartup" /subsystem:console /incremental:yes /debug /machine:I386 /out:"app.exe" /pdbtype:sept /libpath:"." /libpath:"libs"
-# ADD LINK32 /nologo /entry:"mainCRTStartup" /subsystem:console /incremental:yes /debug /machine:I386 /out:"app.exe" /pdbtype:sept /libpath:"." /libpath:"libs"
+# ADD BASE LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Debug\app.exe" /libpath:"bin\Debug" /libpath:"libs"
+# ADD LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Debug\app.exe" /libpath:"bin\Debug" /libpath:"libs"
 # Begin Special Build Tool
 PostBuild_Cmds=echo done
 # End Special Build Tool
@@ -92,7 +92,7 @@ PostBuild_Cmds=echo done
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=app/main.cpp
+SOURCE=app\main.cpp
 # End Source File
 # End Group
 # End Target

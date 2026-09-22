@@ -46,8 +46,9 @@ VC-authored files agree on it. No test changes needed for these:
   made relative to the project (`bin\Debug` default; explicit
   `targetdir` as-is). Intermediate_Dir = baked `cfg.objdir` made
   relative (premake5 uniqueness rules: `obj\Debug` default here too,
-  `obj\Debug\<prj>` on collision, explicit objdir as-is, `!`-prefix
-  honored). Target = `cfg.buildtarget.relpath` adjusted for prefix/ext
+  buildcfg appended on collision — including for explicit objdirs,
+  `temp/Debug` for `objdir "temp"` — project name appended on
+  cross-project collision, `!`-prefix opts out). Target = `cfg.buildtarget.relpath` adjusted for prefix/ext
   (the module still composes prefix+name+ext itself, from
   `cfg.targetprefix`/`cfg.targetextension`, since those carry the
   Windows system-filter defaults).

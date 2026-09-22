@@ -1,6 +1,7 @@
 --
 -- test_vs6_links.lua
--- Port of premake 3.x Tests/Vs6/Cpp/Test_Links.cs
+-- Port of premake 3.x Tests/Vs6/Cpp/Test_Links.cs; expectations follow
+-- premake5-native semantics (docs/3x-to-native.md).
 --
 
 	local p = premake
@@ -10,7 +11,7 @@
 
 
 --
--- Setup: mirrors Script.MakeBasic("exe", "c++") from the 3.x framework.
+-- Setup: one console application with Debug/Release configurations.
 --
 
 	local wks, prj
@@ -32,8 +33,8 @@
 
 	function suite.linksOnPackage()
 		links { "lib1", "lib2" }
-		test.isequal(" lib1.lib lib2.lib /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\"", linkflags("Debug"))
-		test.isequal(" lib1.lib lib2.lib /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\"", linkflags("Release"))
+		test.isequal(" lib1.lib lib2.lib /nologo /subsystem:console /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /libpath:\"bin\\Debug\"", linkflags("Debug"))
+		test.isequal(" lib1.lib lib2.lib /nologo /subsystem:console /machine:I386 /out:\"bin\\Release\\MyPackage.exe\" /libpath:\"bin\\Release\"", linkflags("Release"))
 	end
 
 
@@ -42,8 +43,8 @@
 		links { "lib1-d" }
 		filter "configurations:Release"
 		links { "lib1" }
-		test.isequal(" lib1-d.lib /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\"", linkflags("Debug"))
-		test.isequal(" lib1.lib /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\"", linkflags("Release"))
+		test.isequal(" lib1-d.lib /nologo /subsystem:console /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /libpath:\"bin\\Debug\"", linkflags("Debug"))
+		test.isequal(" lib1.lib /nologo /subsystem:console /machine:I386 /out:\"bin\\Release\\MyPackage.exe\" /libpath:\"bin\\Release\"", linkflags("Release"))
 	end
 
 
@@ -53,6 +54,6 @@
 		links { "liba-d" }
 		filter "configurations:Release"
 		links { "liba" }
-		test.isequal(" pkglib.lib liba-d.lib /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\"", linkflags("Debug"))
-		test.isequal(" pkglib.lib liba.lib /nologo /entry:\"mainCRTStartup\" /subsystem:console /incremental:yes /debug /machine:I386 /out:\"MyPackage.exe\" /pdbtype:sept /libpath:\".\"", linkflags("Release"))
+		test.isequal(" pkglib.lib liba-d.lib /nologo /subsystem:console /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /libpath:\"bin\\Debug\"", linkflags("Debug"))
+		test.isequal(" pkglib.lib liba.lib /nologo /subsystem:console /machine:I386 /out:\"bin\\Release\\MyPackage.exe\" /libpath:\"bin\\Release\"", linkflags("Release"))
 	end

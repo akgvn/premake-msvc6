@@ -32,52 +32,52 @@ RSC=rc.exe
 !IF  "$(CFG)" == "tool - Win32 Release"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "."
-# PROP BASE Intermediate_Dir "obj/Release"
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "bin\Release"
+# PROP BASE Intermediate_Dir "obj\Release\tool"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "."
-# PROP Intermediate_Dir "obj/Release"
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "bin\Release"
+# PROP Intermediate_Dir "obj\Release\tool"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W3 /GR /GX /ZI /O2 /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /ZI /O2 /YX /FD /c
-# ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
-# ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /O2 /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /O2 /YX /FD /c
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /entry:"mainCRTStartup" /subsystem:windows /incremental:yes /debug /machine:I386 /out:"tool.exe" /pdbtype:sept /libpath:"."
-# ADD LINK32 /nologo /entry:"mainCRTStartup" /subsystem:windows /incremental:yes /debug /machine:I386 /out:"tool.exe" /pdbtype:sept /libpath:"."
+# ADD BASE LINK32 /nologo /subsystem:windows /machine:I386 /out:"bin\Release\tool.exe" /libpath:"bin\Release"
+# ADD LINK32 /nologo /subsystem:windows /machine:I386 /out:"bin\Release\tool.exe" /libpath:"bin\Release"
 
 !ELSEIF  "$(CFG)" == "tool - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "."
-# PROP BASE Intermediate_Dir "obj/Debug"
+# PROP BASE Output_Dir "bin\Debug"
+# PROP BASE Intermediate_Dir "obj\Debug\tool"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "."
-# PROP Intermediate_Dir "obj/Debug"
+# PROP Output_Dir "bin\Debug"
+# PROP Intermediate_Dir "obj\Debug\tool"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
-# ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /entry:"mainCRTStartup" /subsystem:windows /incremental:yes /debug /machine:I386 /out:"tool.exe" /pdbtype:sept /libpath:"."
-# ADD LINK32 /nologo /entry:"mainCRTStartup" /subsystem:windows /incremental:yes /debug /machine:I386 /out:"tool.exe" /pdbtype:sept /libpath:"."
+# ADD BASE LINK32 /nologo /subsystem:windows /machine:I386 /out:"bin\Debug\tool.exe" /libpath:"bin\Debug"
+# ADD LINK32 /nologo /subsystem:windows /machine:I386 /out:"bin\Debug\tool.exe" /libpath:"bin\Debug"
 
 !ENDIF
 
@@ -90,7 +90,7 @@ LINK32=link.exe
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=tool/winmain.cpp
+SOURCE=tool\winmain.cpp
 # End Source File
 # End Group
 # End Target

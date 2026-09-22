@@ -1,9 +1,8 @@
 --
 -- test_vs6_includepaths.lua
--- Port of premake 3.x Tests/Vs6/Cpp/Test_IncludePaths.cs
---
--- Note: the module emits Windows path separators (OQ-7), so the 3.x
--- "../src" expectations appear here as "..\src".
+-- Port of premake 3.x Tests/Vs6/Cpp/Test_IncludePaths.cs; expectations
+-- follow premake5-native semantics (docs/3x-to-native.md). The module
+-- emits Windows path separators.
 --
 
 	local p = premake
@@ -13,7 +12,7 @@
 
 
 --
--- Setup: mirrors Script.MakeBasic("exe", "c++") from the 3.x framework.
+-- Setup: one console application with Debug/Release configurations.
 --
 
 	local wks, prj
@@ -34,15 +33,15 @@
 
 
 	function suite.noIncludePaths()
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c", cppflags("Debug"))
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /YX /FD /c", cppflags("Release"))
 	end
 
 
 	function suite.pathsOnPackage()
 		includedirs { "../src", "../include" }
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /I \"..\\src\" /I \"..\\include\" /YX /FD /GZ /c", cppflags("Debug"))
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /I \"..\\src\" /I \"..\\include\" /YX /FD /GZ /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /I \"..\\src\" /I \"..\\include\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /I \"..\\src\" /I \"..\\include\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -51,8 +50,8 @@
 		includedirs { "../debug" }
 		filter "configurations:Release"
 		includedirs { "../release" }
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /I \"..\\debug\" /YX /FD /GZ /c", cppflags("Debug"))
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /I \"..\\release\" /YX /FD /GZ /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /I \"..\\debug\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /I \"..\\release\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -62,6 +61,6 @@
 		includedirs { "../debug" }
 		filter "configurations:Release"
 		includedirs { "../release" }
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /I \"..\\package\" /I \"..\\debug\" /YX /FD /GZ /c", cppflags("Debug"))
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /I \"..\\package\" /I \"..\\release\" /YX /FD /GZ /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /I \"..\\package\" /I \"..\\debug\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /I \"..\\package\" /I \"..\\release\" /YX /FD /c", cppflags("Release"))
 	end

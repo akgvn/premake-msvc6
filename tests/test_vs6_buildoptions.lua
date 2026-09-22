@@ -1,6 +1,7 @@
 --
 -- test_vs6_buildoptions.lua
--- Port of premake 3.x Tests/Vs6/Cpp/Test_BuildOptions.cs
+-- Port of premake 3.x Tests/Vs6/Cpp/Test_BuildOptions.cs; expectations
+-- follow premake5-native semantics (docs/3x-to-native.md).
 --
 
 	local p = premake
@@ -10,7 +11,7 @@
 
 
 --
--- Setup: mirrors Script.MakeBasic("exe", "c++") from the 3.x framework.
+-- Setup: one console application with Debug/Release configurations.
 --
 
 	local wks, prj
@@ -32,8 +33,8 @@
 
 	function suite.setOptionsOnPackage()
 		buildoptions { "pkgopt" }
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c pkgopt", cppflags("Debug"))
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c pkgopt", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /YX /FD /c pkgopt", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /YX /FD /c pkgopt", cppflags("Release"))
 	end
 
 
@@ -42,8 +43,8 @@
 		buildoptions { "dbgopt" }
 		filter "configurations:Release"
 		buildoptions { "relopt" }
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c dbgopt", cppflags("Debug"))
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c relopt", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /YX /FD /c dbgopt", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /YX /FD /c relopt", cppflags("Release"))
 	end
 
 
@@ -51,6 +52,6 @@
 		buildoptions { "pkgopt" }
 		filter "configurations:Release"
 		buildoptions { "relopt" }
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c pkgopt", cppflags("Debug"))
-		test.isequal(" /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c pkgopt relopt", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /YX /FD /c pkgopt", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /YX /FD /c pkgopt relopt", cppflags("Release"))
 	end

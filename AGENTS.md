@@ -5,11 +5,13 @@ Guidance for coding agents working in this repository.
 ## What this is
 
 `premake5-vs6` — a standalone Premake5 module adding a `premake5 vs6`
-action that generates Visual C++ 6.0 `.dsw`/`.dsp` files. v1 is a
-byte-exact port of premake 3.7's vs6 exporter (GPLv2, since it's derived
-from premake 3.x code). Status and the prioritized roadmap live in
-`PLAN.md`; user-facing docs in `README.md`. Read `PLAN.md` first when
-picking up work.
+action that generates Visual C++ 6.0 `.dsw`/`.dsp` files. The module
+follows premake5-native conventions (baked targets, premake5 defaults,
+msc toolset mappings). It began as a byte-exact port of premake 3.7's
+vs6 exporter (preserved at tag `v1.0-3x-parity`; migration spec in
+`docs/3x-to-native.md`). GPLv2, since it's derived from premake 3.x
+code. Status and the prioritized roadmap live in `PLAN.md`; user-facing
+docs in `README.md`. Read `PLAN.md` first when picking up work.
 
 ## Layout
 
@@ -65,13 +67,14 @@ cd samples && <premake5> --scripts=.. --file=premake5.lua vs6
 
 ## Frozen / hands-off
 
-- `tests/golden/` is the frozen premake 3.7 oracle baseline — never
-  regenerate or "fix" it without an explicit instruction (regeneration
-  procedure is in PLAN.md §1d).
+- `tests/golden/` is the module's own output for the sample — a
+  regression baseline. Regenerate it only deliberately (from module
+  output) and review the diff as part of the change. The premake 3.7
+  oracle fixtures that used to live there are at tag `v1.0-3x-parity`.
 - `real-world-test-cases/` files are vendored references under their
   own licenses — don't edit them; add provenance in SOURCE.md when
   adding new ones.
-- The `Use_Debug_Libraries` rotation, the raw-objdir re-fetch, the
-  extra trailing blank line, and the `p.action.set` re-apply in
-  `_preload.lua` are all deliberate. PLAN.md's "Implementation notes"
+- The `p.action.set` re-apply in `_preload.lua`, the extra trailing
+  blank line at the end of each writer, and the baked-target lookups in
+  `vs6.lua` are all deliberate. PLAN.md's "Implementation notes"
   explains each — read before touching the writers.

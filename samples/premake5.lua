@@ -1,6 +1,7 @@
--- Sample workspace for vs6 E2E validation (premake5 syntax).
--- Mirror of premake.lua (premake 3.x syntax) in this directory; the two must
--- describe the same workspace. See PLAN.md Step 5.
+-- Sample workspace for vs6 E2E regression testing.
+-- Exercises: all 4 kinds, Debug/Release, sibling dependencies, defines,
+-- includedirs, libdirs, links, resources, pre/post-build commands.
+-- The module's output for this script is the baseline in tests/golden/.
 
 require "vs6"
 
@@ -26,7 +27,7 @@ project "engine"
 	resdefines { "ENGINE_RES" }
 	resincludedirs { "engine/res" }
 	resoptions { "/x" }
-	prebuildcommands { "echo prebuild" }  -- v1 module ignores with warning (OQ-13)
+	prebuildcommands { "echo prebuild" }  -- folded into PreLink_Cmds
 	prelinkcommands { "echo prelink" }
 	postbuildcommands { "echo postbuild" }
 	filter "configurations:Release"

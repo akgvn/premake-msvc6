@@ -1,6 +1,7 @@
 --
 -- test_vs6_packages.lua
--- Port of premake 3.x Tests/Vs6/Test_Packages.cs
+-- Port of premake 3.x Tests/Vs6/Test_Packages.cs; expectations follow
+-- premake5-native semantics (docs/3x-to-native.md).
 --
 
 	local p = premake
@@ -9,7 +10,7 @@
 
 
 --
--- Setup: mirrors Script.MakeBasic("exe", "c++") from the 3.x framework.
+-- Setup: one console application with Debug/Release configurations.
 --
 
 	local wks, prj
@@ -153,48 +154,48 @@ RSC=rc.exe
 !IF  "$(CFG)" == "MyPackage - Win32 Release"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "."
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "bin\Release"
 # PROP BASE Intermediate_Dir "obj\Release"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "."
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "bin\Release"
 # PROP Intermediate_Dir "obj\Release"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /entry:"mainCRTStartup" /subsystem:console /incremental:yes /debug /machine:I386 /out:"MyPackage.exe" /pdbtype:sept /libpath:"."
-# ADD LINK32 /nologo /entry:"mainCRTStartup" /subsystem:console /incremental:yes /debug /machine:I386 /out:"MyPackage.exe" /pdbtype:sept /libpath:"."
+# ADD BASE LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Release\MyPackage.exe" /libpath:"bin\Release"
+# ADD LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Release\MyPackage.exe" /libpath:"bin\Release"
 
 !ELSEIF  "$(CFG)" == "MyPackage - Win32 Debug"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "."
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "bin\Debug"
 # PROP BASE Intermediate_Dir "obj\Debug"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "."
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "bin\Debug"
 # PROP Intermediate_Dir "obj\Debug"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /entry:"mainCRTStartup" /subsystem:console /incremental:yes /debug /machine:I386 /out:"MyPackage.exe" /pdbtype:sept /libpath:"."
-# ADD LINK32 /nologo /entry:"mainCRTStartup" /subsystem:console /incremental:yes /debug /machine:I386 /out:"MyPackage.exe" /pdbtype:sept /libpath:"."
+# ADD BASE LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Debug\MyPackage.exe" /libpath:"bin\Debug"
+# ADD LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Debug\MyPackage.exe" /libpath:"bin\Debug"
 
 !ENDIF
 
@@ -254,48 +255,48 @@ RSC=rc.exe
 !IF  "$(CFG)" == "MyPackage - Win32 Release"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "."
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "bin\Release"
 # PROP BASE Intermediate_Dir "obj\Release"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "."
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "bin\Release"
 # PROP Intermediate_Dir "obj\Release"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /entry:"mainCRTStartup" /subsystem:console /incremental:yes /debug /machine:I386 /out:"MyPackage.exe" /pdbtype:sept /libpath:"."
-# ADD LINK32 /nologo /entry:"mainCRTStartup" /subsystem:console /incremental:yes /debug /machine:I386 /out:"MyPackage.exe" /pdbtype:sept /libpath:"."
+# ADD BASE LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Release\MyPackage.exe" /libpath:"bin\Release"
+# ADD LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Release\MyPackage.exe" /libpath:"bin\Release"
 
 !ELSEIF  "$(CFG)" == "MyPackage - Win32 Debug"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "."
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "bin\Debug"
 # PROP BASE Intermediate_Dir "obj\Debug"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "."
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "bin\Debug"
 # PROP Intermediate_Dir "obj\Debug"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /YX /FD /GZ /c
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /entry:"mainCRTStartup" /subsystem:console /incremental:yes /debug /machine:I386 /out:"MyPackage.exe" /pdbtype:sept /libpath:"."
-# ADD LINK32 /nologo /entry:"mainCRTStartup" /subsystem:console /incremental:yes /debug /machine:I386 /out:"MyPackage.exe" /pdbtype:sept /libpath:"."
+# ADD BASE LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Debug\MyPackage.exe" /libpath:"bin\Debug"
+# ADD LINK32 /nologo /subsystem:console /machine:I386 /out:"bin\Debug\MyPackage.exe" /libpath:"bin\Debug"
 
 !ENDIF
 

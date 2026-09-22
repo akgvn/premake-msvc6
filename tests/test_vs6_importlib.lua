@@ -1,6 +1,8 @@
 --
 -- test_vs6_importlib.lua
--- Port of premake 3.x Tests/Vs6/Cpp/Test_ImportLib.cs
+-- Import library path behavior; expectations follow premake5-native
+-- semantics (docs/3x-to-native.md): linktarget drives /implib:, and
+-- useimportlib "Off" suppresses it entirely.
 --
 
 	local p = premake
@@ -9,8 +11,7 @@
 
 
 --
--- Setup: mirrors the 3.x test (dll, project bindir/libdir set). The 3.x
--- libdir maps to premake5's implibdir for DLL import libraries (OQ-14).
+-- Setup: a shared library with bin/lib output dirs.
 --
 
 	local wks, prj
@@ -40,6 +41,6 @@
 
 	function suite.noImportLib()
 		useimportlib "Off"
-		test.isequal("obj/Debug/MyPackage.lib", vs6.implib(getcfg("Debug")))
-		test.isequal("obj/Release/MyPackage.lib", vs6.implib(getcfg("Release")))
+		test.isnil(vs6.implib(getcfg("Debug")))
+		test.isnil(vs6.implib(getcfg("Release")))
 	end
