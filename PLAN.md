@@ -105,23 +105,72 @@ The 3.7 oracle is Windows-only: `$P3/bin/premake.exe --file premake.lua --target
 in `samples/`; move outputs to `tests/golden/`. Do not regenerate as
 part of validation — goldens are the frozen 3.x baseline.
 
-## Priority 2 — post-v1 behavior changes (test impact)
+## Priority 2 — premake5-native defaults parity
+
+v1 deliberately reproduces premake 3.x semantics wherever they diverge
+from premake5-native conventions. This item makes the module able to
+follow premake5-native defaults instead, gated on a switch so 3.x parity
+remains available.
+
+**First, decide the switch mechanism**: module option
+(e.g. `vs6 { mode = "3x" | "native" }`), a separate action trigger, or a
+command-line `newoption`. Recommendation: a module-level setting read at
+generate time, defaulting to 3.x for now. Tests: existing suites pin 3.x
+behavior; add native-mode expectations alongside (re-baseline
+`vs6_outputdirs`, `vs6_target`, `vs6_importlib` for native mode; E2E
+goldens stay 3.x-only, native mode gets its own sample baseline).
+
+**Known divergences to cover** (each gets native-mode behavior + tests):
+
+- **Output directories**: 3.x `targetdir` unset → `.`; premake5 →
+  `bin/<buildcfg>`. 3.x always appends the buildcfg to `objdir`
+  (`obj/Debug`, and `temp/Debug` for explicit `objdir "temp"`);
+  premake5 uses explicit objdirs as-is and has its own uniqueness
+  rules. Native mode: trust baked `cfg.buildtarget`.
+- **libdir / import libraries**: 3.x `libdir` (drives the trailing
+  `/libpath:`, StaticLib `Output_Dir`, DLL implib dir) has no premake5
+  equivalent; v1 maps it to `targetdir`/`implibdir`. Native mode: trust
+  baked `cfg.linktarget` for implibs.
+- **Symbols**: 3.x emits debug symbols unless told otherwise (`/ZI`,
+  `/incremental:yes /debug`, `/pdbtype:sept`, `_DEBUG`); premake5
+  defaults to no symbols. Native mode: premake5 default.
+- **Entry point**: 3.x emits `/entry:"mainCRTStartup"` for executables
+  unless suppressed; premake5 only when `entrypoint` is set. The
+  behavior change lands with Priority 3 but its default belongs to this
+  divergence list.
+- **`Use_Debug_Libraries` rotation**: v1 reproduces the 3.7 off-by-one
+  (each block shows the *next* config's flag state) because the oracle
+  does. Native mode should compute it from the block's own config —
+  decide and document.
+- **File lists**: 3.x used config 0's file list; v1 already follows
+  premake5 (union across configs). Already native — just confirm and
+  document.
+
+**Then investigate for more.** Don't stop at the list — the agent
+should hunt for additional divergences and fix any it finds (behind the
+switch, with tests). Suggested procedure:
+
+- For a battery of small scripts (each kind, with/without each common
+  setting), generate with vs6 and with a premake5-native generator
+  (vstudio vcxproj and/or gmake) and diff the *semantics*: output
+  locations, defaults, naming. Every place the module's 3.x behavior
+  differs from premake5's own conventions is a candidate for the list.
+- Read the defaults in premake-core's `src/_premake_init.lua` (system
+  filters, `symbols "Default"`, `rtti "Default"`,
+  `exceptionhandling "Default"`, `characterset "Default"`, …) and check
+  each against the module's mapping.
+- Check premake5 APIs the module maps loosely or ignores: `runtime`
+  (Debug/Release) vs `staticruntime`, `characterset`, `cdialect`/
+  `cppdialect`, `toolset` variations, per-config `kind` interactions
+  with the baked `cfg.buildtarget`.
+
+## Priority 3 — other post-v1 behavior changes (test impact)
 
 Each item changes observable output; test suites must be re-baselined or
 extended per item. Land them one at a time, tests updated in the same
-commit.
+commit. Where an item diverges from the oracle, gate it on the
+Priority 2 switch.
 
-- **Parity switch for premake5-native defaults** (do this FIRST — other
-  items hang off it). Decide the mechanism: module option
-  (e.g. `vs6 { mode = "3x" | "native" }`), a separate action trigger, or
-  a command-line `newoption`. Recommendation: a module-level setting read
-  at generate time, defaulting to 3.x for now. Impact: baked
-  `cfg.buildtarget`/`cfg.linktarget` trusted (`targetdir` unset →
-  `bin/<buildcfg>`, no forced buildcfg suffix on explicit `objdir`);
-  re-baseline `vs6_outputdirs`, `vs6_target`, `vs6_importlib` (these pin
-  3.x defaults — keep them as the 3.x-mode suite and add native-mode
-  expectations); E2E goldens stay 3.x-only, native mode needs its own
-  sample baseline.
 - **`entrypoint` premake5 semantics**: emit `/entry:` only when
   `entrypoint` is explicitly set. Impact: `vs6_buildflags.noMain` and
   `vs6_limits.customEntrypoint` re-baseline (default becomes "no
@@ -141,7 +190,7 @@ commit.
   Impact: `vs6_limits.unmapped*` tests become mapped-value tests;
   warnings stop.
 
-## Priority 3 — gap-driven module features (from real-world analysis)
+## Priority 4 — gap-driven module features (from real-world analysis)
 
 From the real-world-test-cases survey (details in each SOURCE.md):
 
@@ -163,7 +212,7 @@ From the real-world-test-cases survey (details in each SOURCE.md):
   support per-config kind already (vs6_kinds.mixedKinds); validate
   against zlib's exact shape during experiments.
 
-## Priority 4 — real-world generation experiments
+## Priority 5 — real-world generation experiments
 
 - Write a structural-diff tool that strips VC-isms (system-lib lists,
   `# SUBTRACT`, `DEP_CPP_`, `Ignore_Export_Lib 0`, `.\` prefixes, MTL
