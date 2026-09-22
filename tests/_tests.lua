@@ -16,4 +16,5 @@ return {
 	"test_vs6_outputdirs.lua",
 	"test_vs6_resources.lua",
 	"test_vs6_files.lua",
+	"test_vs6_limits.lua",
 }
