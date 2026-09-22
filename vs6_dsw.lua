@@ -57,8 +57,10 @@
 ---
 
 	function dsw.projectEntry(wks, prj)
+		-- the .dsp file is written to prj.filename (p.generate), which may
+		-- differ from the project name (e.g. Loader -> Loader\Peter.dsp)
 		local rel = path.getrelative(wks.location, prj.location)
-		p.outln('Project: "' .. prj.name .. '"=' .. vs6.path(rel) .. '\\' .. prj.name .. '.dsp - Package Owner=<4>')
+		p.outln('Project: "' .. prj.name .. '"=' .. vs6.path(rel) .. '\\' .. prj.filename .. '.dsp - Package Owner=<4>')
 		p.outln('')
 		p.outln('Package=<5>')
 		p.outln('{{{')

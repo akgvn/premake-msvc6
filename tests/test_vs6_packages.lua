@@ -68,6 +68,50 @@ Package=<3>
 
 
 --
+-- The .dsp file name follows the premake5 filename API when it differs
+-- from the project name (e.g. Peter's Loader -> Loader\Peter.dsp); the
+-- project name inside the files stays the project name.
+--
+
+	function suite.customFileName()
+		filename "Peter"
+		vs6.generateWorkspace(test.getWorkspace(wks))
+		test.capture [[
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "MyPackage"=.\Peter.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+
+
+]]
+	end
+
+
+--
 -- C projects generate the same file structure as C++ projects.
 --
 
