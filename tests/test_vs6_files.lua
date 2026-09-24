@@ -121,3 +121,118 @@ SOURCE=somefile.txt
 # End Source File
 		]]
 	end
+
+
+--
+-- SOURCE= paths containing spaces are quoted (VC6 won't parse them
+-- unquoted; Peter's "Lucka 2.ico").
+--
+
+	function suite.pathWithSpacesIsQuoted()
+		files { "Res/Lucka 2.ico", "Res/Lucka.ico" }
+		prepare()
+		test.capture [[
+# Begin Group "Res"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE="Res\Lucka 2.ico"
+# End Source File
+# Begin Source File
+
+SOURCE=Res\Lucka.ico
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=somefile.txt
+# End Source File
+		]]
+	end
+
+
+--
+-- vpath rules drive logical groups; SOURCE= keeps the physical path
+-- (Peter's "Buffery"/"Editory" groups).
+--
+
+	function suite.vpathGroups()
+		vpaths { ["Buffers"] = "**.h" }
+		files { "Src/file1.cpp", "Src/file1.h" }
+		prepare()
+		test.capture [[
+# Begin Group "Src"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=Src\file1.cpp
+# End Source File
+# End Group
+# Begin Group "Buffers"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=Src\file1.h
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=somefile.txt
+# End Source File
+		]]
+	end
+
+
+--
+-- excludefrombuild (files: filter): per-config Exclude_From_Build blocks
+-- for the excluded configurations only, in reversed config order
+-- (quake2's ref_soft, Peter's ProgInit.inc).
+--
+
+	function suite.excludeFromAllConfigs()
+		filter "files:somefile.txt"
+		excludefrombuild "On"
+		filter {}
+		prepare()
+		test.capture [[
+# Begin Source File
+
+SOURCE=somefile.txt
+
+!IF  "$(CFG)" == "MyPackage - Win32 Release"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "MyPackage - Win32 Debug"
+
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
+# End Source File
+		]]
+	end
+
+
+	function suite.excludeFromOneConfig()
+		filter { "configurations:Debug", "files:somefile.txt" }
+		excludefrombuild "On"
+		filter {}
+		prepare()
+		test.capture [[
+# Begin Source File
+
+SOURCE=somefile.txt
+
+!IF  "$(CFG)" == "MyPackage - Win32 Debug"
+
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
+# End Source File
+		]]
+	end

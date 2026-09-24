@@ -281,7 +281,18 @@
 ---
 
 	function dsp.rscFlags(cfg)
-		local r = { '/l 0x409 /d "' .. (vs6.symbols(cfg) and "_DEBUG" or "NDEBUG") .. '"' }
+		-- /l takes an LCID; premake5's locale API maps ISO locale ids to
+		-- culture codes (vstudio.cultureForLocale, used for vs2010's
+		-- Culture element). Default is VC6's en-US 0x409.
+		local langid = "0x409"
+		if cfg.locale then
+			local culture = p.modules.vstudio.cultureForLocale(cfg.locale)
+			if culture then
+				langid = string.format("0x%x", culture)
+			end
+		end
+
+		local r = { '/l ' .. langid .. ' /d "' .. (vs6.symbols(cfg) and "_DEBUG" or "NDEBUG") .. '"' }
 
 		for _, def in ipairs(cfg.defines) do
 			table.insert(r, '/d "' .. def .. '"')
@@ -403,9 +414,10 @@
 
 
 ---
--- The source file tree. Groups are emitted in order of first appearance,
--- before the files of their parent directory; group roots named ".." are
--- skipped.
+-- The source file tree. Files are grouped by their virtual path (premake5
+-- `vpath`; falls back to the physical relative path when no vpath rule
+-- matches). Groups are emitted in order of first appearance, before the
+-- files of their parent directory; group roots named ".." are skipped.
 ---
 
 	function dsp.sourceTree(prj)
@@ -417,29 +429,33 @@
 			return (a.order or math.huge) < (b.order or math.huge)
 		end)
 		for _, fcfg in ipairs(ordered) do
-			table.insert(files, fcfg.relpath)
+			table.insert(files, {
+				node = fcfg,
+				group = fcfg.vpath,
+				source = fcfg.relpath,
+			})
 		end
-		dsp._sourceTree(files, "")
+		dsp._sourceTree(prj, files, "")
 	end
 
-	function dsp._sourceTree(files, dir)
+	function dsp._sourceTree(prj, files, dir)
 		dsp._treeNode(dir:gsub("/$", ""), "open")
 
 		-- recurse into subdirectories, in order of first appearance
 		for i, f in ipairs(files) do
-			if #f > #dir and f:sub(1, #dir) == dir then
-				local s = f:find("/", #dir + 1, true)
+			if #f.group > #dir and f.group:sub(1, #dir) == dir then
+				local s = f.group:find("/", #dir + 1, true)
 				if s then
-					local sub = f:sub(1, s)
+					local sub = f.group:sub(1, s)
 					local first
 					for j, g in ipairs(files) do
-						if g:sub(1, #sub) == sub then
+						if g.group:sub(1, #sub) == sub then
 							first = j
 							break
 						end
 					end
 					if first == i then
-						dsp._sourceTree(files, sub)
+						dsp._sourceTree(prj, files, sub)
 					end
 				end
 			end
@@ -447,9 +463,9 @@
 
 		-- then emit the files that live directly in this directory
 		for _, f in ipairs(files) do
-			local lastslash = f:match("^.*()/")
-			if f:sub(1, #dir) == dir and (not lastslash or lastslash <= #dir) then
-				dsp._treeNode(f, "file")
+			local lastslash = f.group:match("^.*()/")
+			if f.group:sub(1, #dir) == dir and (not lastslash or lastslash <= #dir) then
+				dsp.sourceFile(prj, f)
 			end
 		end
 
@@ -470,10 +486,51 @@
 			if #name > 0 and leaf ~= ".." then
 				p.outln('# End Group')
 			end
-		else
-			p.outln('# Begin Source File')
-			p.outln('')
-			p.outln('SOURCE=' .. vs6.path(name))
-			p.outln('# End Source File')
 		end
+	end
+
+
+---
+-- One source file node: the SOURCE= line (quoted when the path contains
+-- spaces — VC6 won't parse unquoted paths with spaces) followed by
+-- per-configuration Exclude_From_Build blocks for the configurations the
+-- file is excluded from (premake5's excludefrombuild).
+---
+
+	function dsp.sourceFile(prj, file)
+		p.outln('# Begin Source File')
+		p.outln('')
+
+		local src = vs6.path(file.source)
+		if src:find(" ", 1, true) then
+			src = '"' .. src .. '"'
+		end
+		p.outln('SOURCE=' .. src)
+
+		-- VC6 mentions only the excluded configurations, in the same
+		-- reversed order as the project's configuration blocks
+		local excluded = {}
+		local configs = vs6.configs(prj)
+		for i = #configs, 1, -1 do
+			local fcfg = p.fileconfig.getconfig(file.node, configs[i])
+			if fcfg and fcfg.excludefrombuild then
+				table.insert(excluded, configs[i])
+			end
+		end
+
+		if #excluded > 0 then
+			p.outln('')
+			for i, cfg in ipairs(excluded) do
+				p.outln((i == 1 and '!IF' or '!ELSEIF') .. '  "$(CFG)" == "' .. prj.name .. ' - Win32 ' .. cfg.buildcfg .. '"')
+				p.outln('')
+				p.outln('# PROP Exclude_From_Build 1')
+				p.outln('')
+			end
+			-- VC6-authored files write the per-file !ENDIF with a
+			-- trailing space
+			p.outln('!ENDIF ')
+			p.outln('')
+		end
+
+		p.outln('# End Source File')
 	end

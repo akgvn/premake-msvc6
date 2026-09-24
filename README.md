@@ -89,8 +89,14 @@ tests/e2e.sh [path-to-premake5]
   `includedirsafter` (`/I`, after `includedirs`), `syslibdirs`
   (`/libpath:`, after `libdirs`), `ignoredefaultlibraries`
   (`/nodefaultlib:`), `symbolspath` (`/pdb:`), `mapfile`/`mapfilepath`
-  (`/map[:file]`), `profile` (`/profile`). A `links` entry that already
-  carries a library extension (`foo.lib`) is kept as-is.
+  (`/map[:file]`), `profile` (`/profile`), and `locale` (the resource
+  compiler's `/l` LCID, e.g. `locale "cs-CZ"` → `/l 0x405`; default
+  `0x409`). A `links` entry that already carries a library extension
+  (`foo.lib`) is kept as-is.
+- **Files**: `vpaths` rules drive the logical group tree (physical
+  layout otherwise); `SOURCE=` paths containing spaces are quoted;
+  `excludefrombuild` under a `files:` filter emits per-configuration
+  `# PROP Exclude_From_Build 1` blocks for the excluded configurations.
 - **Platforms**: anything other than Win32/x86 is rejected outright.
 - Configurations are stored in reverse order in the `.dsp`, matching
   VC6's own layout.

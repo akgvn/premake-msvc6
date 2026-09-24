@@ -9,7 +9,7 @@
   premake5 defaults, msc toolset flag mappings (details in README.md).
   Began as a byte-exact premake 3.7 port — preserved at tag
   `v1.0-3x-parity`, migration spec `docs/3x-to-native.md`.
-- 104 tests green via `bin/release/premake5 test --test-only=vs6*` from a
+- 111 tests green via `bin/release/premake5 test --test-only=vs6*` from a
   premake-core checkout with this repo linked into
   `premake-core/modules/vs6`; full premake-core suite passes.
   `tests/golden/` is the module's own sample output (regression
@@ -66,25 +66,33 @@ PCH (`/Yu`/`/Yc` — `/YX` is the fixed idiom), single-flag enums
 
 ### Step 2 — gap-driven module features (from real-world analysis)
 
-From the real-world-test-cases survey (details in each SOURCE.md):
+**Done (2026-09-24), 104 → 111 tests.** Findings from the survey, with
+the resolution for each:
 
-- **RSC locale** (Peter: `/l 0x405`): the module hardcodes `0x409`. No
-  premake5 API fits; add a module option (e.g. `vs6.rsclocale`) —
-  decide spelling when implementing.
-- **Quoted `SOURCE=` for paths with spaces** (Peter's `Lucka 2.ico`,
-  Generals' `Autorun English.dsp`): quote SOURCE paths containing
-  spaces. Verify VC6 accepts unquoted too (it doesn't reliably) — this
-  is arguably a bug fix, not a feature.
-- **Logical file groups** (Peter's `Buffery`/`Editory` groups): the
-  module groups by path only; premake5 `vpath` could drive logical
-  groups. `Default_Filter` values have no premake5 API — decide whether
-  to keep emitting `""`.
-- **Per-file settings** (`Exclude_From_Build`, Peter's `ProgInit.inc`):
-  check premake5 fileconfig capabilities and decide if real-world usage
-  justifies it.
-- **zlib's per-config kinds** (DLL and LIB configs in one .dsp): we
-  support per-config kind already (vs6_kinds.mixedKinds); validate
-  against zlib's exact shape during experiments.
+- **RSC locale** (Peter: `/l 0x405`, contiki: `/l 0x407`): turned out to
+  need no module option — premake5's `locale` API (vstudio-registered,
+  maps ISO locale ids to MS culture codes for vs2010's Culture element)
+  fits exactly: `locale "cs-CZ"` → `/l 0x405`. The module now honors
+  `cfg.locale`, default `0x409`; unknown locales warn (premake5's
+  warnOnce) and fall back to the default.
+- **Quoted `SOURCE=` for paths with spaces** (Peter's `Lucka 2.ico`):
+  done — paths containing spaces are quoted, others stay bare (matches
+  Peter's mixed usage; contiki quotes everything, both forms are
+  accepted by VC6).
+- **Logical file groups** (Peter's `Buffery`/`Editory`): done via
+  premake5's `vpaths` — files are grouped by `fcfg.vpath`, which falls
+  back to the physical relative path when no rule matches (so default
+  output is unchanged). `Default_Filter` keeps emitting `""` (decided:
+  no premake5 API, cosmetic only).
+- **Per-file settings**: premake5's `excludefrombuild` (files: filter)
+  now emits VC6's per-config `# PROP Exclude_From_Build 1` blocks for
+  the excluded configurations only, in reversed config order, with
+  VC6's trailing-space `!ENDIF ` (Peter's `ProgInit.inc`, quake2's
+  ref_soft asm files). Per-file **custom build rules** (quake2's ml.exe
+  blocks; premake5's fileconfig buildcommands/buildoutputs) are the
+  remaining gap — deferred to Step 3 if the experiments justify it.
+- **zlib's per-config kinds**: supported already (vs6_kinds.mixedKinds);
+  validation against zlib's exact shape is part of Step 3.
 
 ### Step 3 — real-world generation experiments
 

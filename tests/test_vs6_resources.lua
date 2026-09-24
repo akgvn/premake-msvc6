@@ -82,3 +82,25 @@
 		test.isequal(" /l 0x409 /d \"NDEBUG\" ABC XYZ", rscflags("Debug"))
 		test.isequal(" /l 0x409 /d \"NDEBUG\" ABC XYZ", rscflags("Release"))
 	end
+
+
+--
+-- locale: the RSC /l LCID follows premake5's locale API (the same
+-- culture codes vstudio uses for its Culture element); default is 0x409
+--
+
+	function suite.localeCzech()
+		locale "cs-CZ"
+		test.isequal(" /l 0x405 /d \"NDEBUG\"", rscflags("Debug"))
+	end
+
+
+	function suite.localeGerman()
+		locale "de-DE"
+		test.isequal(" /l 0x407 /d \"NDEBUG\"", rscflags("Debug"))
+	end
+
+
+	function suite.localeUnsetIsDefault()
+		test.isequal(" /l 0x409 /d \"NDEBUG\"", rscflags("Debug"))
+	end
