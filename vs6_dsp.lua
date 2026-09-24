@@ -233,8 +233,29 @@
 			table.insert(r, '/I "' .. vs6.path(p.project.getrelative(cfg.project, dir)) .. '"')
 		end
 
+		for _, dir in ipairs(cfg.externalincludedirs) do
+			table.insert(r, '/I "' .. vs6.path(p.project.getrelative(cfg.project, dir)) .. '"')
+		end
+
+		for _, dir in ipairs(cfg.includedirsafter) do
+			table.insert(r, '/I "' .. vs6.path(p.project.getrelative(cfg.project, dir)) .. '"')
+		end
+
+		-- characterset defines first, then user defines (msc.getdefines)
+		for _, def in ipairs(vs6.charactersetDefines(cfg)) do
+			table.insert(r, def)
+		end
+
 		for _, def in ipairs(cfg.defines) do
 			table.insert(r, '/D "' .. def .. '"')
+		end
+
+		for _, undef in ipairs(cfg.undefines) do
+			table.insert(r, '/U "' .. undef .. '"')
+		end
+
+		for _, file in ipairs(cfg.forceincludes) do
+			table.insert(r, '/FI "' .. vs6.path(p.project.getrelative(cfg.project, file)) .. '"')
 		end
 
 		table.insert(r, "/YX")
@@ -293,15 +314,26 @@
 		local wks = cfg.workspace
 
 		-- sibling projects are linked implicitly by VC6; only external
-		-- libraries are listed, decorated with the .lib extension
+		-- libraries are listed. Like msc.getlinks(), append .lib only
+		-- when the name doesn't already carry a library extension
 		for _, link in ipairs(cfg.links) do
 			local name = link:gsub(":static$", ""):gsub(":shared$", "")
 			if not p.workspace.findproject(wks, name) then
-				table.insert(r, name .. ".lib")
+				if not p.tools.msc.getLibraryExtensions()[name:match("[^.]+$")] then
+					name = name .. ".lib"
+				end
+				table.insert(r, name)
 			end
 		end
 
 		table.insert(r, "/nologo")
+
+		for _, ignore in ipairs(cfg.ignoredefaultlibraries) do
+			if not p.tools.msc.getLibraryExtensions()[ignore:match("[^.]+$")] then
+				ignore = path.appendextension(ignore, ".lib")
+			end
+			table.insert(r, '/nodefaultlib:"' .. ignore .. '"')
+		end
 
 		local entry = vs6.entrypoint(cfg)
 		if vs6.isexe(cfg) and entry then
@@ -338,12 +370,27 @@
 		table.insert(r, '/out:"' .. vs6.path(vs6.target(cfg)) .. '"')
 
 		if vs6.symbols(cfg) then
+			if cfg.symbolspath and cfg.debugformat ~= "c7" then
+				table.insert(r, '/pdb:"' .. vs6.path(p.project.getrelative(cfg.project, cfg.symbolspath)) .. '"')
+			end
 			table.insert(r, "/pdbtype:sept")
+		end
+
+		if cfg.mapfile == p.ON then
+			if cfg.mapfilepath then
+				table.insert(r, '/map:"' .. vs6.path(p.project.getrelative(cfg.project, cfg.mapfilepath)) .. '"')
+			else
+				table.insert(r, "/map")
+			end
+		end
+
+		if cfg.profile then
+			table.insert(r, "/profile")
 		end
 
 		table.insert(r, '/libpath:"' .. vs6.path(vs6.libdir(cfg)) .. '"')
 
-		for _, dir in ipairs(cfg.libdirs) do
+		for _, dir in ipairs(table.join(cfg.libdirs, cfg.syslibdirs)) do
 			table.insert(r, '/libpath:"' .. vs6.path(p.project.getrelative(cfg.project, dir)) .. '"')
 		end
 

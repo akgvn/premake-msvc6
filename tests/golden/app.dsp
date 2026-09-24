@@ -41,8 +41,8 @@ RSC=rc.exe
 # PROP Output_Dir "bin\Release"
 # PROP Intermediate_Dir "obj\Release\app"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W3 /GR /GX /O2 /I "engine\include" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /O2 /I "engine\include" /YX /FD /c
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /O2 /I "engine\include" /D "_UNICODE" /D "UNICODE" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /O2 /I "engine\include" /D "_UNICODE" /D "UNICODE" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG" /i "engine\include"
 # ADD RSC /l 0x409 /d "NDEBUG" /i "engine\include"
 BSC32=bscmake.exe
@@ -67,8 +67,8 @@ PostBuild_Cmds=echo done
 # PROP Output_Dir "bin\Debug"
 # PROP Intermediate_Dir "obj\Debug\app"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W3 /GR /GX /I "engine\include" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /I "engine\include" /YX /FD /c
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /I "engine\include" /D "_UNICODE" /D "UNICODE" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /I "engine\include" /D "_UNICODE" /D "UNICODE" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG" /i "engine\include"
 # ADD RSC /l 0x409 /d "NDEBUG" /i "engine\include"
 BSC32=bscmake.exe

@@ -9,7 +9,7 @@
   premake5 defaults, msc toolset flag mappings (details in README.md).
   Began as a byte-exact premake 3.7 port — preserved at tag
   `v1.0-3x-parity`, migration spec `docs/3x-to-native.md`.
-- 86 tests green via `bin/release/premake5 test --test-only=vs6*` from a
+- 104 tests green via `bin/release/premake5 test --test-only=vs6*` from a
   premake-core checkout with this repo linked into
   `premake-core/modules/vs6`; full premake-core suite passes.
   `tests/golden/` is the module's own sample output (regression
@@ -27,23 +27,42 @@
 
 ### Step 1 — investigate for remaining divergences from premake5-native conventions
 
-The known divergences are all landed; this step hunts for more. Fix any
-found, with tests. Suggested procedure:
+**Done (2026-09-24).** The battery against vs2005 + code review of
+`_premake_init.lua`/`msc.lua`/vstudio found one bug and nine silently
+dropped premake5 APIs, all fixed with tests (86 → 104 tests):
 
-- For a battery of small scripts (each kind, with/without each common
-  setting), generate with vs6 and with a premake5-native generator
-  (vstudio vcxproj and/or gmake) and diff the *semantics*: output
-  locations, defaults, naming. Every place the module's behavior differs
-  from premake5's own conventions is a candidate fix.
-- Read the defaults in premake-core's `src/_premake_init.lua` (system
-  filters, `symbols "Default"`, `rtti "Default"`,
-  `exceptionhandling "Default"`, `characterset "Default"`, …) and check
-  each against the module's mapping.
-- Check premake5 APIs the module maps loosely or ignores: `runtime`
-  (Debug/Release) vs `staticruntime`, `characterset`, `cdialect`/
-  `cppdialect`, `toolset` variations, per-config `kind` interactions
-  with the baked `cfg.buildtarget`, `incrementallink`,
-  `editandcontinue`, `debugformat`, `minimalrebuild`.
+- **Bug:** `links "foo.lib"` emitted `foo.lib.lib`; now kept as-is, like
+  `msc.getlinks()` (`.lib`/`.obj` extensions recognized).
+- **Now mapped** (msc/vstudio equivalents): `undefines`→`/U`,
+  `characterset`→defines, `syslibdirs`→`/libpath:` (after `libdirs`),
+  `ignoredefaultlibraries`→`/nodefaultlib:`, `externalincludedirs` +
+  `includedirsafter`→`/I` (after `includedirs`),
+  `forceincludes`→`/FI`, `symbolspath`→`/pdb:` (symbols on, not c7),
+  `mapfile`/`mapfilepath`→`/map[:file]`, `profile`→`/profile`.
+- **Checked, no change needed:** `runtime`/`staticruntime` (matches
+  `msc.lua getRuntimeFlag`), `symbols`/`debugformat`/`editandcontinue`
+  (matches `vs200x_vcproj.symbols()`), `minimalrebuild`,
+  `incrementallink`, `optimize`/`warnings`, `rtti`/`exceptionhandling`
+  Default, per-config `kind` (oven), `toolset` (premake-core warns),
+  `targetname`-with-path (oven). `cdialect`/`cppdialect` have no VC6
+  equivalent (`/std:*` didn't exist) — documented in Step 4's matrix.
+
+**Decision logged (would otherwise have asked; revisit if needed):**
+`characterset "Default"` (premake5's global default) maps to
+`/D "_UNICODE" /D "UNICODE"`, following `msc.lua`/`vs2010` exactly — the
+module's stated convention is premake5-native mappings, and the D3
+symbols re-baseline set the precedent that premake5 defaults win over
+VC6-era idiom. Consequence: legacy ANSI code must opt out with
+`characterset "MBCS"` (documented in README.md). The alternative
+(rejected): Default → nothing, keeping VC6's ANSI norm but diverging
+from every premake5 generator. Golden baseline regenerated for this.
+
+Still-deferred premake5 data APIs without a defensible VC6 mapping:
+PCH (`/Yu`/`/Yc` — `/YX` is the fixed idiom), single-flag enums
+(`callingconvention`, `structmemberalign`, `stringpooling`,
+`intrinsics`, `functionlevellinking`, `unsignedchar`, `compileas`,
+`inlining`) — these are Step 4 coverage-matrix items, not divergences.
+
 
 ### Step 2 — gap-driven module features (from real-world analysis)
 

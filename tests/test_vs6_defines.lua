@@ -32,15 +32,15 @@
 
 
 	function suite.noDefines()
-		test.isequal(" /MD /W3 /GR /GX /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GR /GX /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Release"))
 	end
 
 
 	function suite.definesOnPackage()
 		defines { "TRACE", "EXPORT=__declspec(dllexport)" }
-		test.isequal(" /MD /W3 /GR /GX /D \"TRACE\" /D \"EXPORT=__declspec(dllexport)\" /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GR /GX /D \"TRACE\" /D \"EXPORT=__declspec(dllexport)\" /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /D \"TRACE\" /D \"EXPORT=__declspec(dllexport)\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /D \"TRACE\" /D \"EXPORT=__declspec(dllexport)\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -49,8 +49,8 @@
 		defines { "DEBUG" }
 		filter "configurations:Release"
 		defines { "NDEBUG" }
-		test.isequal(" /MD /W3 /GR /GX /D \"DEBUG\" /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GR /GX /D \"NDEBUG\" /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /D \"DEBUG\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /D \"NDEBUG\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -60,6 +60,45 @@
 		defines { "DEBUG" }
 		filter "configurations:Release"
 		defines { "NDEBUG" }
-		test.isequal(" /MD /W3 /GR /GX /D \"TRACE\" /D \"DEBUG\" /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GR /GX /D \"TRACE\" /D \"NDEBUG\" /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /D \"TRACE\" /D \"DEBUG\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /D \"TRACE\" /D \"NDEBUG\" /YX /FD /c", cppflags("Release"))
+	end
+
+
+--
+-- undefines: /U flags after the defines (msc.getundefines)
+--
+
+	function suite.undefinesOnPackage()
+		undefines { "TRACE", "OLD_API" }
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /U \"TRACE\" /U \"OLD_API\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /U \"TRACE\" /U \"OLD_API\" /YX /FD /c", cppflags("Release"))
+	end
+
+
+--
+-- characterset (msc.defines.characterset): premake5's global default is
+-- "Default", which msc maps to the Unicode defines
+--
+
+	function suite.charactersetDefault()
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Debug"))
+	end
+
+
+	function suite.charactersetUnicode()
+		characterset "Unicode"
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Debug"))
+	end
+
+
+	function suite.charactersetMbcs()
+		characterset "MBCS"
+		test.isequal(" /MD /W3 /GR /GX /D \"_MBCS\" /YX /FD /c", cppflags("Debug"))
+	end
+
+
+	function suite.charactersetAscii()
+		characterset "ASCII"
+		test.isequal(" /MD /W3 /GR /GX /YX /FD /c", cppflags("Debug"))
 	end

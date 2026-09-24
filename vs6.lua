@@ -171,6 +171,19 @@
 		return cfg.omitframepointer == p.ON
 	end
 
+	-- msc.lua's characterset mapping (msc.defines.characterset): premake5's
+	-- global default is characterset "Default", which msc maps to the
+	-- Unicode defines, matching every premake5 generator
+	function vs6.charactersetDefines(cfg)
+		if cfg.characterset == "MBCS" then
+			return { '/D "_MBCS"' }
+		end
+		if cfg.characterset == "ASCII" then
+			return {}
+		end
+		return { '/D "_UNICODE"', '/D "UNICODE"' }
+	end
+
 	function vs6.noImportLib(cfg)
 		if cfg.useimportlib == p.OFF then
 			return true

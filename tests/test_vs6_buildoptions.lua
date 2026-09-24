@@ -33,8 +33,8 @@
 
 	function suite.setOptionsOnPackage()
 		buildoptions { "pkgopt" }
-		test.isequal(" /MD /W3 /GR /GX /YX /FD /c pkgopt", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GR /GX /YX /FD /c pkgopt", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c pkgopt", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c pkgopt", cppflags("Release"))
 	end
 
 
@@ -43,8 +43,8 @@
 		buildoptions { "dbgopt" }
 		filter "configurations:Release"
 		buildoptions { "relopt" }
-		test.isequal(" /MD /W3 /GR /GX /YX /FD /c dbgopt", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GR /GX /YX /FD /c relopt", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c dbgopt", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c relopt", cppflags("Release"))
 	end
 
 
@@ -52,6 +52,6 @@
 		buildoptions { "pkgopt" }
 		filter "configurations:Release"
 		buildoptions { "relopt" }
-		test.isequal(" /MD /W3 /GR /GX /YX /FD /c pkgopt", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GR /GX /YX /FD /c pkgopt relopt", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c pkgopt", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c pkgopt relopt", cppflags("Release"))
 	end

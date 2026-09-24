@@ -46,8 +46,8 @@
 
 	function suite.setFlagOnPackage()
 		rtti "Off"
-		test.isequal(" /MD /W3 /GX /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GX /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -58,8 +58,8 @@
 	function suite.setFlagOnConfig()
 		filter "configurations:Debug"
 		rtti "Off"
-		test.isequal(" /MD /W3 /GX /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GR /GX /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -69,8 +69,8 @@
 
 	function suite.extraWarnings()
 		warnings "Extra"
-		test.isequal(" /MD /W4 /GR /GX /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MD /W4 /GR /GX /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MD /W4 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W4 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -80,8 +80,8 @@
 
 	function suite.fatalWarnings()
 		fatalwarnings { "All" }
-		test.isequal(" /MD /W3 /WX /GR /GX /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MD /W3 /WX /GR /GX /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /WX /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /WX /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -91,8 +91,8 @@
 
 	function suite.noExceptions()
 		exceptionhandling "Off"
-		test.isequal(" /MD /W3 /GR /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GR /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -102,8 +102,8 @@
 
 	function suite.noFramePointer()
 		omitframepointer "On"
-		test.isequal(" /MD /W3 /GR /GX /Oy /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GR /GX /Oy /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /Oy /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /Oy /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -133,8 +133,8 @@
 # PROP Intermediate_Dir "obj\Release"
 # PROP Ignore_Export_Lib 1
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W3 /GR /GX /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /D "_UNICODE" /D "UNICODE" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /D "_UNICODE" /D "UNICODE" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -167,8 +167,8 @@ LINK32=link.exe
 
 	function suite.noRtti()
 		rtti "Off"
-		test.isequal(" /MD /W3 /GX /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GX /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -178,8 +178,8 @@ LINK32=link.exe
 
 	function suite.noSymbols()
 		symbols "Off"
-		test.isequal(" /MD /W3 /GR /GX /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GR /GX /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Release"))
 		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /libpath:\"bin\\Debug\"", linkflags("Debug"))
 		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Release\\MyPackage.exe\" /libpath:\"bin\\Release\"", linkflags("Release"))
 		test.isequal(" /l 0x409 /d \"NDEBUG\"", dsp.rscFlags(getcfg("Debug")))
@@ -193,8 +193,8 @@ LINK32=link.exe
 
 	function suite.optimize()
 		optimize "On"
-		test.isequal(" /MD /W3 /GR /GX /Ot /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GR /GX /Ot /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /Ot /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /Ot /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -204,8 +204,8 @@ LINK32=link.exe
 
 	function suite.optimizeSize()
 		optimize "Size"
-		test.isequal(" /MD /W3 /GR /GX /O1 /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GR /GX /O1 /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /O1 /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /O1 /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -215,8 +215,8 @@ LINK32=link.exe
 
 	function suite.optimizeSpeed()
 		optimize "Speed"
-		test.isequal(" /MD /W3 /GR /GX /O2 /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MD /W3 /GR /GX /O2 /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MD /W3 /GR /GX /O2 /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MD /W3 /GR /GX /O2 /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Release"))
 	end
 
 
@@ -226,6 +226,32 @@ LINK32=link.exe
 
 	function suite.staticRuntime()
 		staticruntime "On"
-		test.isequal(" /MT /W3 /GR /GX /YX /FD /c", cppflags("Debug"))
-		test.isequal(" /MT /W3 /GR /GX /YX /FD /c", cppflags("Release"))
+		test.isequal(" /MT /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Debug"))
+		test.isequal(" /MT /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", cppflags("Release"))
+	end
+
+
+--
+-- symbolspath: /pdb: on the link line when symbols are on and the
+-- debug format is not c7 (vs2010's programDatabaseFile)
+--
+
+	function suite.symbolsPath()
+		symbols "On"
+		symbolspath "logs/app.pdb"
+		test.isequal(" /nologo /subsystem:console /debug /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /pdb:\"logs\\app.pdb\" /pdbtype:sept /libpath:\"bin\\Debug\"", linkflags("Debug"))
+	end
+
+
+	function suite.symbolsPathC7()
+		symbols "On"
+		debugformat "c7"
+		symbolspath "logs/app.pdb"
+		test.isequal(" /nologo /subsystem:console /debug /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /pdbtype:sept /libpath:\"bin\\Debug\"", linkflags("Debug"))
+	end
+
+
+	function suite.symbolsPathNoSymbols()
+		symbolspath "logs/app.pdb"
+		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /libpath:\"bin\\Debug\"", linkflags("Debug"))
 	end

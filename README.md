@@ -80,6 +80,17 @@ tests/e2e.sh [path-to-premake5]
 - **optimize/warnings** use the msc toolset's mappings (`On`→`/Ot`,
   `Speed`→`/O2`, `Size`→`/O1`, `Off`/`Debug`→`/Od`, `Full`→`/Ox`;
   `Off`→`/W0`, `Extra`/`High`/`Everything`→`/W4`).
+- **characterset** follows the msc toolset's defines mapping — including
+  premake5's `characterset "Default"` global default, which msc maps to
+  `/D "_UNICODE" /D "UNICODE"`. Set `characterset "MBCS"` (`/D "_MBCS"`)
+  or `characterset "ASCII"` (no define) for classic ANSI builds.
+- **Other premake5 APIs** mapped to their VC6 equivalents: `undefines`
+  (`/U`), `forceincludes` (`/FI`), `externalincludedirs`/
+  `includedirsafter` (`/I`, after `includedirs`), `syslibdirs`
+  (`/libpath:`, after `libdirs`), `ignoredefaultlibraries`
+  (`/nodefaultlib:`), `symbolspath` (`/pdb:`), `mapfile`/`mapfilepath`
+  (`/map[:file]`), `profile` (`/profile`). A `links` entry that already
+  carries a library extension (`foo.lib`) is kept as-is.
 - **Platforms**: anything other than Win32/x86 is rejected outright.
 - Configurations are stored in reverse order in the `.dsp`, matching
   VC6's own layout.

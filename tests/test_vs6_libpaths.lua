@@ -64,3 +64,14 @@
 		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /libpath:\"bin\\Debug\" /libpath:\"..\\package\" /libpath:\"..\\debug\"", linkflags("Debug"))
 		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Release\\MyPackage.exe\" /libpath:\"bin\\Release\" /libpath:\"..\\package\" /libpath:\"..\\release\"", linkflags("Release"))
 	end
+
+
+--
+-- syslibdirs follow libdirs (msc.getLibraryDirectories)
+--
+
+	function suite.sysLibDirsOnPackage()
+		libdirs { "libs" }
+		syslibdirs { "syslibs" }
+		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /libpath:\"bin\\Debug\" /libpath:\"libs\" /libpath:\"syslibs\"", linkflags("Debug"))
+	end

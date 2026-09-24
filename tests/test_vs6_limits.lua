@@ -86,8 +86,8 @@
 # PROP Output_Dir "bin\Release"
 # PROP Intermediate_Dir "obj\Release"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W3 /GR /GX /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /D "_UNICODE" /D "UNICODE" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /D "_UNICODE" /D "UNICODE" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -171,20 +171,20 @@ Package=<3>
 
 	function suite.optimizeOffMapped()
 		optimize "Off"
-		test.isequal(" /MD /W3 /GR /GX /Od /YX /FD /c", dsp.cppFlags(getcfg("Debug")))
+		test.isequal(" /MD /W3 /GR /GX /Od /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", dsp.cppFlags(getcfg("Debug")))
 	end
 
 	function suite.optimizeFullMapped()
 		optimize "Full"
-		test.isequal(" /MD /W3 /GR /GX /Ox /YX /FD /c", dsp.cppFlags(getcfg("Debug")))
+		test.isequal(" /MD /W3 /GR /GX /Ox /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", dsp.cppFlags(getcfg("Debug")))
 	end
 
 	function suite.warningsOffMapped()
 		warnings "Off"
-		test.isequal(" /MD /W0 /GR /GX /YX /FD /c", dsp.cppFlags(getcfg("Debug")))
+		test.isequal(" /MD /W0 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", dsp.cppFlags(getcfg("Debug")))
 	end
 
 	function suite.warningsHighMapped()
 		warnings "High"
-		test.isequal(" /MD /W4 /GR /GX /YX /FD /c", dsp.cppFlags(getcfg("Debug")))
+		test.isequal(" /MD /W4 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /YX /FD /c", dsp.cppFlags(getcfg("Debug")))
 	end

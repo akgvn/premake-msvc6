@@ -41,8 +41,8 @@ RSC=rc.exe
 # PROP Output_Dir "bin\Release"
 # PROP Intermediate_Dir "obj\Release\tool"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W3 /GR /GX /O2 /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /O2 /YX /FD /c
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /O2 /D "_UNICODE" /D "UNICODE" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /O2 /D "_UNICODE" /D "UNICODE" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -66,8 +66,8 @@ LINK32=link.exe
 # PROP Output_Dir "bin\Debug"
 # PROP Intermediate_Dir "obj\Debug\tool"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W3 /GR /GX /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /YX /FD /c
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /D "_UNICODE" /D "UNICODE" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /D "_UNICODE" /D "UNICODE" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"

@@ -41,8 +41,8 @@ RSC=rc.exe
 # PROP Output_Dir "bin\Release"
 # PROP Intermediate_Dir "obj\Release\engine"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W3 /GR /GX /O2 /I "engine\include" /D "ENGINE_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /O2 /I "engine\include" /D "ENGINE_EXPORTS" /YX /FD /c
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /O2 /I "engine\include" /D "_UNICODE" /D "UNICODE" /D "ENGINE_EXPORTS" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /O2 /I "engine\include" /D "_UNICODE" /D "UNICODE" /D "ENGINE_EXPORTS" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG" /d "ENGINE_EXPORTS" /d "ENGINE_RES" /i "engine\include" /i "engine\res" /x
@@ -70,8 +70,8 @@ PostBuild_Cmds=echo postbuild
 # PROP Output_Dir "bin\Debug"
 # PROP Intermediate_Dir "obj\Debug\engine"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W3 /GR /GX /I "engine\include" /D "ENGINE_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /I "engine\include" /D "ENGINE_EXPORTS" /YX /FD /c
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /I "engine\include" /D "_UNICODE" /D "UNICODE" /D "ENGINE_EXPORTS" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /I "engine\include" /D "_UNICODE" /D "UNICODE" /D "ENGINE_EXPORTS" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG" /d "ENGINE_EXPORTS" /d "ENGINE_RES" /i "engine\include" /i "engine\res" /x

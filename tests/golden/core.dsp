@@ -40,8 +40,8 @@ RSC=rc.exe
 # PROP Output_Dir "bin\Release"
 # PROP Intermediate_Dir "obj\Release\core"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W3 /GR /GX /O2 /D "CORE_LIB" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /O2 /D "CORE_LIB" /YX /FD /c
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /O2 /D "_UNICODE" /D "UNICODE" /D "CORE_LIB" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /O2 /D "_UNICODE" /D "UNICODE" /D "CORE_LIB" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG" /d "CORE_LIB"
 # ADD RSC /l 0x409 /d "NDEBUG" /d "CORE_LIB"
 BSC32=bscmake.exe
@@ -63,8 +63,8 @@ LINK32=link.exe -lib
 # PROP Output_Dir "bin\Debug"
 # PROP Intermediate_Dir "obj\Debug\core"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W3 /GR /GX /D "CORE_LIB" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GR /GX /D "CORE_LIB" /YX /FD /c
+# ADD BASE CPP /nologo /MD /W3 /GR /GX /D "_UNICODE" /D "UNICODE" /D "CORE_LIB" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /D "_UNICODE" /D "UNICODE" /D "CORE_LIB" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG" /d "CORE_LIB"
 # ADD RSC /l 0x409 /d "NDEBUG" /d "CORE_LIB"
 BSC32=bscmake.exe
