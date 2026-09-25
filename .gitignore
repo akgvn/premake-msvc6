@@ -20,3 +20,4 @@ samples/*.ncb
 samples/*.opt
 samples/build-*.log
 experiments/*/build/
+tools/__pycache__/
