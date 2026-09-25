@@ -71,7 +71,6 @@ CFG=MyPackage - Win32 Debug
 # PROP Scc_ProjName ""
 # PROP Scc_LocalPath ""
 CPP=cl.exe
-MTL=midl.exe
 RSC=rc.exe
 
 !IF  "$(CFG)" == "MyPackage - Win32 Release"

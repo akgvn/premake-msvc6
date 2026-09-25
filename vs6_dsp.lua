@@ -107,7 +107,9 @@
 		p.outln('# PROP Scc_ProjName ""')
 		p.outln('# PROP Scc_LocalPath ""')
 		p.outln('CPP=cl.exe')
-		if not vs6.islib(cfg0) then
+		-- MTL appears only where MIDL settings make sense (VC-authored
+		-- console apps and static libraries don't carry it)
+		if vs6.iswinexe(cfg0) or vs6.isdll(cfg0) then
 			p.outln('MTL=midl.exe')
 		end
 		p.outln('RSC=rc.exe')
@@ -286,13 +288,22 @@
 		-- Culture element). Default is VC6's en-US 0x409.
 		local langid = "0x409"
 		if cfg.locale then
-			local culture = p.modules.vstudio.cultureForLocale(cfg.locale)
+			-- vstudio is an embedded premake5 module; load on demand
+			local culture = require("vstudio").cultureForLocale(cfg.locale)
 			if culture then
 				langid = string.format("0x%x", culture)
 			end
 		end
 
-		local r = { '/l ' .. langid .. ' /d "' .. (vs6.symbols(cfg) and "_DEBUG" or "NDEBUG") .. '"' }
+		-- the automatic debug marker is skipped when the script already
+		-- defines one explicitly (VC6-parity scripts define _DEBUG/NDEBUG)
+		local sym = vs6.symbols(cfg) and "_DEBUG" or "NDEBUG"
+		local r = {}
+		if not table.contains(cfg.defines, sym) and not table.contains(cfg.resdefines, sym) then
+			table.insert(r, '/l ' .. langid .. ' /d "' .. sym .. '"')
+		else
+			table.insert(r, '/l ' .. langid)
+		end
 
 		for _, def in ipairs(cfg.defines) do
 			table.insert(r, '/d "' .. def .. '"')
@@ -326,14 +337,18 @@
 
 		-- sibling projects are linked implicitly by VC6; only external
 		-- libraries are listed. Like msc.getlinks(), append .lib only
-		-- when the name doesn't already carry a library extension
+		-- when the name doesn't already carry a library extension. The
+		-- oven absolutizes path-like link entries; re-relativize them
 		for _, link in ipairs(cfg.links) do
 			local name = link:gsub(":static$", ""):gsub(":shared$", "")
 			if not p.workspace.findproject(wks, name) then
+				if path.isabsolute(name) then
+					name = p.project.getrelative(cfg.project, name)
+				end
 				if not p.tools.msc.getLibraryExtensions()[name:match("[^.]+$")] then
 					name = name .. ".lib"
 				end
-				table.insert(r, name)
+				table.insert(r, vs6.path(name))
 			end
 		end
 

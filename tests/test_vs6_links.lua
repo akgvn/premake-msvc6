@@ -71,6 +71,17 @@
 
 
 --
+-- Path-like link entries: the oven absolutizes them; the module
+-- re-relativizes and emits backslashes (VC6-authored style)
+--
+
+	function suite.linksWithPath()
+		links { "../lib/tran.lib" }
+		test.isequal(" ..\\lib\\tran.lib /nologo /subsystem:console /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /libpath:\"bin\\Debug\"", linkflags("Debug"))
+	end
+
+
+--
 -- ignoredefaultlibraries: /nodefaultlib flags after /nologo, .lib
 -- appended when no library extension is present (msc.getldflags)
 --

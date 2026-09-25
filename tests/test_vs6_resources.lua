@@ -104,3 +104,20 @@
 	function suite.localeUnsetIsDefault()
 		test.isequal(" /l 0x409 /d \"NDEBUG\"", rscflags("Debug"))
 	end
+
+
+--
+-- The automatic _DEBUG/NDEBUG marker is skipped when the script already
+-- defines it (VC6-parity scripts define their own markers)
+--
+
+	function suite.noDuplicateDebugMarker()
+		defines { "NDEBUG" }
+		test.isequal(" /l 0x409 /d \"NDEBUG\"", rscflags("Debug"))
+	end
+
+
+	function suite.noDuplicateDebugMarkerViaResdefines()
+		resdefines { "NDEBUG" }
+		test.isequal(" /l 0x409 /d \"NDEBUG\"", rscflags("Debug"))
+	end
