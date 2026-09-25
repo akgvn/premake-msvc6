@@ -19,3 +19,4 @@ samples/*.plg
 samples/*.ncb
 samples/*.opt
 samples/build-*.log
+experiments/*/build/

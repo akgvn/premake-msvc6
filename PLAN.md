@@ -96,13 +96,21 @@ the resolution for each:
 
 ### Step 3 — real-world generation experiments
 
-- Write a structural-diff tool that strips VC-isms (system-lib lists,
-  `# SUBTRACT`, `DEP_CPP_`, `Ignore_Export_Lib 0`, `.\` prefixes, MTL
-  `/o "NUL"`) and compares only the premake-reachable parts of a .dsp —
-  full-file diffs are too noisy to be useful.
-- Then, in order: Peter (8 projects, the stated target), zlib/libpng
-  (small, deps, per-config kinds), FLTK/Quake 2 (scale). Each experiment
-  produces a premake5 script + a gap list feeding Step 2.
+- **Structural-diff tool:** `tools/dspdiff.py` strips VC-isms
+  (system-lib lists, `# SUBTRACT`, `# ADD BASE`/`# PROP BASE`, `DEP_*`,
+  `Ignore_Export_Lib 0`, `.\` prefixes, MTL `/o "NUL"`, `CFG=` (last-
+  active IDE state), `Default_Filter` values, runtime tokens, `/GZ`,
+  `/out:`, RSC merged defines, blank lines, flag order, file order) and
+  diffs the premake-reachable remainder.
+- **Peter (done 2026-09-24):** `experiments/peter/` reproduces all 9
+  files; 7 are structurally identical, DataInst/Gener differ only in
+  the documented gaps (custom BSC32 output, PCH `/Yu`+per-file `/Yc`,
+  empty groups). Three module bugs found and fixed (path-like links
+  emitted absolute, `MTL=` on console apps, RSC debug-marker
+  duplication). Details in `experiments/peter/NOTES.md`.
+- Then, in order: zlib/libpng (small, deps, per-config kinds),
+  FLTK/Quake 2 (scale). Each experiment produces a premake5 script + a
+  gap list feeding Step 2.
 
 ### Step 4 — VC6 build-option coverage (generation + Windows validation)
 
