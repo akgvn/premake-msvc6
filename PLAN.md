@@ -58,10 +58,10 @@ VC6-era idiom. Consequence: legacy ANSI code must opt out with
 from every premake5 generator. Golden baseline regenerated for this.
 
 Still-deferred premake5 data APIs without a defensible VC6 mapping:
-PCH (`/Yu`/`/Yc` — `/YX` is the fixed idiom), single-flag enums
-(`callingconvention`, `structmemberalign`, `stringpooling`,
-`intrinsics`, `functionlevellinking`, `unsignedchar`, `compileas`,
-`inlining`) — these are Step 4 coverage-matrix items, not divergences.
+single-flag enums (`callingconvention`, `structmemberalign`,
+`stringpooling`, `intrinsics`, `functionlevellinking`, `unsignedchar`,
+`compileas`, `inlining`) — these are Step 4 coverage-matrix items, not
+divergences.
 
 
 ### Step 2 — gap-driven module features (from real-world analysis)
@@ -97,11 +97,13 @@ the resolution for each:
 ### Step 3 — real-world generation experiments
 
 - **Structural-diff tool:** `tools/dspdiff.py` strips VC-isms
-  (system-lib lists, `# SUBTRACT`, `# ADD BASE`/`# PROP BASE`, `DEP_*`,
-  `Ignore_Export_Lib 0`, `.\` prefixes, MTL `/o "NUL"`, `CFG=` (last-
-  active IDE state), `Default_Filter` values, runtime tokens, `/GZ`,
-  `/out:`, RSC merged defines, blank lines, flag order, file order) and
-  diffs the premake-reachable remainder.
+  (system-lib lists, `# SUBTRACT`, `# ADD BASE`/`# PROP BASE`,
+  `DEP_*`/`NODEP_*` dependency lists and continuations, a per-file
+  `!IF` chain that is empty in every branch, `Ignore_Export_Lib 0`, `.\`
+  prefixes, `Target_Dir "."`, MTL `/o "NUL"`, `CFG=` (last-active IDE
+  state), `Default_Filter` values, runtime tokens, `/GZ`, `/out:`, RSC
+  merged defines, blank lines, flag order, file order) and diffs the
+  premake-reachable remainder.
 - **Peter (done 2026-09-24):** `experiments/peter/` reproduces all 9
   files; 7 are structurally identical, DataInst/Gener differ only in
   the documented gaps (custom BSC32 output name, empty groups). Three
@@ -117,9 +119,15 @@ the resolution for each:
   match; libpng.dsp matches except the VB-config position artifact
   (premake5 has no removeconfigurations), embedded-quote RSC defines,
   and the original's own hand drift. See NOTES.md.
-- **Quake 2 (surveyed, script not written):** findings in HANDOFF.md
-  (per-project settings, the `/machine:ALPHA` gap, ref_soft asm custom
-  builds). FLTK optional after that.
+- **Quake 2 (done 2026-09-27):** `experiments/quake2/` — 5 projects,
+  ~150 files, 4 configurations each incl. two ALPHA ones. `quake2.dsw`
+  matches exactly; all five `.dsp` match except the documented residuals
+  (`/machine:ALPHA` unpinnable, ref_soft's missing `/FD`, and
+  `/nodefaultlib:"libc"` vs the premake5-native `"libc.lib"`). Drove the
+  dspdiff dependency-block fixes (DEP/NODEP continuations, all-empty
+  per-file `!IF` chains, `Target_Dir "."`). See NOTES.md.
+- **FLTK** is the other "scale" candidate and remains optional: it has no
+  feature the corpus above doesn't already cover.
 
 ### Step 4 — VC6 build-option coverage (generation + Windows validation)
 
@@ -149,9 +157,17 @@ VC6 toolchain. Where full coverage is impossible, document why.
      `/implib` (linktarget, absent with useimportlib Off), `/out`
      (buildtarget), `/pdbtype:sept` (symbols), `/libpath` (target dir +
      libdirs), + linkoptions; LIB32 `/nologo` + `/out` (StaticLib).
-   - RSC: `/l 0x409` (fixed — locale option is Step 2), `/d` (defines +
+   - RSC: `/l <lcid>` (`locale`, default 0x409), `/d` (defines +
      resdefines + debug symbol), `/i` (includedirs + resincludedirs),
      + resoptions.
+
+   The Steps 2–3 rounds already made several flags reachable; they belong
+   in the matrix: `locale`→RSC `/l`, per-file CPP (`/D`/`/U`/`/I` +
+   buildoptions), per-file custom build rules, PCH (`pchheader`→`/Yu`,
+   `pchsource`→`/Yc`), `symbolspath`→`/pdb:`, `mapfile`→`/map[:file]`,
+   `profile`→`/profile`, `ignoredefaultlibraries`→`/nodefaultlib:`,
+   `forceincludes`→`/FI`, `undefines`→`/U`, and the `characterset`
+   defines.
 
 2. **Combinatoric generation tests.** Add a `vs6_coverage` suite that
    programmatically walks the reachable option space and asserts the

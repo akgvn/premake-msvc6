@@ -3,10 +3,11 @@
 #
 # Compares only the premake-reachable parts of a .dsp, stripping VC-isms
 # that generators never reproduce: system library lists, # SUBTRACT /
-# # ADD BASE / # PROP BASE lines, DEP_CPP_/DEP_RSC_ dependency lines,
-# Ignore_Export_Lib 0, leading ".\", MTL /o "NUL", the trailing /libpath
-# duplicating a config's own Output_Dir, blank lines, and flag order
-# (tokens within each # ADD line are sorted).
+# # ADD BASE / # PROP BASE lines, DEP_CPP_/DEP_RSC_/NODEP_ dependency
+# lines (assignment plus continuations), Ignore_Export_Lib 0, leading
+# ".\\", MTL /o "NUL", the trailing /libpath duplicating a config's own
+# Output_Dir, a Target_Dir of "." (the project directory), blank lines,
+# and flag order (tokens within each # ADD line are sorted).
 #
 # Usage: dspdiff.py A.dsp B.dsp [A2.dsp B2.dsp ...]
 # Exit status 0 when all pairs are structurally identical, 1 otherwise.
@@ -131,8 +132,16 @@ def normalize(path):
     outdir = None
     cpp_defines = set()
     cpp_includes = set()
+    in_dep = False
     for line in text.split("\n"):
         line = line.rstrip()
+        if in_dep:
+            # a dependency list is the DEP_CPP_/DEP_RSC_ assignment plus
+            # its tab-indented quoted continuations (the last is a bare
+            # tab); drop the whole run
+            if line.startswith("\t"):
+                continue
+            in_dep = False
         line = re.sub(r" {2,}", " ", line)
         line = re.sub(r'# PROP Default_Filter "[^"]*"', '# PROP Default_Filter ""', line)
         line = line.replace("=.\\", "=")
@@ -145,6 +154,14 @@ def normalize(path):
         # the file — user state, not structure
         line = re.sub(r"^CFG=.*", "CFG=", line)
         line = re.sub(r"^# Begin Custom Build.*", "# Begin Custom Build", line)
+        # Target_Dir "." is the project's own directory, the same place
+        # the module's implicit "" points
+        line = re.sub(r'^# PROP Target_Dir "\."\s*$', '# PROP Target_Dir ""', line)
+        if line.startswith(("DEP_CPP_", "DEP_RSC_", "NODEP_")):
+            # enter the dependency run; the continuations are skipped by
+            # the in_dep guard above
+            in_dep = True
+            continue
         if not line or DROP_LINE.match(line):
             continue
         m = re.match(r'# PROP (?:BASE )?Output_Dir "([^"]*)"', line)
@@ -216,7 +233,10 @@ def drop_empty_branches(lines):
                 hdr = "!IF " + hdr[len("!ELSEIF "):]
             out.append(hdr)
             out.extend(body)
-        out.append("!ENDIF")
+        # a chain whose branches are all empty (e.g. VC6's per-file blocks
+        # holding only dependency lists) disappears entirely
+        if kept:
+            out.append("!ENDIF")
     return out
 
 
