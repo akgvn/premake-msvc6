@@ -9,8 +9,8 @@
   premake5 defaults, msc toolset flag mappings (details in README.md).
   Began as a byte-exact premake 3.7 port — preserved at tag
   `v1.0-3x-parity`, migration spec `docs/3x-to-native.md`.
-- 122 tests green via `bin/release/premake5 test --test-only=vs6*` from a
-  premake-core checkout with this repo linked into
+- 233 tests green via `bin/release/premake5 test --test-only=vs6*` from
+  a premake-core checkout with this repo linked into
   `premake-core/modules/vs6`; full premake-core suite passes.
   `tests/golden/` is the module's own sample output (regression
   baseline); `tests/e2e.sh` diffs against it with separator/EOL
@@ -134,6 +134,12 @@ the resolution for each:
 Goal: every VC6 build switch the module can emit is reachable from a
 premake5 script, and every emitted combination is accepted by a real
 VC6 toolchain. Where full coverage is impossible, document why.
+
+**Status: items 1–2 done; item 3 harness prepared, Windows run
+outstanding.** The matrix is `docs/coverage-matrix.md`; the suite is
+`tests/test_vs6_coverage.lua` (greedy pairwise, 50 compiler + 26 linker
++ 26 resource cases, plus explicit legality/escape-hatch tests); the
+acceptance harness is `tests/acceptance/` (see its README.md).
 
 1. **Coverage matrix.** Enumerate the VC6 flags the module emits and
    the premake5 API that reaches each. Anything without a dedicated

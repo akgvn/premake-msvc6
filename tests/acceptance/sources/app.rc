@@ -1,0 +1,9 @@
+/*
+ * tests/acceptance/sources/app.rc
+ * Minimal resource script so rc.exe actually runs (exercises the RSC
+ * /l and /d lines).
+ */
+STRINGTABLE
+BEGIN
+	1 "vc6 acceptance"
+END
