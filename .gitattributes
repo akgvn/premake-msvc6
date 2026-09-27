@@ -2,3 +2,6 @@
 # let git normalize line endings on checkout/commit.
 *.dsp -text
 *.dsw -text
+
+# Windows acceptance evidence: keep the recorded CRLF bytes.
+tests/acceptance/acceptance-windows.log -text

@@ -1,0 +1,1205 @@
+VC6 acceptance run 
+toolchain: C:\MSVC6\Common\MSDev98\Bin\MSDEV.EXE 
+ 
+=== cpp_default [Debug] === 
+--------------------Configuration: cpp_default - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_default.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_default - Win32 Debug 
+=== cpp_default [Release] === 
+--------------------Configuration: cpp_default - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_default.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_default - Win32 Release 
+=== cpp_debug [Debug] === 
+--------------------Configuration: cpp_debug - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_debug.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_debug - Win32 Debug 
+=== cpp_debug [Release] === 
+--------------------Configuration: cpp_debug - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_debug.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_debug - Win32 Release 
+=== cpp_static [Debug] === 
+--------------------Configuration: cpp_static - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_static.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_static - Win32 Debug 
+=== cpp_static [Release] === 
+--------------------Configuration: cpp_static - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_static.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_static - Win32 Release 
+=== cpp_static_debug [Debug] === 
+--------------------Configuration: cpp_static_debug - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_static_debug.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_static_debug - Win32 Debug 
+=== cpp_static_debug [Release] === 
+--------------------Configuration: cpp_static_debug - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_static_debug.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_static_debug - Win32 Release 
+=== cpp_warn_off [Debug] === 
+--------------------Configuration: cpp_warn_off - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_warn_off.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_warn_off - Win32 Debug 
+=== cpp_warn_off [Release] === 
+--------------------Configuration: cpp_warn_off - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_warn_off.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_warn_off - Win32 Release 
+=== cpp_warn_extra [Debug] === 
+--------------------Configuration: cpp_warn_extra - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_warn_extra.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_warn_extra - Win32 Debug 
+=== cpp_warn_extra [Release] === 
+--------------------Configuration: cpp_warn_extra - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_warn_extra.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_warn_extra - Win32 Release 
+=== cpp_warn_fatal [Debug] === 
+--------------------Configuration: cpp_warn_fatal - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_warn_fatal.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_warn_fatal - Win32 Debug 
+=== cpp_warn_fatal [Release] === 
+--------------------Configuration: cpp_warn_fatal - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_warn_fatal.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_warn_fatal - Win32 Release 
+=== cpp_minrebuild [Debug] === 
+--------------------Configuration: cpp_minrebuild - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_minrebuild.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_minrebuild - Win32 Debug 
+=== cpp_minrebuild [Release] === 
+--------------------Configuration: cpp_minrebuild - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_minrebuild.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_minrebuild - Win32 Release 
+=== cpp_nortti [Debug] === 
+--------------------Configuration: cpp_nortti - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_nortti.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_nortti - Win32 Debug 
+=== cpp_nortti [Release] === 
+--------------------Configuration: cpp_nortti - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_nortti.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_nortti - Win32 Release 
+=== cpp_noexcept [Debug] === 
+--------------------Configuration: cpp_noexcept - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_noexcept.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_noexcept - Win32 Debug 
+=== cpp_noexcept [Release] === 
+--------------------Configuration: cpp_noexcept - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_noexcept.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_noexcept - Win32 Release 
+=== cpp_zi [Debug] === 
+--------------------Configuration: cpp_zi - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_zi.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_zi - Win32 Debug 
+=== cpp_zi [Release] === 
+--------------------Configuration: cpp_zi - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_zi.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_zi - Win32 Release 
+=== cpp_zi_opt [Debug] === 
+--------------------Configuration: cpp_zi_opt - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_zi_opt.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_zi_opt - Win32 Debug 
+=== cpp_zi_opt [Release] === 
+--------------------Configuration: cpp_zi_opt - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_zi_opt.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_zi_opt - Win32 Release 
+=== cpp_z7 [Debug] === 
+--------------------Configuration: cpp_z7 - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_z7.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_z7 - Win32 Debug 
+=== cpp_z7 [Release] === 
+--------------------Configuration: cpp_z7 - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_z7.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_z7 - Win32 Release 
+=== cpp_zi_ecoff [Debug] === 
+--------------------Configuration: cpp_zi_ecoff - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_zi_ecoff.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_zi_ecoff - Win32 Debug 
+=== cpp_zi_ecoff [Release] === 
+--------------------Configuration: cpp_zi_ecoff - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_zi_ecoff.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_zi_ecoff - Win32 Release 
+=== cpp_od [Debug] === 
+--------------------Configuration: cpp_od - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_od.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_od - Win32 Debug 
+=== cpp_od [Release] === 
+--------------------Configuration: cpp_od - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_od.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_od - Win32 Release 
+=== cpp_ot [Debug] === 
+--------------------Configuration: cpp_ot - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_ot.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_ot - Win32 Debug 
+=== cpp_ot [Release] === 
+--------------------Configuration: cpp_ot - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_ot.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_ot - Win32 Release 
+=== cpp_o1 [Debug] === 
+--------------------Configuration: cpp_o1 - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_o1.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_o1 - Win32 Debug 
+=== cpp_o1 [Release] === 
+--------------------Configuration: cpp_o1 - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_o1.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_o1 - Win32 Release 
+=== cpp_o2 [Debug] === 
+--------------------Configuration: cpp_o2 - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_o2.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_o2 - Win32 Debug 
+=== cpp_o2 [Release] === 
+--------------------Configuration: cpp_o2 - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_o2.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_o2 - Win32 Release 
+=== cpp_ox [Debug] === 
+--------------------Configuration: cpp_ox - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_ox.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_ox - Win32 Debug 
+=== cpp_ox [Release] === 
+--------------------Configuration: cpp_ox - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_ox.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_ox - Win32 Release 
+=== cpp_omitfp [Debug] === 
+--------------------Configuration: cpp_omitfp - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_omitfp.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_omitfp - Win32 Debug 
+=== cpp_omitfp [Release] === 
+--------------------Configuration: cpp_omitfp - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_omitfp.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_omitfp - Win32 Release 
+=== cpp_mbcs [Debug] === 
+--------------------Configuration: cpp_mbcs - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_mbcs.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_mbcs - Win32 Debug 
+=== cpp_mbcs [Release] === 
+--------------------Configuration: cpp_mbcs - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_mbcs.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_mbcs - Win32 Release 
+=== cpp_ascii [Debug] === 
+--------------------Configuration: cpp_ascii - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_ascii.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_ascii - Win32 Debug 
+=== cpp_ascii [Release] === 
+--------------------Configuration: cpp_ascii - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_ascii.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_ascii - Win32 Release 
+=== cpp_defines [Debug] === 
+--------------------Configuration: cpp_defines - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_defines.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_defines - Win32 Debug 
+=== cpp_defines [Release] === 
+--------------------Configuration: cpp_defines - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_defines.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_defines - Win32 Release 
+=== cpp_includes [Debug] === 
+--------------------Configuration: cpp_includes - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_includes.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_includes - Win32 Debug 
+=== cpp_includes [Release] === 
+--------------------Configuration: cpp_includes - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_includes.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_includes - Win32 Release 
+=== cpp_forceinclude [Debug] === 
+--------------------Configuration: cpp_forceinclude - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_forceinclude.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_forceinclude - Win32 Debug 
+=== cpp_forceinclude [Release] === 
+--------------------Configuration: cpp_forceinclude - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_forceinclude.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_forceinclude - Win32 Release 
+=== cpp_buildoptions [Debug] === 
+--------------------Configuration: cpp_buildoptions - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_buildoptions.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_buildoptions - Win32 Debug 
+=== cpp_buildoptions [Release] === 
+--------------------Configuration: cpp_buildoptions - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+cpp_buildoptions.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_buildoptions - Win32 Release 
+=== cpp_pch [Debug] === 
+--------------------Configuration: cpp_pch - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+stdafx.c
+Compiling...
+pchmain.c
+Linking...
+
+cpp_pch.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_pch - Win32 Debug 
+=== cpp_pch [Release] === 
+--------------------Configuration: cpp_pch - Win32 Release--------------------
+Compiling resources...
+Compiling...
+stdafx.c
+Compiling...
+pchmain.c
+Linking...
+
+cpp_pch.exe - 0 error(s), 0 warning(s)
+ACCEPTED cpp_pch - Win32 Release 
+=== link_console [Debug] === 
+--------------------Configuration: link_console - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_console.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_console - Win32 Debug 
+=== link_console [Release] === 
+--------------------Configuration: link_console - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_console.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_console - Win32 Release 
+=== link_windowed [Debug] === 
+--------------------Configuration: link_windowed - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+winmain.c
+Linking...
+
+link_windowed.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_windowed - Win32 Debug 
+=== link_windowed [Release] === 
+--------------------Configuration: link_windowed - Win32 Release--------------------
+Compiling resources...
+Compiling...
+winmain.c
+Linking...
+
+link_windowed.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_windowed - Win32 Release 
+=== link_dll [Debug] === 
+--------------------Configuration: link_dll - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+lib.c
+Linking...
+
+link_dll.dll - 0 error(s), 0 warning(s)
+ACCEPTED link_dll - Win32 Debug 
+=== link_dll [Release] === 
+--------------------Configuration: link_dll - Win32 Release--------------------
+Compiling resources...
+Compiling...
+lib.c
+Linking...
+
+link_dll.dll - 0 error(s), 0 warning(s)
+ACCEPTED link_dll - Win32 Release 
+=== link_dll_noimplib [Debug] === 
+--------------------Configuration: link_dll_noimplib - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+lib.c
+Linking...
+
+link_dll_noimplib.dll - 0 error(s), 0 warning(s)
+ACCEPTED link_dll_noimplib - Win32 Debug 
+=== link_dll_noimplib [Release] === 
+--------------------Configuration: link_dll_noimplib - Win32 Release--------------------
+Compiling resources...
+Compiling...
+lib.c
+Linking...
+
+link_dll_noimplib.dll - 0 error(s), 0 warning(s)
+ACCEPTED link_dll_noimplib - Win32 Release 
+=== link_symbols [Debug] === 
+--------------------Configuration: link_symbols - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_symbols.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_symbols - Win32 Debug 
+=== link_symbols [Release] === 
+--------------------Configuration: link_symbols - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_symbols.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_symbols - Win32 Release 
+=== link_symbols_pdb [Debug] === 
+--------------------Configuration: link_symbols_pdb - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_symbols_pdb.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_symbols_pdb - Win32 Debug 
+=== link_symbols_pdb [Release] === 
+--------------------Configuration: link_symbols_pdb - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_symbols_pdb.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_symbols_pdb - Win32 Release 
+=== link_incr_yes [Debug] === 
+--------------------Configuration: link_incr_yes - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_incr_yes.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_incr_yes - Win32 Debug 
+=== link_incr_yes [Release] === 
+--------------------Configuration: link_incr_yes - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_incr_yes.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_incr_yes - Win32 Release 
+=== link_incr_no [Debug] === 
+--------------------Configuration: link_incr_no - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_incr_no.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_incr_no - Win32 Debug 
+=== link_incr_no [Release] === 
+--------------------Configuration: link_incr_no - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_incr_no.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_incr_no - Win32 Release 
+=== link_entry [Debug] === 
+--------------------Configuration: link_entry - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_entry.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_entry - Win32 Debug 
+=== link_entry [Release] === 
+--------------------Configuration: link_entry - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_entry.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_entry - Win32 Release 
+=== link_map [Debug] === 
+--------------------Configuration: link_map - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_map.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_map - Win32 Debug 
+=== link_map [Release] === 
+--------------------Configuration: link_map - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_map.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_map - Win32 Release 
+=== link_map_path [Debug] === 
+--------------------Configuration: link_map_path - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_map_path.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_map_path - Win32 Debug 
+=== link_map_path [Release] === 
+--------------------Configuration: link_map_path - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_map_path.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_map_path - Win32 Release 
+=== link_profile [Debug] === 
+--------------------Configuration: link_profile - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_profile.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_profile - Win32 Debug 
+=== link_profile [Release] === 
+--------------------Configuration: link_profile - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_profile.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_profile - Win32 Release 
+=== link_libdirs [Debug] === 
+--------------------Configuration: link_libdirs - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_libdirs.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_libdirs - Win32 Debug 
+=== link_libdirs [Release] === 
+--------------------Configuration: link_libdirs - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_libdirs.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_libdirs - Win32 Release 
+=== link_links [Debug] === 
+--------------------Configuration: link_links - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_links.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_links - Win32 Debug 
+=== link_links [Release] === 
+--------------------Configuration: link_links - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_links.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_links - Win32 Release 
+=== link_nodefaultlib [Debug] === 
+--------------------Configuration: link_nodefaultlib - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_nodefaultlib.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_nodefaultlib - Win32 Debug 
+=== link_nodefaultlib [Release] === 
+--------------------Configuration: link_nodefaultlib - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+link_nodefaultlib.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_nodefaultlib - Win32 Release 
+=== link_options [Debug] === 
+--------------------Configuration: link_options - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+Start Pass1
+Processed /DEFAULTLIB:MSVCRT
+Processed /DEFAULTLIB:OLDNAMES
+Searching Libraries
+    Searching C:\MSVC6\VC98\LIB\MSVCRT.lib:
+      Found __imp__printf
+        Referenced in main.obj
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found _mainCRTStartup
+        Loaded MSVCRT.lib(crtexe.obj)
+      Found __IMPORT_DESCRIPTOR_MSVCRT
+        Referenced in MSVCRT.lib(MSVCRT.dll)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __imp___exit
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __XcptFilter
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __imp__exit
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __imp____p___initenv
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found ___xc_a
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(cinitexe.obj)
+Processed /DEFAULTLIB:kernel32.lib
+ Processed /DISALLOWLIB:libc.lib
+ Processed /DISALLOWLIB:libcd.lib
+ Processed /DISALLOWLIB:libcmt.lib
+ Processed /DISALLOWLIB:libcmtd.lib
+ Processed /DISALLOWLIB:msvcrtd.lib
+      Found __imp____getmainargs
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __dowildcard
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(wildcard.obj)
+      Found __newmode
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(_newmode.obj)
+      Found __initterm
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __setdefaultprecision
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(fp8.obj)
+      Found __imp____setusermatherr
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __matherr
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(merr.obj)
+      Found __setargv
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(dllargv.obj)
+      Found __adjust_fdiv
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(adjustfd.obj)
+      Found __imp___adjust_fdiv
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __commode
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(xncommod.obj)
+      Found __imp____p__commode
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __fmode
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(xtxtmode.obj)
+      Found __imp____p__fmode
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found ___onexitbegin
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(atonexit.obj)
+      Found __imp____set_app_type
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __except_list
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(dllsupp.obj)
+      Found __except_handler3
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __NULL_IMPORT_DESCRIPTOR
+        Referenced in MSVCRT.lib(MSVCRT.dll)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found MSVCRT_NULL_THUNK_DATA
+        Referenced in MSVCRT.lib(MSVCRT.dll)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __controlfp
+        Referenced in MSVCRT.lib(fp8.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found ___dllonexit
+        Referenced in MSVCRT.lib(atonexit.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __imp___onexit
+        Referenced in MSVCRT.lib(atonexit.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+Done Searching Libraries
+End Pass1
+    Discarded ".idata$6" from MSVCRT.lib(MSVCRT.dll)
+    Discarded ".idata$4" from MSVCRT.lib(MSVCRT.dll)
+    Discarded __imp___onexit from MSVCRT.lib(MSVCRT.dll)
+    Discarded ".idata$6" from MSVCRT.lib(MSVCRT.dll)
+    Discarded ".idata$4" from MSVCRT.lib(MSVCRT.dll)
+    Discarded __imp____dllonexit from MSVCRT.lib(MSVCRT.dll)
+    Discarded ___dllonexit from MSVCRT.lib(MSVCRT.dll)
+    Discarded ___set_app_type from MSVCRT.lib(MSVCRT.dll)
+    Discarded _atexit from MSVCRT.lib(atonexit.obj)
+    Discarded __onexit from MSVCRT.lib(atonexit.obj)
+    Discarded ___p__fmode from MSVCRT.lib(MSVCRT.dll)
+    Discarded ___p__commode from MSVCRT.lib(MSVCRT.dll)
+    Discarded ___setusermatherr from MSVCRT.lib(MSVCRT.dll)
+    Discarded ___getmainargs from MSVCRT.lib(MSVCRT.dll)
+    Discarded ___p___initenv from MSVCRT.lib(MSVCRT.dll)
+    Discarded _exit from MSVCRT.lib(MSVCRT.dll)
+    Discarded __exit from MSVCRT.lib(MSVCRT.dll)
+    Discarded _printf from MSVCRT.lib(MSVCRT.dll)
+Start Pass2
+     app.res
+     main.obj
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(dllsupp.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(atonexit.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(xtxtmode.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(xncommod.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(adjustfd.obj)
+     MSVCRT.lib(dllargv.obj)
+     MSVCRT.lib(merr.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(fp8.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(_newmode.obj)
+     MSVCRT.lib(wildcard.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(cinitexe.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(crtexe.obj)
+     MSVCRT.lib(MSVCRT.dll)
+End Pass2
+
+link_options.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_options - Win32 Debug 
+=== link_options [Release] === 
+--------------------Configuration: link_options - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+Start Pass1
+Processed /DEFAULTLIB:MSVCRT
+Processed /DEFAULTLIB:OLDNAMES
+Searching Libraries
+    Searching C:\MSVC6\VC98\LIB\MSVCRT.lib:
+      Found __imp__printf
+        Referenced in main.obj
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found _mainCRTStartup
+        Loaded MSVCRT.lib(crtexe.obj)
+      Found __IMPORT_DESCRIPTOR_MSVCRT
+        Referenced in MSVCRT.lib(MSVCRT.dll)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __imp___exit
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __XcptFilter
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __imp__exit
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __imp____p___initenv
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found ___xc_a
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(cinitexe.obj)
+Processed /DEFAULTLIB:kernel32.lib
+ Processed /DISALLOWLIB:libc.lib
+ Processed /DISALLOWLIB:libcd.lib
+ Processed /DISALLOWLIB:libcmt.lib
+ Processed /DISALLOWLIB:libcmtd.lib
+ Processed /DISALLOWLIB:msvcrtd.lib
+      Found __imp____getmainargs
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __dowildcard
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(wildcard.obj)
+      Found __newmode
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(_newmode.obj)
+      Found __initterm
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __setdefaultprecision
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(fp8.obj)
+      Found __imp____setusermatherr
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __matherr
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(merr.obj)
+      Found __setargv
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(dllargv.obj)
+      Found __adjust_fdiv
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(adjustfd.obj)
+      Found __imp___adjust_fdiv
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __commode
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(xncommod.obj)
+      Found __imp____p__commode
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __fmode
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(xtxtmode.obj)
+      Found __imp____p__fmode
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found ___onexitbegin
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(atonexit.obj)
+      Found __imp____set_app_type
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __except_list
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(dllsupp.obj)
+      Found __except_handler3
+        Referenced in MSVCRT.lib(crtexe.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __NULL_IMPORT_DESCRIPTOR
+        Referenced in MSVCRT.lib(MSVCRT.dll)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found MSVCRT_NULL_THUNK_DATA
+        Referenced in MSVCRT.lib(MSVCRT.dll)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __controlfp
+        Referenced in MSVCRT.lib(fp8.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found ___dllonexit
+        Referenced in MSVCRT.lib(atonexit.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+      Found __imp___onexit
+        Referenced in MSVCRT.lib(atonexit.obj)
+        Loaded MSVCRT.lib(MSVCRT.dll)
+Done Searching Libraries
+End Pass1
+    Discarded ".idata$6" from MSVCRT.lib(MSVCRT.dll)
+    Discarded ".idata$4" from MSVCRT.lib(MSVCRT.dll)
+    Discarded __imp___onexit from MSVCRT.lib(MSVCRT.dll)
+    Discarded ".idata$6" from MSVCRT.lib(MSVCRT.dll)
+    Discarded ".idata$4" from MSVCRT.lib(MSVCRT.dll)
+    Discarded __imp____dllonexit from MSVCRT.lib(MSVCRT.dll)
+    Discarded ___dllonexit from MSVCRT.lib(MSVCRT.dll)
+    Discarded ___set_app_type from MSVCRT.lib(MSVCRT.dll)
+    Discarded _atexit from MSVCRT.lib(atonexit.obj)
+    Discarded __onexit from MSVCRT.lib(atonexit.obj)
+    Discarded ___p__fmode from MSVCRT.lib(MSVCRT.dll)
+    Discarded ___p__commode from MSVCRT.lib(MSVCRT.dll)
+    Discarded ___setusermatherr from MSVCRT.lib(MSVCRT.dll)
+    Discarded ___getmainargs from MSVCRT.lib(MSVCRT.dll)
+    Discarded ___p___initenv from MSVCRT.lib(MSVCRT.dll)
+    Discarded _exit from MSVCRT.lib(MSVCRT.dll)
+    Discarded __exit from MSVCRT.lib(MSVCRT.dll)
+    Discarded _printf from MSVCRT.lib(MSVCRT.dll)
+Start Pass2
+     app.res
+     main.obj
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(dllsupp.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(atonexit.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(xtxtmode.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(xncommod.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(adjustfd.obj)
+     MSVCRT.lib(dllargv.obj)
+     MSVCRT.lib(merr.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(fp8.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(_newmode.obj)
+     MSVCRT.lib(wildcard.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(cinitexe.obj)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(MSVCRT.dll)
+     MSVCRT.lib(crtexe.obj)
+     MSVCRT.lib(MSVCRT.dll)
+End Pass2
+
+link_options.exe - 0 error(s), 0 warning(s)
+ACCEPTED link_options - Win32 Release 
+=== lib_static [Debug] === 
+--------------------Configuration: lib_static - Win32 Debug--------------------
+Compiling...
+lib.c
+Creating library...
+
+lib_static.lib - 0 error(s), 0 warning(s)
+ACCEPTED lib_static - Win32 Debug 
+=== lib_static [Release] === 
+--------------------Configuration: lib_static - Win32 Release--------------------
+Compiling...
+lib.c
+Creating library...
+
+lib_static.lib - 0 error(s), 0 warning(s)
+ACCEPTED lib_static - Win32 Release 
+=== rsc_locale [Debug] === 
+--------------------Configuration: rsc_locale - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+rsc_locale.exe - 0 error(s), 0 warning(s)
+ACCEPTED rsc_locale - Win32 Debug 
+=== rsc_locale [Release] === 
+--------------------Configuration: rsc_locale - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+rsc_locale.exe - 0 error(s), 0 warning(s)
+ACCEPTED rsc_locale - Win32 Release 
+=== rsc_locale_de [Debug] === 
+--------------------Configuration: rsc_locale_de - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+rsc_locale_de.exe - 0 error(s), 0 warning(s)
+ACCEPTED rsc_locale_de - Win32 Debug 
+=== rsc_locale_de [Release] === 
+--------------------Configuration: rsc_locale_de - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+rsc_locale_de.exe - 0 error(s), 0 warning(s)
+ACCEPTED rsc_locale_de - Win32 Release 
+=== rsc_defines [Debug] === 
+--------------------Configuration: rsc_defines - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+rsc_defines.exe - 0 error(s), 0 warning(s)
+ACCEPTED rsc_defines - Win32 Debug 
+=== rsc_defines [Release] === 
+--------------------Configuration: rsc_defines - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+rsc_defines.exe - 0 error(s), 0 warning(s)
+ACCEPTED rsc_defines - Win32 Release 
+=== rsc_options [Debug] === 
+--------------------Configuration: rsc_options - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+rsc_options.exe - 0 error(s), 0 warning(s)
+ACCEPTED rsc_options - Win32 Debug 
+=== rsc_options [Release] === 
+--------------------Configuration: rsc_options - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+rsc_options.exe - 0 error(s), 0 warning(s)
+ACCEPTED rsc_options - Win32 Release 
+=== rsc_symbols [Debug] === 
+--------------------Configuration: rsc_symbols - Win32 Debug--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+rsc_symbols.exe - 0 error(s), 0 warning(s)
+ACCEPTED rsc_symbols - Win32 Debug 
+=== rsc_symbols [Release] === 
+--------------------Configuration: rsc_symbols - Win32 Release--------------------
+Compiling resources...
+Compiling...
+main.c
+Linking...
+
+rsc_symbols.exe - 0 error(s), 0 warning(s)
+ACCEPTED rsc_symbols - Win32 Release 
+ 
+ACCEPTED=98 REJECTED=0 

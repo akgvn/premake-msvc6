@@ -135,11 +135,15 @@ Goal: every VC6 build switch the module can emit is reachable from a
 premake5 script, and every emitted combination is accepted by a real
 VC6 toolchain. Where full coverage is impossible, document why.
 
-**Status: items 1–2 done; item 3 harness prepared, Windows run
-outstanding.** The matrix is `docs/coverage-matrix.md`; the suite is
-`tests/test_vs6_coverage.lua` (greedy pairwise, 50 compiler + 26 linker
-+ 26 resource cases, plus explicit legality/escape-hatch tests); the
-acceptance harness is `tests/acceptance/` (see its README.md).
+**Status: DONE (2026-09-27).** The matrix is
+`docs/coverage-matrix.md`; the suite is `tests/test_vs6_coverage.lua`
+(greedy pairwise, 50 compiler + 26 linker + 26 resource cases, plus
+explicit legality/escape-hatch tests); the acceptance harness is
+`tests/acceptance/` and its Windows run passed 98/98 (see
+`tests/acceptance/RESULTS.md` + `acceptance-windows.log`). The four
+first-run rejects were harness authoring errors (VC6 `/Yc`
+include-match and `/FI` search), fixed in the profiles and documented as
+toolchain gotchas in the matrix.
 
 1. **Coverage matrix.** Enumerate the VC6 flags the module emits and
    the premake5 API that reaches each. Anything without a dedicated

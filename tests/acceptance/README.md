@@ -4,10 +4,11 @@ Step 4.3 of `PLAN.md`: generate the reachable build-option combinations
 as `.dsp` files and compile each one with the real Visual C++ 6.0
 toolchain, recording accepted/rejected per combination.
 
-This directory holds the harness only. The actual run needs a Windows
-machine with the loose VC6 tree (`VC98\Bin\VCVARS32.BAT` and
-`Common\MSDev98\Bin\MSDEV.EXE`); it has **not** been executed from the
-Linux development environment.
+This directory holds the harness and the recorded run. The run needs a
+Windows machine with the loose VC6 tree (`VC98\Bin\VCVARS32.BAT` and
+`Common\MSDev98\Bin\MSDEV.EXE`); generation runs on Linux. It has been
+executed once: **98/98 accepted, 0 rejected** — see
+[`RESULTS.md`](RESULTS.md) and [`acceptance-windows.log`](acceptance-windows.log).
 
 ## Files
 
