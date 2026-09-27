@@ -236,3 +236,165 @@ SOURCE=somefile.txt
 # End Source File
 		]]
 	end
+
+
+--
+-- Per-file custom build rules (buildcommands/buildoutputs on a files:
+-- filter); zlib's ml.exe steps. Mixes freely with excludefrombuild.
+--
+
+	function suite.customBuildAllConfigs()
+		filter "files:somefile.txt"
+		buildcommands { "ml.exe /nologo /c /coff /Cx /Fo\"$(IntDir)\\$(InputName).obj\" \"$(InputPath)\"" }
+		buildoutputs { "$(IntDir)\\$(InputName).obj" }
+		filter {}
+		prepare()
+		test.capture [[
+# Begin Source File
+
+SOURCE=somefile.txt
+
+!IF  "$(CFG)" == "MyPackage - Win32 Release"
+
+# Begin Custom Build
+IntDir=obj\Release
+InputPath=somefile.txt
+InputName=somefile
+
+"$(IntDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /coff /Cx /Fo"$(IntDir)\$(InputName).obj" "$(InputPath)"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "MyPackage - Win32 Debug"
+
+# Begin Custom Build
+IntDir=obj\Debug
+InputPath=somefile.txt
+InputName=somefile
+
+"$(IntDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /coff /Cx /Fo"$(IntDir)\$(InputName).obj" "$(InputPath)"
+
+# End Custom Build
+
+!ENDIF 
+
+# End Source File
+		]]
+	end
+
+
+	function suite.customBuildMixedWithExclude()
+		filter { "configurations:Debug", "files:somefile.txt" }
+		excludefrombuild "On"
+		filter { "configurations:Release", "files:somefile.txt" }
+		buildcommands { "ml.exe /c \"$(InputPath)\"" }
+		buildoutputs { "$(IntDir)\\$(InputName).obj" }
+		filter {}
+		prepare()
+		test.capture [[
+# Begin Source File
+
+SOURCE=somefile.txt
+
+!IF  "$(CFG)" == "MyPackage - Win32 Release"
+
+# Begin Custom Build
+IntDir=obj\Release
+InputPath=somefile.txt
+InputName=somefile
+
+"$(IntDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /c "$(InputPath)"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "MyPackage - Win32 Debug"
+
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
+# End Source File
+		]]
+	end
+
+
+--
+-- PCH: pchheader replaces the fixed /YX with /Yu"hdr"; the pchsource
+-- file gets per-config /Yc"hdr" (Gener's StdAfx.cpp)
+--
+
+	function suite.pchHeader()
+		pchheader "stdafx.h"
+		pchsource "somefile.txt"
+		prepare()
+		test.capture [[
+# Begin Source File
+
+SOURCE=somefile.txt
+
+# ADD CPP /Yc"stdafx.h"
+# End Source File
+		]]
+	end
+
+
+	function suite.pchDisabled()
+		pchheader "stdafx.h"
+		pchsource "somefile.txt"
+		enablepch "Off"
+		prepare()
+		test.capture [[
+# Begin Source File
+
+SOURCE=somefile.txt
+# End Source File
+		]]
+	end
+
+--
+-- Per-file compiler additions (zlib's per-file /I)
+--
+
+	function suite.perFileCppFlags()
+		filter "files:somefile.txt"
+		includedirs { "../.." }
+		filter {}
+		prepare()
+		test.capture [[
+# Begin Source File
+
+SOURCE=somefile.txt
+
+# ADD CPP /I "..\.."
+# End Source File
+		]]
+	end
+
+
+--
+-- Per-file CPP flags that differ per configuration (or mix with
+-- excludes/custom builds) are chained per configuration
+--
+
+	function suite.perFileCppFlagsPerConfig()
+		filter { "configurations:Debug", "files:somefile.txt" }
+		includedirs { "../.." }
+		filter {}
+		prepare()
+		test.capture [[
+# Begin Source File
+
+SOURCE=somefile.txt
+
+!IF  "$(CFG)" == "MyPackage - Win32 Debug"
+
+# ADD CPP /I "..\.."
+
+!ENDIF 
+
+# End Source File
+		]]
+	end

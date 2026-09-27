@@ -255,3 +255,21 @@ LINK32=link.exe
 		symbolspath "logs/app.pdb"
 		test.isequal(" /nologo /subsystem:console /machine:I386 /out:\"bin\\Debug\\MyPackage.exe\" /libpath:\"bin\\Debug\"", linkflags("Debug"))
 	end
+
+
+--
+-- pchheader: /Yu"hdr" replaces the fixed /YX idiom; enablepch "Off"
+-- drops PCH flags entirely
+--
+
+	function suite.pchHeaderYu()
+		pchheader "stdafx.h"
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /Yu\"stdafx.h\" /FD /c", cppflags("Debug"))
+	end
+
+
+	function suite.pchDisabled()
+		pchheader "stdafx.h"
+		enablepch "Off"
+		test.isequal(" /MD /W3 /GR /GX /D \"_UNICODE\" /D \"UNICODE\" /FD /c", cppflags("Debug"))
+	end

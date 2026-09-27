@@ -137,7 +137,7 @@ project "DelExe"
 
 
 --
--- Gener (ConsoleApp; PCH /Yu + per-file /Yc not reproduced — known gap)
+-- Gener (ConsoleApp; precompiled header stdafx.h)
 --
 
 project "Gener"
@@ -148,6 +148,8 @@ project "Gener"
 	era()
 	rtti "Off"
 	defines { "WIN32", "_CONSOLE", "_MBCS" }
+	pchheader "stdafx.h"
+	pchsource "Gener/StdAfx.cpp"
 
 	vpaths {
 		["Source Files"] = { "Gener/*.cpp" },
@@ -172,6 +174,7 @@ project "Gener"
 		incrementallink "Off"
 		runtime "Debug"
 		exceptionhandling "Off"
+		enablepch "Off"
 	filter "configurations:Install"
 		releasecfg()
 		defines { "NDEMO", "_INSTALL" }

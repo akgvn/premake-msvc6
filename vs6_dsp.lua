@@ -162,7 +162,7 @@
 		p.outln('# ADD BSC32 /nologo')
 
 		if vs6.islib(cfg) then
-			p.outln('LINK32=link.exe -lib')
+			p.outln('LIB32=link.exe -lib')
 			p.outln('# ADD BASE LIB32 /nologo')
 			p.outln('# ADD LIB32 /nologo /out:"' .. vs6.path(vs6.target(cfg)) .. '"')
 		else
@@ -260,7 +260,11 @@
 			table.insert(r, '/FI "' .. vs6.path(p.project.getrelative(cfg.project, file)) .. '"')
 		end
 
-		table.insert(r, "/YX")
+		if cfg.enablepch ~= p.OFF and cfg.pchheader then
+			table.insert(r, '/Yu"' .. cfg.pchheader .. '"')
+		elseif cfg.enablepch ~= p.OFF then
+			table.insert(r, "/YX")
+		end
 		table.insert(r, "/FD")
 
 		if debugRuntime then
@@ -508,8 +512,9 @@
 ---
 -- One source file node: the SOURCE= line (quoted when the path contains
 -- spaces — VC6 won't parse unquoted paths with spaces) followed by
--- per-configuration Exclude_From_Build blocks for the configurations the
--- file is excluded from (premake5's excludefrombuild).
+-- per-configuration blocks for the configurations the file is excluded
+-- from (premake5's excludefrombuild) or custom-built in (premake5's
+-- buildcommands/buildoutputs on a files: filter).
 ---
 
 	function dsp.sourceFile(prj, file)
@@ -522,30 +527,146 @@
 		end
 		p.outln('SOURCE=' .. src)
 
-		-- VC6 mentions only the excluded configurations, in the same
+		-- VC6 mentions only the configurations that differ, in the same
 		-- reversed order as the project's configuration blocks
-		local excluded = {}
 		local configs = vs6.configs(prj)
-		for i = #configs, 1, -1 do
-			local fcfg = p.fileconfig.getconfig(file.node, configs[i])
-			if fcfg and fcfg.excludefrombuild then
-				table.insert(excluded, configs[i])
+
+		-- the PCH source builds the precompiled header; VC6 writes the
+		-- /Yc mark config-independent when pchheader is uniform
+		local pchflag
+		local pchuniform = true
+		for _, cfg in ipairs(configs) do
+			if cfg.enablepch ~= p.OFF and cfg.pchheader
+					and cfg.pchsource == file.node.abspath then
+				if pchflag and pchflag ~= cfg.pchheader then
+					pchuniform = false
+				end
+				pchflag = pchflag or cfg.pchheader
 			end
 		end
 
-		if #excluded > 0 then
+		local bodies = {}
+		for i = #configs, 1, -1 do
+			local cfg = configs[i]
+			local fcfg = p.fileconfig.getconfig(file.node, cfg)
+			if fcfg then
+				local body = { cfg = cfg }
+				if fcfg.excludefrombuild then
+					body.exclude = true
+				end
+				if p.fileconfig.hasCustomBuildRule(fcfg) then
+					body.custom = fcfg
+				end
+				-- per-file compiler additions (defines, undefines,
+				-- include dirs, buildoptions)
+				local cpp = {}
+				for _, def in ipairs(fcfg.defines) do
+					table.insert(cpp, '/D "' .. def .. '"')
+				end
+				for _, undef in ipairs(fcfg.undefines) do
+					table.insert(cpp, '/U "' .. undef .. '"')
+				end
+				for _, dir in ipairs(fcfg.includedirs) do
+					table.insert(cpp, '/I "' .. vs6.path(p.project.getrelative(cfg.project, dir)) .. '"')
+				end
+				for _, opt in ipairs(fcfg.buildoptions) do
+					table.insert(cpp, opt)
+				end
+				-- non-uniform pchheader: /Yc lands in the per-config chain
+				if not pchuniform and cfg.enablepch ~= p.OFF and cfg.pchheader
+						and cfg.pchsource == file.node.abspath then
+					table.insert(cpp, 1, '/Yc"' .. cfg.pchheader .. '"')
+				end
+				if #cpp > 0 then
+					body.cpp = cpp
+				end
+				if body.exclude or body.custom or body.cpp then
+					table.insert(bodies, body)
+				end
+			end
+		end
+
+		if pchuniform and pchflag then
 			p.outln('')
-			for i, cfg in ipairs(excluded) do
-				p.outln((i == 1 and '!IF' or '!ELSEIF') .. '  "$(CFG)" == "' .. prj.name .. ' - Win32 ' .. cfg.buildcfg .. '"')
+			p.outln('# ADD CPP /Yc"' .. pchflag .. '"')
+		end
+
+		if #bodies > 0 then
+			-- VC6 idiom: per-file CPP flags that are uniform across all
+			-- configurations are written without the !IF chain (excludes
+			-- and custom builds are always chained)
+			local uniform = #bodies == #configs
+			local first = bodies[1].cpp
+			if uniform and first then
+				for _, body in ipairs(bodies) do
+					if body.exclude or body.custom or not body.cpp
+							or table.concat(body.cpp, "\1") ~= table.concat(first, "\1") then
+						uniform = false
+						break
+					end
+				end
+			else
+				uniform = false
+			end
+			if uniform then
 				p.outln('')
-				p.outln('# PROP Exclude_From_Build 1')
+				p.outln('# ADD CPP ' .. table.concat(first, " "))
+			else
+				p.outln('')
+				for i, body in ipairs(bodies) do
+					p.outln((i == 1 and '!IF' or '!ELSEIF') .. '  "$(CFG)" == "' .. prj.name .. ' - Win32 ' .. body.cfg.buildcfg .. '"')
+					p.outln('')
+					if body.exclude then
+						p.outln('# PROP Exclude_From_Build 1')
+					end
+					if body.cpp then
+						p.outln('# ADD CPP ' .. table.concat(body.cpp, " "))
+					end
+					if body.custom then
+						dsp.customBuild(body.cfg, body.custom, file)
+					end
+					p.outln('')
+				end
+				-- VC6-authored files write the per-file !ENDIF with a
+				-- trailing space
+				p.outln('!ENDIF ')
 				p.outln('')
 			end
-			-- VC6-authored files write the per-file !ENDIF with a
-			-- trailing space
-			p.outln('!ENDIF ')
-			p.outln('')
 		end
 
 		p.outln('# End Source File')
+	end
+
+
+---
+-- The custom build block for one file in one configuration. Commands
+-- and outputs are emitted verbatim (premake5 does not translate build
+-- step macros either; scripts use VC6's $(IntDir)/$(InputPath) macros
+-- directly). The IntDir=/OutDir= header follows where the first output
+-- points, matching VC6's own convention.
+---
+
+	function dsp.customBuild(cfg, fcfg, file)
+		p.outln('# Begin Custom Build')
+
+		local firstout = fcfg.buildoutputs[1] or ""
+		if firstout:find("%$%(OUTDIR%)") then
+			p.outln('OutDir=' .. vs6.path(vs6.outdir(cfg)))
+		else
+			p.outln('IntDir=' .. vs6.path(vs6.objdir(cfg)))
+		end
+		p.outln('InputPath=' .. vs6.path(file.source))
+		p.outln('InputName=' .. path.getbasename(file.source))
+		p.outln('')
+
+		local outputs = table.translate(fcfg.buildoutputs, function(o)
+			return '"' .. vs6.path(o) .. '"'
+		end)
+		p.outln(table.concat(outputs, " ") .. ' : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"')
+		for _, cmd in ipairs(fcfg.buildcommands) do
+			p.outln('\t' .. cmd)
+		end
+		p.outln('')
+
+		p.outln('# End Custom Build')
 	end
