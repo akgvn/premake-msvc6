@@ -4,7 +4,7 @@ Guidance for coding agents working in this repository.
 
 ## What this is
 
-`premake5-vs6` — a standalone Premake5 module adding a `premake5 vs6`
+`premake-msvc6` — a standalone Premake5 module adding a `premake5 vs6`
 action that generates Visual C++ 6.0 `.dsw`/`.dsp` files. The module
 follows premake5-native conventions (baked targets, premake5 defaults,
 msc toolset mappings). It began as a byte-exact port of premake 3.7's

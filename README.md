@@ -1,4 +1,4 @@
-# premake5-vs6
+# premake-msvc6
 
 A standalone [Premake5](https://premake.github.io) module adding a `vs6`
 action that generates Visual C++ 6.0 workspace (`.dsw`) and project (`.dsp`)
@@ -29,7 +29,7 @@ workspace "Sample"
 ```
 
 ```sh
-premake5 --scripts=/path/to/premake5-vs6 vs6
+premake5 --scripts=/path/to/premake-msvc6 vs6
 ```
 
 (`--scripts` adds this repository to Premake's module search path; any
@@ -47,7 +47,7 @@ into a [premake-core](https://github.com/premake/premake-core) checkout
 (one-time), then run from that checkout:
 
 ```sh
-ln -s /path/to/premake5-vs6 modules/vs6
+ln -s /path/to/premake-msvc6 modules/vs6
 bin/release/premake5 test --test-only=vs6*
 ```
 

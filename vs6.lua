@@ -8,7 +8,7 @@
 -- (It began as a byte-exact port of premake 3.7's vs6 exporter; that
 -- state is preserved at tag v1.0-3x-parity. See docs/3x-to-native.md.)
 --
--- Copyright (c) 2026 the premake5-vs6 project contributors
+-- Copyright (c) 2026 the premake-msvc6 project contributors
 -- Based on premake 3.x (vs6.c, vs6_cpp.c) by Jason Perkins
 -- SPDX-License-Identifier: GPL-2.0-or-later
 --

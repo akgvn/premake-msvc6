@@ -2,7 +2,7 @@
 -- vs6_dsw.lua
 -- Visual C++ 6.0 workspace (.dsw) file writer.
 --
--- Copyright (c) 2026 the premake5-vs6 project contributors
+-- Copyright (c) 2026 the premake-msvc6 project contributors
 -- Based on premake 3.x (vs6.c) by Jason Perkins
 -- SPDX-License-Identifier: GPL-2.0-or-later
 --

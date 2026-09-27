@@ -2,7 +2,7 @@
 -- vs6_dsp.lua
 -- Visual C++ 6.0 project (.dsp) file writer.
 --
--- Copyright (c) 2026 the premake5-vs6 project contributors
+-- Copyright (c) 2026 the premake-msvc6 project contributors
 -- Based on premake 3.x (vs6_cpp.c) by Jason Perkins
 -- SPDX-License-Identifier: GPL-2.0-or-later
 --
