@@ -1,61 +1,49 @@
 # HANDOFF — where we are and what's next
 
-State as of 2026-09-27, uncommitted work on top of commit 700c25c.
-122 vs6 tests green; full premake-core suite (3025) green;
-tests/e2e.sh green; zlib experiment 100% green; peter and libpng
-show only their documented residuals. The quake2 experiment is written
-and its result recorded; the dspdiff fixes below are uncommitted.
+State as of 2026-09-27, commit 2167f78 (all committed, nothing in
+flight). 122 vs6 tests green; full premake-core suite (3025) green;
+tests/e2e.sh green. Steps 1–3 of PLAN.md are DONE: the module is
+premake5-native, the four real-world experiments (peter, zlib, libpng,
+quake2) reproduce their targets except each one's documented residuals
+(experiments/*/NOTES.md), and Step 3's feature harvest (custom build
+rules, per-file CPP flags, PCH, locale, vpaths, excludefrombuild,
+quoted SOURCE=) is in.
 
-## Done since the last HANDOFF
+## Next: Step 4 — VC6 build-option coverage
 
-- **Step 3d — experiments/quake2 (scale):** the five-project Quake 2
-  v3.19 workspace is reproduced. `quake2.dsw` matches exactly; all five
-  `.dsp` match except three documented residuals (`/machine:ALPHA`
-  unpinnable, ref_soft Release missing `/FD`, `/nodefaultlib:"libc"`
-  vs the premake5-native `"libc.lib"`). New shapes exercised: ALPHA
-  configs via `buildoptions` + `editandcontinue "Off"` (for `/Zi`),
-  script-relative file/dir paths for subdirectory projects,
-  `/subsystem:windows` restored through `linkoptions`, per-config
-  mapfile/incrementallink/ignoredefaultlibraries, ref_gl's
-  opengl32-only-in-Debug-Alpha hand drift, and per-file
-  `files:not` filters for r_polysa.asm's one-off empty ALPHA branches.
-  See `experiments/quake2/NOTES.md`.
-- **tools/dspdiff.py fixes** (first forced by quake2's VC6 dependency
-  blocks): now drops `DEP_CPP_`/`DEP_RSC_`/`NODEP_` *continuations*,
-  removes an all-empty per-file `!IF` chain instead of leaving a stray
-  `!ENDIF`, and normalizes `# PROP Target_Dir "."` to `""`. zlib, peter
-  and libpng outcomes are unchanged (their originals have no dependency
-  blocks).
-- No module sources changed this round; PLAN.md Status/Steps updated
-  with the quake2 line and the already-reachable Step 4 flags.
+Everything else is done; this is the only remaining step in PLAN.md.
+Its three deliverables, in order:
 
-## Remaining
+1. **Coverage matrix** (`docs/`): every VC6 flag the module can emit →
+   the premake5 API that reaches it. The full starting inventory is in
+   PLAN.md Step 4 item 1 (compiler/linker/RSC lists + the Steps 2–3
+   additions). For flags with no dedicated mapping: say "escape hatch"
+   (buildoptions/linkoptions/resoptions) or give a documented reason
+   (no-VC6-equivalent list: `/std:*`, `/arch:*`, `/fp:*`, …; the
+   unpinnable `/machine:ALPHA` from the quake2 experiment belongs here
+   too).
+2. **`vs6_coverage` suite** (tests/): pairwise (or documented
+   structured subset) walk of the reachable option space asserting the
+   exact CPP/RSC/LINK32/LIB32 lines per combination, incl. the legality
+   rules (`/ZI`→`/Zi` under optimization, `/GZ` only with the debug
+   runtime, `/implib` absent with `useimportlib "Off"`). Record which
+   subset and why. Existing suites (test_vs6_buildflags.lua etc.) pin
+   the individual mappings already — the coverage suite is about
+   combinations.
+3. **Windows acceptance run**: generate the same combinations as .dsp,
+   compile a trivial source under each with the real VC6 toolchain
+   (loose tree at C:\MSVC6, env via
+   VC98\Bin\VCVARS32.BAT, `cl.exe`/`link.exe` directly or
+   `msdev /MAKE`). Log accepted/rejected per combo; fix or document
+   every rejection.
 
-- **FLTK** is the other "scale" candidate in PLAN Step 3, now optional:
-  the quake2 experiment covers everything FLTK would (it has no feature
-  the corpus doesn't already cover).
-- **Step 4 — VC6 build-option coverage** (the big one): coverage matrix
-  + `vs6_coverage` combinatoric suite + Windows acceptance run. PLAN.md
-  Step 4 has the flag inventory; the Steps 2–3 flags are already listed
-  as reachable there (locale/RSC, per-file CPP + custom build, PCH
-  `/Yu`/`/Yc`, `symbolspath` `/pdb:`, `mapfile` `/map`, `profile`,
-  `/nodefaultlib:`, `/FI`, `/U`, characterset defines). Deferred
-  single-flag enums to evaluate there: callingconvention `/Gd`..,
-  structmemberalign `/Zp`, stringpooling `/GF`, intrinsics `/Oi`,
-  functionlevellinking `/Gy`, unsignedchar `/J`, compileas `/TC`/`/TP`,
-  inlining `/Ob`, plus the no-VC6-equivalent list (cdialect/cppdialect
-  `/std`, vectorextensions, floatingpoint, …). The Windows run uses the
-  loose VC6 tree at `C:\MSVC6` with
-  VCVARS32.BAT.
+Single-flag enums to evaluate for dedicated mappings while doing item 1
+(currently escape-hatch-only): callingconvention `/Gd..`, structmemberalign
+`/Zp`, stringpooling `/GF`, intrinsics `/Oi`, functionlevellinking `/Gy`,
+unsignedchar `/J`, compileas `/TC`/`/TP`, inlining `/Ob`.
 
 ## Working with the quota
 
 Batch independent tool calls; avoid re-reading files already read;
-trust prior findings (this file + PLAN.md + NOTES.md files carry them).
-Commit only when explicitly asked.
-
-**Placeholder lesson:** explicit per-project file lists (zlib, libpng,
-quake2) avoid the placeholder machinery entirely; if globs are ever used
-(peter), placeholder paths must be joined onto the script's own
-directory (the real .dsp's depth), never naively — see commit b3e7474
-for the escaped-stubs incident.
+trust prior findings (this file + PLAN.md + experiments/*/NOTES.md carry
+them). Commit only when explicitly asked.
