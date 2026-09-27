@@ -1,5 +1,7 @@
 # premake-msvc6
 
+Note: entirely written by LLM agents (mostly by Kimi K3 and to a lesser extent DeepSeek v4.1 Flash) to assist my other organically-produced modernization side-projects. The rest of this file is LLM-generated as well.
+
 A standalone [Premake5](https://premake.github.io) module adding a `vs6`
 action that generates Visual C++ 6.0 workspace (`.dsw`) and project (`.dsp`)
 files for C/C++ projects (Win32 only).
