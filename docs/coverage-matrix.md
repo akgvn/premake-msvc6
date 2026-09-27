@@ -49,8 +49,8 @@ per-source `# ADD CPP` / `# Begin Custom Build` block.
 | `/U "DEF"` | `undefines { "DEF" }` | CPP | |
 | `/FI "hdr"` | `forceincludes { "hdr" }` | CPP | |
 | `/YX` | *(default)* | CPP | premake5 default (`enablepch` not `Off`, no `pchheader`) |
-| `/Yu"hdr"` | `pchheader "hdr"` | CPP | |
-| `/Yc"hdr"` | `pchsource "src"` | file | per-file build-the-PCH block |
+| `/Yu"hdr"` | `pchheader "hdr"` | CPP | `hdr` is emitted verbatim; VC6 matches it against the source's `#include` string (see gotchas) |
+| `/Yc"hdr"` | `pchsource "src"` | file | per-file build-the-PCH block; same include-match rule |
 | `/FD` | *(fixed)* | CPP | |
 | `/GZ` | debug runtime | CPP | after `/FD`; only for `/MDd`/`/MTd` |
 | `/c` | *(fixed)* | CPP | |
@@ -176,6 +176,26 @@ the corresponding text is emitted by the escape hatch instead.
 | `/implib` absent with `useimportlib "Off"` | no `/implib:` and adds `# PROP Ignore_Export_Lib 1` |
 | `rtti "Off"` / `exceptionhandling "Off"` | simply omit `/GR` / `/GX` (no negative form on VC6) |
 | static library | uses `LIB32=link.exe -lib` + `/out:`; no `LINK32` flags, no `MTL` |
+
+## VC6 gotchas found by the acceptance run
+
+These are toolchain rules, not module mappings, but they affect how a
+script must be written:
+
+- **PCH include match.** VC6's `/Yc` requires the source file's
+  `#include` to name the header exactly as the `/Yc` argument. A
+  `pchheader` carrying a directory (`pchheader "include/precomp.h"`)
+  produces `/Yc"include/precomp.h"`, so the building source must
+  `#include "include/precomp.h"` (or the path must match). A bare
+  basename (`pchheader "precomp.h"`) with an `includedirs` entry is the
+  portable form. The module emits `pchheader` verbatim, matching
+  premake5's vstudio behavior.
+- **Forced-include search.** `/FI` is processed like a quoted `#include`
+  in the first line of each source, so a `forceincludes` path is
+  resolved from the including file's directory and the `/I` list, not
+  from the project root. A directory-relative path
+  (`forceincludes "sub/hdr.h"`) therefore needs the directory on
+  `includedirs`; a header next to the sources works with a bare name.
 
 ## Coverage-suite subset
 

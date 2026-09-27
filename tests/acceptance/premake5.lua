@@ -48,14 +48,14 @@ local profiles = {
 		externalincludedirs { "include" }
 		includedirsafter { "include" }
 	end },
-	{ name = "cpp_forceinclude",  opts = function() forceincludes { "sources/accept.h" } end },
+	{ name = "cpp_forceinclude",  opts = function() forceincludes { "accept.h" } end },
 	{ name = "cpp_buildoptions",  opts = function()
 		-- the escape-hatch-only single-flag enums
 		buildoptions { "/Gd", "/Zp8", "/GF", "/Oi", "/Gy", "/J", "/Ob1" }
 	end },
 	{ name = "cpp_pch",
 		files = { "sources/stdafx.c", "sources/pchmain.c", "sources/app.rc" },
-		opts = function() pchheader "sources/accept.h"; pchsource "sources/stdafx.c" end },
+		opts = function() pchheader "accept.h"; pchsource "sources/stdafx.c" end },
 
 	-- linker flags -------------------------------------------------------
 	{ name = "link_console" },
