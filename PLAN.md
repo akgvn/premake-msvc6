@@ -9,7 +9,7 @@
   premake5 defaults, msc toolset flag mappings (details in README.md).
   Began as a byte-exact premake 3.7 port — preserved at tag
   `v1.0-3x-parity`, migration spec `docs/3x-to-native.md`.
-- 111 tests green via `bin/release/premake5 test --test-only=vs6*` from a
+- 122 tests green via `bin/release/premake5 test --test-only=vs6*` from a
   premake-core checkout with this repo linked into
   `premake-core/modules/vs6`; full premake-core suite passes.
   `tests/golden/` is the module's own sample output (regression
@@ -104,13 +104,22 @@ the resolution for each:
   diffs the premake-reachable remainder.
 - **Peter (done 2026-09-24):** `experiments/peter/` reproduces all 9
   files; 7 are structurally identical, DataInst/Gener differ only in
-  the documented gaps (custom BSC32 output, PCH `/Yu`+per-file `/Yc`,
-  empty groups). Three module bugs found and fixed (path-like links
-  emitted absolute, `MTL=` on console apps, RSC debug-marker
-  duplication). Details in `experiments/peter/NOTES.md`.
-- Then, in order: zlib/libpng (small, deps, per-config kinds),
-  FLTK/Quake 2 (scale). Each experiment produces a premake5 script + a
-  gap list feeding Step 2.
+  the documented gaps (custom BSC32 output name, empty groups). Three
+  module bugs found and fixed (path-like links emitted absolute, `MTL=`
+  on console apps, RSC debug-marker duplication). Details in
+  `experiments/peter/NOTES.md`.
+- **zlib (done 2026-09-24):** `experiments/zlib/` — 100% structural
+  match (per-config kinds/target names, deps, per-config excludes,
+  ml.exe custom builds, per-file `/I`). Drove the per-file custom-build
+  + per-file CPP flags features; PCH (`/Yu`/`/Yc`) landed here too.
+  See NOTES.md.
+- **libpng (done 2026-09-24):** `experiments/libpng/` — dsw + pngtest
+  match; libpng.dsp matches except the VB-config position artifact
+  (premake5 has no removeconfigurations), embedded-quote RSC defines,
+  and the original's own hand drift. See NOTES.md.
+- **Quake 2 (surveyed, script not written):** findings in HANDOFF.md
+  (per-project settings, the `/machine:ALPHA` gap, ref_soft asm custom
+  builds). FLTK optional after that.
 
 ### Step 4 — VC6 build-option coverage (generation + Windows validation)
 
@@ -122,8 +131,9 @@ VC6 toolchain. Where full coverage is impossible, document why.
    the premake5 API that reaches each. Anything without a dedicated
    mapping is either reachable through the
    `buildoptions`/`linkoptions`/`resoptions` escape hatches (say so) or
-   gets a documented reason (e.g. PCH `/Yu`/`/Yc` — premake5's pch APIs
-   exist but the module doesn't implement them yet). Starting point:
+   gets a documented reason. PCH is implemented now (pchheader →
+   `/Yu"hdr"`, pchsource → per-file `/Yc"hdr"`, enablepch "Off" →
+   neither); the flag inventory below predates that. Starting point:
 
    - Compiler: `/nologo` (fixed), `/MD(d)`/`/MT(d)` (staticruntime +
      runtime/isDebugBuild), `/W0`/`/W3`/`/W4` (warnings), `/WX`
