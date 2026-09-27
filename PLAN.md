@@ -21,182 +21,50 @@
   old 3.x-parity output was a premake 3.7 oracle bug; native mode emits
   `/Zi` with optimization.
 - `real-world-test-cases/` holds 310 .dsw/.dsp files from 13 public
-  projects (provenance in each SOURCE.md) for Steps 2–3.
+  projects (provenance in each SOURCE.md); `experiments/` reproduces
+  four of them from premake5 scripts (per-experiment NOTES.md).
 
-## Next steps (in order)
+## Completed roadmap (Steps 1–4, all done 2026-09-24 → 2026-09-27)
 
-### Step 1 — investigate for remaining divergences from premake5-native conventions
+History lives in the git log and the per-experiment NOTES.md files:
 
-**Done (2026-09-24).** The battery against vs2005 + code review of
-`_premake_init.lua`/`msc.lua`/vstudio found one bug and nine silently
-dropped premake5 APIs, all fixed with tests (86 → 104 tests):
+1. **Divergence sweep:** one bug (`links "foo.lib"` double-extension)
+   and nine silently dropped premake5 APIs mapped (undefines,
+   characterset, syslibdirs, ignoredefaultlibraries,
+   externalincludedirs, includedirsafter, forceincludes, symbolspath,
+   mapfile/mapfilepath, profile).
+2. **Gap features:** `locale` → RSC `/l` LCID, quoted `SOURCE=` for
+   paths with spaces, `vpaths` logical groups, `excludefrombuild`
+   per-config blocks.
+3. **Real-world experiments** (`tools/dspdiff.py` structural differ):
+   peter (7/9 identical), zlib (100%), libpng (dsw + pngtest match),
+   quake2 (dsw + all 5 dsp match) — each with documented residuals.
+   Drove per-file custom build rules, per-file CPP flags, PCH
+   (`/Yu`/`/Yc`), plus fixes for path-like links, `MTL=` condition,
+   RSC marker dedupe, and `LIB32=link.exe -lib`.
+4. **Build-option coverage:** `docs/coverage-matrix.md`, the
+   `vs6_coverage` pairwise suite (111 cases), and the Windows acceptance
+   run — 98/98 accepted (`tests/acceptance/RESULTS.md`).
 
-- **Bug:** `links "foo.lib"` emitted `foo.lib.lib`; now kept as-is, like
-  `msc.getlinks()` (`.lib`/`.obj` extensions recognized).
-- **Now mapped** (msc/vstudio equivalents): `undefines`→`/U`,
-  `characterset`→defines, `syslibdirs`→`/libpath:` (after `libdirs`),
-  `ignoredefaultlibraries`→`/nodefaultlib:`, `externalincludedirs` +
-  `includedirsafter`→`/I` (after `includedirs`),
-  `forceincludes`→`/FI`, `symbolspath`→`/pdb:` (symbols on, not c7),
-  `mapfile`/`mapfilepath`→`/map[:file]`, `profile`→`/profile`.
-- **Checked, no change needed:** `runtime`/`staticruntime` (matches
-  `msc.lua getRuntimeFlag`), `symbols`/`debugformat`/`editandcontinue`
-  (matches `vs200x_vcproj.symbols()`), `minimalrebuild`,
-  `incrementallink`, `optimize`/`warnings`, `rtti`/`exceptionhandling`
-  Default, per-config `kind` (oven), `toolset` (premake-core warns),
-  `targetname`-with-path (oven). `cdialect`/`cppdialect` have no VC6
-  equivalent (`/std:*` didn't exist) — documented in Step 4's matrix.
+## Optional follow-ups (nothing required)
 
-**Decision logged (would otherwise have asked; revisit if needed):**
-`characterset "Default"` (premake5's global default) maps to
-`/D "_UNICODE" /D "UNICODE"`, following `msc.lua`/`vs2010` exactly — the
-module's stated convention is premake5-native mappings, and the D3
-symbols re-baseline set the precedent that premake5 defaults win over
-VC6-era idiom. Consequence: legacy ANSI code must opt out with
-`characterset "MBCS"` (documented in README.md). The alternative
-(rejected): Default → nothing, keeping VC6's ANSI norm but diverging
-from every premake5 generator. Golden baseline regenerated for this.
-
-Still-deferred premake5 data APIs without a defensible VC6 mapping:
-single-flag enums (`callingconvention`, `structmemberalign`,
-`stringpooling`, `intrinsics`, `functionlevellinking`, `unsignedchar`,
-`compileas`, `inlining`) — these are Step 4 coverage-matrix items, not
-divergences.
-
-
-### Step 2 — gap-driven module features (from real-world analysis)
-
-**Done (2026-09-24), 104 → 111 tests.** Findings from the survey, with
-the resolution for each:
-
-- **RSC locale** (Peter: `/l 0x405`, contiki: `/l 0x407`): turned out to
-  need no module option — premake5's `locale` API (vstudio-registered,
-  maps ISO locale ids to MS culture codes for vs2010's Culture element)
-  fits exactly: `locale "cs-CZ"` → `/l 0x405`. The module now honors
-  `cfg.locale`, default `0x409`; unknown locales warn (premake5's
-  warnOnce) and fall back to the default.
-- **Quoted `SOURCE=` for paths with spaces** (Peter's `Lucka 2.ico`):
-  done — paths containing spaces are quoted, others stay bare (matches
-  Peter's mixed usage; contiki quotes everything, both forms are
-  accepted by VC6).
-- **Logical file groups** (Peter's `Buffery`/`Editory`): done via
-  premake5's `vpaths` — files are grouped by `fcfg.vpath`, which falls
-  back to the physical relative path when no rule matches (so default
-  output is unchanged). `Default_Filter` keeps emitting `""` (decided:
-  no premake5 API, cosmetic only).
-- **Per-file settings**: premake5's `excludefrombuild` (files: filter)
-  now emits VC6's per-config `# PROP Exclude_From_Build 1` blocks for
-  the excluded configurations only, in reversed config order, with
-  VC6's trailing-space `!ENDIF ` (Peter's `ProgInit.inc`, quake2's
-  ref_soft asm files). Per-file **custom build rules** (quake2's ml.exe
-  blocks; premake5's fileconfig buildcommands/buildoutputs) are the
-  remaining gap — deferred to Step 3 if the experiments justify it.
-- **zlib's per-config kinds**: supported already (vs6_kinds.mixedKinds);
-  validation against zlib's exact shape is part of Step 3.
-
-### Step 3 — real-world generation experiments
-
-- **Structural-diff tool:** `tools/dspdiff.py` strips VC-isms
-  (system-lib lists, `# SUBTRACT`, `# ADD BASE`/`# PROP BASE`,
-  `DEP_*`/`NODEP_*` dependency lists and continuations, a per-file
-  `!IF` chain that is empty in every branch, `Ignore_Export_Lib 0`, `.\`
-  prefixes, `Target_Dir "."`, MTL `/o "NUL"`, `CFG=` (last-active IDE
-  state), `Default_Filter` values, runtime tokens, `/GZ`, `/out:`, RSC
-  merged defines, blank lines, flag order, file order) and diffs the
-  premake-reachable remainder.
-- **Peter (done 2026-09-24):** `experiments/peter/` reproduces all 9
-  files; 7 are structurally identical, DataInst/Gener differ only in
-  the documented gaps (custom BSC32 output name, empty groups). Three
-  module bugs found and fixed (path-like links emitted absolute, `MTL=`
-  on console apps, RSC debug-marker duplication). Details in
-  `experiments/peter/NOTES.md`.
-- **zlib (done 2026-09-24):** `experiments/zlib/` — 100% structural
-  match (per-config kinds/target names, deps, per-config excludes,
-  ml.exe custom builds, per-file `/I`). Drove the per-file custom-build
-  + per-file CPP flags features; PCH (`/Yu`/`/Yc`) landed here too.
-  See NOTES.md.
-- **libpng (done 2026-09-24):** `experiments/libpng/` — dsw + pngtest
-  match; libpng.dsp matches except the VB-config position artifact
-  (premake5 has no removeconfigurations), embedded-quote RSC defines,
-  and the original's own hand drift. See NOTES.md.
-- **Quake 2 (done 2026-09-27):** `experiments/quake2/` — 5 projects,
-  ~150 files, 4 configurations each incl. two ALPHA ones. `quake2.dsw`
-  matches exactly; all five `.dsp` match except the documented residuals
-  (`/machine:ALPHA` unpinnable, ref_soft's missing `/FD`, and
-  `/nodefaultlib:"libc"` vs the premake5-native `"libc.lib"`). Drove the
-  dspdiff dependency-block fixes (DEP/NODEP continuations, all-empty
-  per-file `!IF` chains, `Target_Dir "."`). See NOTES.md.
-- **FLTK** is the other "scale" candidate and remains optional: it has no
+- **Dedicated mappings for the escape-hatch-only single-flag enums**
+  (currently reachable only via `buildoptions`, documented in
+  `docs/coverage-matrix.md`): `callingconvention` (`/Gd`..),
+  `structmemberalign` (`/Zp`), `stringpooling` (`/GF`), `intrinsics`
+  (`/Oi`), `functionlevellinking` (`/Gy`), `unsignedchar` (`/J`),
+  `compileas` (`/TC`/`/TP`), `inlining` (`/Ob`). Decide each as
+  map-vs-document; tests in the same commit.
+- **Revisit if needed:** `characterset "Default"` (premake5's global
+  default) maps to `/D "_UNICODE" /D "UNICODE"`, following
+  `msc.lua`/`vs2010` exactly — legacy ANSI code opts out with
+  `characterset "MBCS"` (documented in README.md). The rejected
+  alternative was Default → nothing (VC6-era ANSI norm, diverging from
+  every premake5 generator).
+- **FLTK experiment** (Step 3's other scale candidate): it has no
   feature the corpus above doesn't already cover.
-
-### Step 4 — VC6 build-option coverage (generation + Windows validation)
-
-Goal: every VC6 build switch the module can emit is reachable from a
-premake5 script, and every emitted combination is accepted by a real
-VC6 toolchain. Where full coverage is impossible, document why.
-
-**Status: DONE (2026-09-27).** The matrix is
-`docs/coverage-matrix.md`; the suite is `tests/test_vs6_coverage.lua`
-(greedy pairwise, 50 compiler + 26 linker + 26 resource cases, plus
-explicit legality/escape-hatch tests); the acceptance harness is
-`tests/acceptance/` and its Windows run passed 98/98 (see
-`tests/acceptance/RESULTS.md` + `acceptance-windows.log`). The four
-first-run rejects were harness authoring errors (VC6 `/Yc`
-include-match and `/FI` search), fixed in the profiles and documented as
-toolchain gotchas in the matrix.
-
-1. **Coverage matrix.** Enumerate the VC6 flags the module emits and
-   the premake5 API that reaches each. Anything without a dedicated
-   mapping is either reachable through the
-   `buildoptions`/`linkoptions`/`resoptions` escape hatches (say so) or
-   gets a documented reason. PCH is implemented now (pchheader →
-   `/Yu"hdr"`, pchsource → per-file `/Yc"hdr"`, enablepch "Off" →
-   neither); the flag inventory below predates that. Starting point:
-
-   - Compiler: `/nologo` (fixed), `/MD(d)`/`/MT(d)` (staticruntime +
-     runtime/isDebugBuild), `/W0`/`/W3`/`/W4` (warnings), `/WX`
-     (fatalwarnings), `/Gm` (minimalrebuild), `/GR` (rtti), `/GX`
-     (exceptionhandling), `/ZI`/`/Zi`/`/Z7` (symbols + editandcontinue +
-     debugformat + the optimize legality rule), `/Od`/`/Ot`/`/O2`/`/O1`/
-     `/Ox` (optimize), `/Oy` (omitframepointer), `/GZ` (debug runtime),
-     `/I` (includedirs), `/D` (defines), `/YX` `/FD` `/c` (fixed),
-     + buildoptions.
-   - Linker: `/nologo` (fixed), `/entry` (entrypoint),
-     `/subsystem:console|windows`, `/dll` (kind), `/debug` (symbols),
-     `/incremental:yes|no` (incrementallink), `/machine:I386` (fixed),
-     `/implib` (linktarget, absent with useimportlib Off), `/out`
-     (buildtarget), `/pdbtype:sept` (symbols), `/libpath` (target dir +
-     libdirs), + linkoptions; LIB32 `/nologo` + `/out` (StaticLib).
-   - RSC: `/l <lcid>` (`locale`, default 0x409), `/d` (defines +
-     resdefines + debug symbol), `/i` (includedirs + resincludedirs),
-     + resoptions.
-
-   The Steps 2–3 rounds already made several flags reachable; they belong
-   in the matrix: `locale`→RSC `/l`, per-file CPP (`/D`/`/U`/`/I` +
-   buildoptions), per-file custom build rules, PCH (`pchheader`→`/Yu`,
-   `pchsource`→`/Yc`), `symbolspath`→`/pdb:`, `mapfile`→`/map[:file]`,
-   `profile`→`/profile`, `ignoredefaultlibraries`→`/nodefaultlib:`,
-   `forceincludes`→`/FI`, `undefines`→`/U`, and the `characterset`
-   defines.
-
-2. **Combinatoric generation tests.** Add a `vs6_coverage` suite that
-   programmatically walks the reachable option space and asserts the
-   module emits the expected CPP/RSC/LINK32/LIB32 lines per
-   combination — including the legality rules (`/ZI`→`/Zi` under
-   optimization, `/GZ` only with the debug runtime, `/implib` absent
-   with `useimportlib "Off"`, …). Use pairwise coverage (or a
-   documented structured subset), not exhaustive enumeration — the
-   full cross-product is in the thousands; record which and why.
-
-3. **Windows acceptance run.** Generate the same combinations as .dsp
-   files and compile a trivial source under each with the real VC6
-   toolchain (`VC98\Bin\VCVARS32.BAT` + `cl.exe`/`link.exe` directly,
-   or `msdev /MAKE` on generated projects). Record accepted/rejected
-   per combo. Any combination VC6 rejects must be either avoided by the
-   module (fix) or documented with the reason.
-
-Deliverables: the coverage matrix + the `vs6_coverage` suite + the
-Windows acceptance log, all committed.
+- **Retire `../premake-sources/`** (a premake-core checkout is still
+  needed to run the unit tests; see README).
 
 ## Reference material
 
@@ -206,8 +74,9 @@ Windows acceptance log, all committed.
   tag `v1.0-3x-parity`.
 - `real-world-test-cases/` — 310 files from 13 projects (see its
   README.md); not byte-parity targets.
-- `../premake-sources/` can be deleted; a premake-core checkout is still
-  needed to run the unit tests (see README).
+- `experiments/` — premake5 scripts reproducing four real-world
+  workspaces; each has a run.sh (generate into git-ignored build/ and
+  diff with `tools/dspdiff.py`) and a NOTES.md (results + gap list).
 
 ## Implementation notes (load-bearing for future edits)
 

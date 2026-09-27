@@ -21,8 +21,13 @@ _manifest.lua   file manifest
 vs6.lua         module entry: p.modules.vs6, shared helpers
 vs6_dsw.lua     workspace (.dsw) writer
 vs6_dsp.lua     project (.dsp) writer
-samples/        E2E sample (premake.lua = 3.x syntax, premake5.lua = module input)
-tests/          unit test suites (_tests.lua), e2e.sh, golden/ fixtures
+samples/        E2E sample (premake5.lua = module input)
+tests/          unit test suites (_tests.lua), e2e.sh, golden/ fixtures,
+                acceptance/ (Windows VC6 harness + RESULTS.md)
+docs/           design notes, 3x-to-native migration spec, coverage matrix
+experiments/    real-world reproduction scripts (peter, zlib, libpng,
+                quake2), each with run.sh + NOTES.md
+tools/          dspdiff.py (structural .dsp differ for the experiments)
 real-world-test-cases/  310 .dsw/.dsp from public projects + SOURCE.md provenance
 ```
 
