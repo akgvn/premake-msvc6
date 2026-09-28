@@ -9,9 +9,11 @@
   premake5 defaults, msc toolset flag mappings (details in README.md).
   Began as a byte-exact premake 3.7 port — preserved at tag
   `v1.0-3x-parity`, migration spec `docs/3x-to-native.md`.
-- 233 tests green via `bin/release/premake5 test --test-only=vs6*` from
-  a premake-core checkout with this repo linked into
-  `premake-core/modules/vs6`; full premake-core suite passes.
+- 233 tests green via `tools/test.sh` — the pinned premake5 beta8
+  release binary in `.deps/` (prepared by `tools/premake5.sh`) ships
+  the self-test harness, which `tools/run-vs6-tests.lua` points at
+  `tests/`; no premake-core checkout is needed. The full premake-core
+  suite was also green during Step 4 against a then-current checkout.
   `tests/golden/` is the module's own sample output (regression
   baseline); `tests/e2e.sh` diffs against it with separator/EOL
   normalization.
@@ -63,8 +65,6 @@ History lives in the git log and the per-experiment NOTES.md files:
   every premake5 generator).
 - **FLTK experiment** (Step 3's other scale candidate): it has no
   feature the corpus above doesn't already cover.
-- **Retire `../premake-sources/`** (a premake-core checkout is still
-  needed to run the unit tests; see README).
 
 ## Reference material
 

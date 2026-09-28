@@ -9,7 +9,10 @@ set -eu
 
 REPO=$(CDPATH='' cd -- "$(dirname -- "$0")/../.." && pwd)
 EXP=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
-PREMAKE5=${1:-"$REPO/../premake-sources/premake-core/bin/release/premake5"}
+
+. "$REPO/tools/find-premake5.sh"
+PREMAKE5=$(find_premake5 "${1:-}")
+
 REAL="$REPO/real-world-test-cases/zlib"
 
 WORK="$EXP/build"

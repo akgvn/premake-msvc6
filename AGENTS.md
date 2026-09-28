@@ -27,23 +27,29 @@ tests/          unit test suites (_tests.lua), e2e.sh, golden/ fixtures,
 docs/           design notes, 3x-to-native migration spec, coverage matrix
 experiments/    real-world reproduction scripts (peter, zlib, libpng,
                 quake2), each with run.sh + NOTES.md
-tools/          dspdiff.py (structural .dsp differ for the experiments)
+tools/          dspdiff.py (structural .dsp differ for the experiments),
+                premake5.sh (pinned binary setup + tests), test.sh,
+                run-vs6-tests.lua, find-premake5.sh
 real-world-test-cases/  310 .dsw/.dsp from public projects + SOURCE.md provenance
 ```
 
 ## Environment
 
-- A premake-core checkout with a built binary is expected at
-  `../premake-sources/premake-core` (`bin/release/premake5`), with this
-  repo linked at `premake-core/modules/vs6` (required for test
-  discovery — `--scripts` alone does NOT work): `ln -s <repo> modules/vs6`
-  on Linux, `mklink /J modules\vs6 <repo>` on Windows (plain mklink /J,
-  no admin needed). On Windows the binary is `bin\release\premake5.exe`
-  (`Bootstrap.bat vs18` to build with VS2026 Community).
-- A premake 3.7 checkout may exist at `../premake-sources/premake-3.x`
-  (oracle; `bin/premake` is a Linux build, `bin/premake.exe` the Windows
-  one). `../premake-sources/` is slated for deletion — don't rely on it
-  in committed files.
+- Test environment: run `tools/premake5.sh` once. It uses an installed
+  premake5 if its version matches the pinned tag, otherwise downloads
+  the pinned release binary (beta8) into `.deps/premake5/`, then runs
+  the vs6 unit tests. No premake-core checkout, compiler, or Bootstrap
+  is needed: release binaries ship the Lua core and the self-test
+  harness, which `tools/run-vs6-tests.lua` wires to `tests/_tests.lua`.
+  `tools/premake5.sh --clean` removes `.deps/`; `tools/test.sh [pattern]`
+  reruns the suites.
+- `--scripts=<repo>` module loading requires premake5 beta8 or newer
+  (used by e2e.sh and the experiments); beta7 cannot load the module
+  that way, and its API set is too old for the unit tests. On Windows
+  use Git Bash or WSL for the shell scripts (`bash`, `git`,
+  `curl`/`unzip` are needed).
+- A premake 3.7 oracle checkout used to live at `../premake-sources/`;
+  it has been deleted. Its output fixtures live at tag `v1.0-3x-parity`.
 - A loose VC6 tree exists on the Windows machine at
   `C:\MSVC6`
   (`Common\MSDev98\Bin\MSDEV.EXE` + `VC98\Bin\VCVARS32.BAT`; environment
@@ -52,11 +58,12 @@ real-world-test-cases/  310 .dsw/.dsp from public projects + SOURCE.md provenanc
 ## Common commands
 
 ```sh
-# unit tests (from the premake-core checkout):
-cd ../premake-sources/premake-core && bin/release/premake5 test --test-only=vs6*
-# full premake-core suite (regression check):
-bin/release/premake5 test
-# E2E vs the golden 3.7 oracle fixtures (from this repo):
+# one-time setup + vs6 unit tests (downloads into .deps/ as needed):
+tools/premake5.sh
+# vs6 unit tests (rerun; optional --test-only pattern):
+tools/test.sh
+tools/test.sh 'vs6_links*'
+# E2E vs the golden baseline (from this repo):
 tests/e2e.sh
 # generate the sample manually:
 cd samples && <premake5> --scripts=.. --file=premake5.lua vs6

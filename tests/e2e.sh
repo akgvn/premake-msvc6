@@ -10,12 +10,15 @@
 # canonicalized; everything else must match byte-for-byte.
 #
 # Usage: tests/e2e.sh [path-to-premake5]
-# The premake5 binary defaults to the sibling premake-core checkout.
+# The premake5 binary defaults to $PREMAKE5, the pinned download under
+# .deps/ (tools/premake5.sh), or premake5 on PATH.
 
 set -eu
 
 REPO=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
-PREMAKE5=${1:-"$REPO/../premake-sources/premake-core/bin/release/premake5"}
+
+. "$REPO/tools/find-premake5.sh"
+PREMAKE5=$(find_premake5 "${1:-}")
 FILES="Sample.dsw app.dsp core.dsp engine.dsp tool.dsp"
 
 WORK=$(mktemp -d)

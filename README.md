@@ -34,9 +34,10 @@ workspace "Sample"
 premake5 --scripts=/path/to/premake-msvc6 vs6
 ```
 
-(`--scripts` adds this repository to Premake's module search path; any
-other module search path works too, e.g. copying or linking this repo to
-`%USERPROFILE%\.premake\modules\vs6` / `~/.premake/modules/vs6`.)
+(`--scripts` adds this repository to Premake's module search path
+(premake5 beta8 or newer); any other module search path works too, e.g.
+copying or linking this repo to `%USERPROFILE%\.premake\modules\vs6` /
+`~/.premake/modules/vs6`.)
 
 This produces `Sample.dsw` and one `.dsp` per project. Generated files
 always use CRLF line endings and backslash path separators, regardless of
@@ -44,14 +45,19 @@ host OS.
 
 ## Testing
 
-Unit tests use premake5's built-in test harness. Link this repository
-into a [premake-core](https://github.com/premake/premake-core) checkout
-(one-time), then run from that checkout:
+Unit tests use premake5's built-in self-test harness, wired to
+`tests/_tests.lua` by `tools/run-vs6-tests.lua`. Prepare the pinned
+beta8 binary (one-time — uses an installed matching premake5, otherwise
+downloads it into the git-ignored `.deps/`), then run the suites:
 
 ```sh
-ln -s /path/to/premake-msvc6 modules/vs6
-bin/release/premake5 test --test-only=vs6*
+tools/premake5.sh        # setup + verification (233 tests)
+tools/test.sh            # rerun the vs6 suites
+tools/test.sh 'vs6_*'    # ...or a single suite/test pattern
 ```
+
+No premake-core checkout, compiler, or Bootstrap is needed: release
+binaries ship the Lua runtime and the self-test harness.
 
 End-to-end regression check: regenerates `samples/` output and diffs
 against the committed baseline in `tests/golden/` (the module's own
@@ -119,7 +125,8 @@ real-world-test-cases/  .dsw/.dsp files from public projects + provenance
 
 ## Notes
 
-- Developed and tested against a current premake-core snapshot. The
-  premake5 beta7 binary can also load the module (it dual-reads
-  `flags {"NoImportLib"}` where `useimportlib` is unavailable), but that
-  binary is a mid-transition dev build, so beta7 support is best-effort.
+- Developed and tested against premake5 beta8 (the pin used by
+  `tools/premake5.sh`). The premake5 beta7 release can also load the
+  module (it dual-reads `flags {"NoImportLib"}` where `useimportlib` is
+  unavailable), but not via `--scripts`, and it is too old for the unit
+  tests, so beta7 support is best-effort.
