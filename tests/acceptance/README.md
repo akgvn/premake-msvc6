@@ -6,7 +6,7 @@ toolchain, recording accepted/rejected per combination.
 
 This directory holds the harness and the recorded run. The run needs a
 Windows machine with the loose VC6 tree (`VC98\Bin\VCVARS32.BAT` and
-`Common\MSDev98\Bin\MSDEV.EXE`); generation runs on Linux. It has been
+`Common\MSDev98\Bin\MSDEV.EXE`); generation runs anywhere uv does. It has been
 executed once: **98/98 accepted, 0 rejected** — see
 [`RESULTS.md`](RESULTS.md) and [`acceptance-windows.log`](acceptance-windows.log).
 
@@ -15,7 +15,7 @@ executed once: **98/98 accepted, 0 rejected** — see
 | File | Host | Purpose |
 |---|---|---|
 | `premake5.lua` | any | defines one project per acceptance profile; writes `manifest.txt` |
-| `generate.sh` | Linux/WSL/Git Bash | runs the module and materializes `build/` |
+| `generate.py` | any (uv) | runs the module and materializes `build/` |
 | `run.bat` | Windows | sources `VCVARS32.BAT`, builds every manifest entry with `msdev /MAKE`, writes `acceptance.log` |
 | `sources/`, `include/` | any | trivial C sources and one `.rc` so cl/link/rc all run |
 
@@ -23,9 +23,9 @@ executed once: **98/98 accepted, 0 rejected** — see
 
 ## Procedure
 
-1. **Generate** (Linux/WSL/Git Bash, from the repository):
+1. **Generate** (any host with uv, from the repository):
    ```sh
-   tests/acceptance/generate.sh
+   uv run tests/acceptance/generate.py
    ```
    This produces `tests/acceptance/build/` with `vc6_acceptance.dsw`,
    one `.dsp` per profile, the sources, and `manifest.txt`. Re-running

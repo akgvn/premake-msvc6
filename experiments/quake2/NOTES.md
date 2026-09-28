@@ -5,7 +5,7 @@ projects from id Software's Quake 2 v3.19 GPL release) with the vs6
 module.
 
 `premake5.lua` sits at the workspace root of the shadow tree, like the
-real quake2.dsw; `run.sh` generates into `build/` (git-ignored) and diffs
+real quake2.dsw; `run.py` generates into `build/` (git-ignored) and diffs
 each file against the original with `tools/dspdiff.py`.
 
 ## Result

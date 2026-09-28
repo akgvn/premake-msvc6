@@ -203,7 +203,7 @@ VC-authored files agree on it. No test changes needed for these:
   baseline. The 3.7 fixtures remain reachable at tag `v1.0-3x-parity`.
 - `samples/premake.lua` (3.x syntax, oracle input) is deleted — no
   3.x mode left to compare against.
-- `tests/e2e.sh` mechanics unchanged (normalized diff; path-separator
+- `tests/e2e.py` mechanics unchanged (normalized diff; path-separator
   normalization becomes a no-op but harmless).
 
 ## E. Open design decisions (recommendations; settle during conversion)

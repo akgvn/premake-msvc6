@@ -1,5 +1,5 @@
 # Pinned premake5 binary for building/testing this module
-# (tools/premake5.sh)
+# (uv run tools/premake5.py)
 .deps/
 
 # Regenerated E2E output (committed baselines live in tests/golden/)

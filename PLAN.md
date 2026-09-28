@@ -9,13 +9,13 @@
   premake5 defaults, msc toolset flag mappings (details in README.md).
   Began as a byte-exact premake 3.7 port — preserved at tag
   `v1.0-3x-parity`, migration spec `docs/3x-to-native.md`.
-- 233 tests green via `tools/test.sh` — the pinned premake5 beta8
-  release binary in `.deps/` (prepared by `tools/premake5.sh`) ships
+- 233 tests green via `uv run tools/test.py` — the pinned premake5 beta8
+  release binary in `.deps/` (prepared by `uv run tools/premake5.py`) ships
   the self-test harness, which `tools/run-vs6-tests.lua` points at
   `tests/`; no premake-core checkout is needed. The full premake-core
   suite was also green during Step 4 against a then-current checkout.
   `tests/golden/` is the module's own sample output (regression
-  baseline); `tests/e2e.sh` diffs against it with separator/EOL
+  baseline); `tests/e2e.py` diffs against it with separator/EOL
   normalization.
 - Validated on Windows (2026-09-22): Sample.dsw opens clean in a real
   VC6 IDE and builds end-to-end (dependencies and build events working);
@@ -75,7 +75,7 @@ History lives in the git log and the per-experiment NOTES.md files:
 - `real-world-test-cases/` — 310 files from 13 projects (see its
   README.md); not byte-parity targets.
 - `experiments/` — premake5 scripts reproducing four real-world
-  workspaces; each has a run.sh (generate into git-ignored build/ and
+  workspaces; each has a run.py (generate into git-ignored build/ and
   diff with `tools/dspdiff.py`) and a NOTES.md (results + gap list).
 
 ## Implementation notes (load-bearing for future edits)

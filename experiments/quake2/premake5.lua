@@ -8,7 +8,7 @@
 -- (ctf/, game/, ref_gl/, ref_soft/) and reference shared sources with ..\
 -- paths. File paths and output dirs are script-relative (premake5
 -- convention), hence the "game\..." / "ref_gl\..." prefixes. Pair with
--- tools/dspdiff.py via run.sh.
+-- tools/dspdiff.py via run.py.
 --
 -- Notable shapes: four configurations per project including two ALPHA
 -- ones (/QA21164 /Gt0 /QAieee1 /D C_ONLY through buildoptions;

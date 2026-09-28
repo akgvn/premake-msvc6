@@ -51,9 +51,9 @@ beta8 binary (one-time — uses an installed matching premake5, otherwise
 downloads it into the git-ignored `.deps/`), then run the suites:
 
 ```sh
-tools/premake5.sh        # setup + verification (233 tests)
-tools/test.sh            # rerun the vs6 suites
-tools/test.sh 'vs6_*'    # ...or a single suite/test pattern
+uv run tools/premake5.py      # setup + verification (233 tests)
+uv run tools/test.py          # rerun the vs6 suites
+uv run tools/test.py 'vs6_*'  # ...or a single suite/test pattern
 ```
 
 No premake-core checkout, compiler, or Bootstrap is needed: release
@@ -65,7 +65,7 @@ output, regenerated deliberately — the old premake 3.7 oracle fixtures
 live at tag `v1.0-3x-parity`):
 
 ```sh
-tests/e2e.sh [path-to-premake5]
+uv run tests/e2e.py [path-to-premake5]
 ```
 
 ## Behavior notes
@@ -118,7 +118,7 @@ vs6.lua         module entry: p.modules.vs6, shared helpers
 vs6_dsw.lua     workspace (.dsw) writer
 vs6_dsp.lua     project (.dsp) writer
 samples/        E2E sample (premake5 syntax)
-tests/          test suites (_tests.lua), e2e.sh, golden/ baseline
+tests/          test suites (_tests.lua), e2e.py, golden/ baseline
 docs/           design and migration notes
 real-world-test-cases/  .dsw/.dsp files from public projects + provenance
 ```
@@ -126,7 +126,7 @@ real-world-test-cases/  .dsw/.dsp files from public projects + provenance
 ## Notes
 
 - Developed and tested against premake5 beta8 (the pin used by
-  `tools/premake5.sh`). The premake5 beta7 release can also load the
+  `tools/premake5.py`). The premake5 beta7 release can also load the
   module (it dual-reads `flags {"NoImportLib"}` where `useimportlib` is
   unavailable), but not via `--scripts`, and it is too old for the unit
   tests, so beta7 support is best-effort.

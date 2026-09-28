@@ -5,7 +5,7 @@ example.dsp + minigzip.dsp, from zlib 1.2.3's hand-maintained
 projects/visualc6) with the vs6 module.
 
 `premake5.lua` sits at the projects/visualc6 position of the shadow
-tree, like the originals; `run.sh` generates into `build/` (git-ignored)
+tree, like the originals; `run.py` generates into `build/` (git-ignored)
 and diffs against the originals with `tools/dspdiff.py`.
 
 ## Result

@@ -3,7 +3,7 @@
 Goal: reproduce `real-world-test-cases/peter` (Peter.dsw + 8 .dsp) from a
 premake5 script with the vs6 module, and harvest the gap list.
 
-`premake5.lua` reproduces the workspace; `run.sh` generates into a
+`premake5.lua` reproduces the workspace; `run.py` generates into a
 shadow tree (`build/`, git-ignored) and diffs each file against the
 original with `tools/dspdiff.py`.
 

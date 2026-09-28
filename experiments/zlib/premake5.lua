@@ -3,7 +3,7 @@
 -- Reproduce zlib.dsw + zlib/example/minigzip .dsp files
 -- (real-world-test-cases/zlib) with the vs6 module. The script sits at
 -- the projects/visualc6 position in the shadow tree, like the real
--- files. Pair with tools/dspdiff.py via run.sh.
+-- files. Pair with tools/dspdiff.py via run.py.
 --
 -- Notable shapes: per-config kind (DLL and LIB configurations in one
 -- project), per-config target names (zlib1/zlib1d/zlib/zlibd), project

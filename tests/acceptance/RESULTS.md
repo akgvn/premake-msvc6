@@ -43,7 +43,7 @@ them.
 ## Reproducing
 
 ```sh
-tests/acceptance/generate.sh          # Linux: writes build/
+uv run tests/acceptance/generate.py   # writes build/
 # copy tests/acceptance/build/ to the Windows checkout
 tests\acceptance\run.bat              # Windows: rebuilds and rewrites acceptance.log
 ```

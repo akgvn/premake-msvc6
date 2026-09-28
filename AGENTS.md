@@ -22,32 +22,33 @@ vs6.lua         module entry: p.modules.vs6, shared helpers
 vs6_dsw.lua     workspace (.dsw) writer
 vs6_dsp.lua     project (.dsp) writer
 samples/        E2E sample (premake5.lua = module input)
-tests/          unit test suites (_tests.lua), e2e.sh, golden/ fixtures,
+tests/          unit test suites (_tests.lua), e2e.py, golden/ fixtures,
                 acceptance/ (Windows VC6 harness + RESULTS.md)
 docs/           design notes, 3x-to-native migration spec, coverage matrix
 experiments/    real-world reproduction scripts (peter, zlib, libpng,
-                quake2), each with run.sh + NOTES.md
+                quake2), each with run.py + NOTES.md
 tools/          dspdiff.py (structural .dsp differ for the experiments),
-                premake5.sh (pinned binary setup + tests), test.sh,
-                run-vs6-tests.lua, find-premake5.sh
+                premake5.py (pinned binary setup + tests), test.py,
+                premake5lib.py (shared helpers), run-vs6-tests.lua,
+                find_premake5.py
 real-world-test-cases/  310 .dsw/.dsp from public projects + SOURCE.md provenance
 ```
 
 ## Environment
 
-- Test environment: run `tools/premake5.sh` once. It uses an installed
-  premake5 if its version matches the pinned tag, otherwise downloads
-  the pinned release binary (beta8) into `.deps/premake5/`, then runs
-  the vs6 unit tests. No premake-core checkout, compiler, or Bootstrap
-  is needed: release binaries ship the Lua core and the self-test
-  harness, which `tools/run-vs6-tests.lua` wires to `tests/_tests.lua`.
-  `tools/premake5.sh --clean` removes `.deps/`; `tools/test.sh [pattern]`
-  reruns the suites.
-- `--scripts=<repo>` module loading requires premake5 beta8 or newer
-  (used by e2e.sh and the experiments); beta7 cannot load the module
-  that way, and its API set is too old for the unit tests. On Windows
-  use Git Bash or WSL for the shell scripts (`bash`, `git`,
-  `curl`/`unzip` are needed).
+- Test environment: run `uv run tools/premake5.py` once. It uses an
+  installed premake5 if its version matches the pinned tag, otherwise
+  downloads the pinned release binary (beta8) into `.deps/premake5/`,
+  then runs the vs6 unit tests. No premake-core checkout, compiler, or
+  Bootstrap is needed: release binaries ship the Lua core and the
+  self-test harness, which `tools/run-vs6-tests.lua` wires to
+  `tests/_tests.lua`. `uv run tools/premake5.py --clean` removes
+  `.deps/`; `uv run tools/test.py [pattern]` reruns the suites.
+- All tooling is uv-based Python (PEP 723 inline metadata; uv 0.12+):
+  run it as `uv run <script>.py` on any host. `--scripts=<repo>` module
+  loading requires premake5 beta8 or newer (used by e2e.py and the
+  experiments); beta7 cannot load the module that way, and its API set
+  is too old for the unit tests.
 - A premake 3.7 oracle checkout used to live at `../premake-sources/`;
   it has been deleted. Its output fixtures live at tag `v1.0-3x-parity`.
 - A loose VC6 tree exists on the Windows machine at
@@ -59,12 +60,12 @@ real-world-test-cases/  310 .dsw/.dsp from public projects + SOURCE.md provenanc
 
 ```sh
 # one-time setup + vs6 unit tests (downloads into .deps/ as needed):
-tools/premake5.sh
+uv run tools/premake5.py
 # vs6 unit tests (rerun; optional --test-only pattern):
-tools/test.sh
-tools/test.sh 'vs6_links*'
+uv run tools/test.py
+uv run tools/test.py 'vs6_links*'
 # E2E vs the golden baseline (from this repo):
-tests/e2e.sh
+uv run tests/e2e.py
 # generate the sample manually:
 cd samples && <premake5> --scripts=.. --file=premake5.lua vs6
 ```

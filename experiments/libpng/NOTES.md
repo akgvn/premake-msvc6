@@ -5,7 +5,7 @@ Goal: reproduce `real-world-test-cases/libpng` (libpng.dsw + libpng.dsp
 project from a sibling tree (`../../../zlib/...`), like the real file.
 
 `premake5.lua` sits at libpng/projects/visualc6 in the shadow tree;
-`run.sh` materializes both source trees' files as placeholders,
+`run.py` materializes both source trees' files as placeholders,
 generates, and diffs with `tools/dspdiff.py`.
 
 ## Result

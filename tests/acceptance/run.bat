@@ -2,8 +2,9 @@
 rem tests/acceptance/run.bat - build the generated acceptance projects
 rem with the real VC6 toolchain and log accepted/rejected per combo.
 rem
-rem Run tests/acceptance/generate.sh first (Linux/WSL/Git Bash) and copy
-rem the build\ directory next to this script, then run this on Windows.
+rem Run 'uv run tests/acceptance/generate.py' first (any host with uv)
+rem and copy the build\ directory next to this script, then run this on
+rem Windows.
 rem
 rem Usage: run.bat [VC6_ROOT]
 rem VC6_ROOT defaults to the loose VC6 tree; it must contain
@@ -34,7 +35,7 @@ set "LOG=%HERE%acceptance.log"
 
 if not exist "%DSW%" (
 	echo Generated workspace not found: "%DSW%"
-	echo Run tests/acceptance/generate.sh, then copy build\ here.
+	echo Run 'uv run tests/acceptance/generate.py', then copy build\ here.
 	exit /b 2
 )
 if not exist "%MANIFEST%" (

@@ -4,7 +4,7 @@
 -- (real-world-test-cases/libpng) with the vs6 module. The script sits at
 -- the projects/visualc6 position of a libpng source tree with a sibling
 -- zlib tree (the real libpng.dsw references ../../../zlib). Pair with
--- tools/dspdiff.py via run.sh.
+-- tools/dspdiff.py via run.py.
 --
 -- Notable shapes: per-config kind and target names (libpng13/libpng13d/
 -- libpng/libpngd/libpng13vb), explicit library paths per configuration,

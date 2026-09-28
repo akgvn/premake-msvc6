@@ -1,7 +1,7 @@
 --
 -- experiments/peter/premake5.lua
 -- Reproduce Peter.dsw + its 8 .dsp files (real-world-test-cases/peter)
--- with the vs6 module. Pair with tools/dspdiff.py via run.sh.
+-- with the vs6 module. Pair with tools/dspdiff.py via run.py.
 --
 -- Era-accurate choices: characterset "ASCII" (these VC6-era projects
 -- carry no _UNICODE/_MBCS charset define; premake5's Default would add

@@ -3,7 +3,7 @@
 -- Register a `test` action backed by the self-test module that ships
 -- inside premake5 release binaries, and point test discovery at the
 -- repository root so tests/_tests.lua (and with it this module) is
--- found. Used by tools/test.sh.
+-- found. Used by tools/test.py.
 --
 -- Copyright (c) 2026 the premake-msvc6 project contributors
 -- SPDX-License-Identifier: GPL-2.0-or-later

@@ -1,7 +1,7 @@
 --
 -- tests/acceptance/premake5.lua
 -- Generates one VC6 project per acceptance profile into a single
--- workspace. Run via tests/acceptance/generate.sh; the generated
+-- workspace. Run via `uv run tests/acceptance/generate.py`; the generated
 -- vc6_acceptance.dsw + .dsp files are then built on Windows by run.bat
 -- with the real VC6 toolchain (see README.md).
 --
