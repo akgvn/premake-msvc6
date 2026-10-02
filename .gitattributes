@@ -1,3 +1,8 @@
+# Text files are stored LF in the repository and checked out LF, so the
+# worktree cannot drift to CRLF and swamp every diff with line-ending
+# churn. Binary files are left alone (text=auto detects them).
+* text=auto eol=lf
+
 # VC6 project files are golden fixtures: preserve bytes exactly, never
 # let git normalize line endings on checkout/commit.
 *.dsp -text

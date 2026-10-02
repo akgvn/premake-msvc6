@@ -29,3 +29,4 @@ tools/__pycache__/
 # Step 4.3 Windows acceptance artifacts (generated locally)
 tests/acceptance/build/
 tests/acceptance/acceptance.log
+.ori/
